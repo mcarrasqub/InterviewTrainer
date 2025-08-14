@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configuración - Lumo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .config-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .config-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .config-header {
+        background: var(--lumo-gradient);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .config-body {
+        padding: 2rem;
+    }
+
+    .info-section {
+        background: #e0f2fe;
+        border: 1px solid #81d4fa;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .info-title {
+        color: #0277bd;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .back-btn {
+        background: white;
+        color: var(--lumo-primary);
+        border: 2px solid var(--lumo-primary);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+        background: var(--lumo-primary);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .feature-list {
+        text-align: left;
+        margin: 1rem 0;
+    }
+
+    .feature-list li {
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="config-container">
+    <!-- Back Button -->
+    <a href="{% url 'chat' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Chat
+    </a>
+
+    <div class="config-card">
+        <div class="config-header">
+            <h2><i class="fas fa-cog me-2"></i>Configuración de Perfil</h2>
+            <p class="mb-0">Personaliza tu experiencia con Lumo</p>
+        </div>
+
+        <div class="config-body">
+            <!-- Info Section -->
+            <div class="info-section">
+                <h5 class="info-title">
+                    <i class="fas fa-check-circle"></i>
+                    ¡Todo Configurado!
+                </h5>
+                <p class="mb-3">Lumo está listo para usar. No necesitas configurar ninguna API key.</p>
+                
+                <div class="feature-list">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-robot text-primary"></i> IA entrenadora activada</li>
+                        <li><i class="fas fa-infinity text-primary"></i> Sesiones ilimitadas</li>
+                        <li><i class="fas fa-shield-alt text-primary"></i> Datos seguros</li>
+                        <li><i class="fas fa-clock text-primary"></i> Disponible 24/7</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Preferences Section -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="preferredType" class="form-label fw-bold">
+                        <i class="fas fa-heart me-2"></i>Tipo de Entrevista Preferido
+                    </label>
+                    <select class="form-select" id="preferredType" name="preferred_interview_type">
+                        <option value="general" {% if profile.preferred_interview_type == 'general' %}selected{% endif %}>General</option>
+                        <option value="technical" {% if profile.preferred_interview_type == 'technical' %}selected{% endif %}>Técnica</option>
+                        <option value="behavioral" {% if profile.preferred_interview_type == 'behavioral' %}selected{% endif %}>Comportamental</option>
+                        <option value="simulation" {% if profile.preferred_interview_type == 'simulation' %}selected{% endif %}>Simulación</option>
+                    </select>
+                    <div class="form-text">Esto personalizará las sugerencias iniciales en el chat</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i>Guardar Preferencias
+                </button>
+            </form>
+
+            <!-- Stats Section -->
+            <div class="mt-4 p-3 bg-light rounded">
+                <h6 class="fw-bold mb-3">📊 Tus Estadísticas</h6>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="fw-bold text-primary">{{ profile.total_sessions }}</div>
+                        <small class="text-muted">Sesiones</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-success">{{ profile.preferred_interview_type|title }}</div>
+                        <small class="text-muted">Preferido</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-info">{{ user.date_joined|date:"M Y" }}</div>
+                        <small class="text-muted">Miembro desde</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

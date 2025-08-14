@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ session.title }} - Lumo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .session-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .session-header {
+        background: var(--lumo-gradient);
+        color: white;
+        padding: 2rem;
+        border-radius: 20px 20px 0 0;
+        text-align: center;
+    }
+
+    .session-stats {
+        background: white;
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+    }
+
+    .stat-item {
+        flex: 1;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--lumo-primary);
+    }
+
+    .messages-container {
+        background: white;
+        max-height: 60vh; /* ✅ ALTURA MÁXIMA DEFINIDA */
+        overflow-y: auto; /* ✅ SCROLL VERTICAL */
+        padding: 1.5rem;
+        border-radius: 0 0 20px 20px;
+    }
+
+    /* ✅ SCROLLBAR PERSONALIZADA */
+    .messages-container::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .messages-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .messages-container::-webkit-scrollbar-thumb {
+        background: var(--lumo-primary);
+        border-radius: 10px;
+    }
+
+    .messages-container::-webkit-scrollbar-thumb:hover {
+        background: var(--lumo-secondary);
+    }
+
+    .message {
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message.user {
+        justify-content: flex-end;
+    }
+
+    .message.ai {
+        justify-content: flex-start;
+    }
+
+    .message-content {
+        max-width: 75%;
+        padding: 1.25rem 1.5rem;
+        border-radius: 20px;
+        white-space: pre-wrap;
+        word-wrap: break-word; /* ✅ ROMPE PALABRAS LARGAS */
+        line-height: 1.6;
+        position: relative;
+    }
+
+    .message.user .message-content {
+        background: var(--lumo-gradient);
+        color: white;
+        border-bottom-right-radius: 8px;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .message.ai .message-content {
+        background: #f8f9fa;
+        color: var(--lumo-dark);
+        border: 1px solid #e2e8f0;
+        border-bottom-left-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 12px;
+        font-size: 16px;
+        flex-shrink: 0; /* ✅ NO SE ENCOGE */
+    }
+
+    .message.user .message-avatar {
+        background: var(--lumo-primary);
+        color: white;
+        order: 2;
+    }
+
+    .message.ai .message-avatar {
+        background: var(--lumo-gradient);
+        color: white;
+    }
+
+    .message-timestamp {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        margin-top: 0.5rem;
+        text-align: right;
+    }
+
+    .message.ai .message-timestamp {
+        text-align: left;
+    }
+
+    .back-btn {
+        background: white;
+        color: var(--lumo-primary);
+        border: 2px solid var(--lumo-primary);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+        background: var(--lumo-primary);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .session-actions {
+        background: white;
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        border-radius: 0 0 20px 20px;
+    }
+
+    .empty-session {
+        text-align: center;
+        padding: 3rem;
+        color: #6b7280;
+    }
+
+    .empty-session i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--lumo-primary);
+    }
+
+    /* ✅ RESPONSIVE */
+    @media (max-width: 768px) {
+        .session-container {
+            margin: 1rem;
+        }
+
+        .session-stats {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .messages-container {
+            max-height: 50vh;
+        }
+
+        .message-content {
+            max-width: 90%;
+        }
+
+        .session-actions {
+            flex-direction: column;
+        }
+    }
+
+    /* ✅ SCROLL TO TOP BUTTON */
+    .scroll-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--lumo-primary);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .scroll-to-top.show {
+        display: flex;
+    }
+
+    .scroll-to-top:hover {
+        background: var(--lumo-secondary);
+        transform: scale(1.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="session-container">
+    <!-- Back Button -->
+    <a href="{% url 'chat' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Chat
+    </a>
+
+    <div class="card border-0 shadow-lg">
+        <!-- Session Header -->
+        <div class="session-header">
+            <h2><i class="fas fa-comments me-2"></i>{{ session.title }}</h2>
+            <p class="mb-0">{{ session.get_session_type_display }} • {{ session.created_at|date:"d/m/Y H:i" }}</p>
+        </div>
+
+        <!-- Session Stats -->
+        <div class="session-stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ user_messages_count }}</div>
+                <div class="text-muted">Tus mensajes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ ai_messages_count }}</div>
+                <div class="text-muted">Respuestas IA</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ session_duration }}</div>
+                <div class="text-muted">Duración</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ messages|length }}</div>
+                <div class="text-muted">Total mensajes</div>
+            </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="messages-container" id="messagesContainer">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message {% if message.is_user %}user{% else %}ai{% endif %}">
+                        <div class="message-avatar">
+                            <i class="fas fa-{% if message.is_user %}user{% else %}robot{% endif %}"></i>
+                        </div>
+                        <div class="message-content">
+                            {{ message.content }}
+                            <div class="message-timestamp">
+                                {{ message.timestamp|date:"H:i" }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-session">
+                    <i class="fas fa-inbox"></i>
+                    <h4>Sesión vacía</h4>
+                    <p>Esta sesión no tiene mensajes aún.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Session Actions -->
+        {% if messages %}
+        <div class="session-actions">
+            <button class="btn btn-outline-primary" onclick="scrollToTop()">
+                <i class="fas fa-arrow-up me-2"></i>Ir al inicio
+            </button>
+            <button class="btn btn-outline-secondary" onclick="scrollToBottom()">
+                <i class="fas fa-arrow-down me-2"></i>Ir al final
+            </button>
+            <a href="{% url 'chat' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Continuar conversación
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Scroll to Top Button -->
+<button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()">
+    <i class="fas fa-chevron-up"></i>
+</button>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const messagesContainer = document.getElementById('messagesContainer');
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+    // ✅ MANEJO DE SCROLL
+    messagesContainer.addEventListener('scroll', function() {
+        // Mostrar/ocultar botón de scroll to top
+        if (messagesContainer.scrollTop > 200) {
+            scrollToTopBtn.classList.add('show');
+        } else {
+            scrollToTopBtn.classList.remove('show');
+        }
+    });
+
+    function scrollToTop() {
+        messagesContainer.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    function scrollToBottom() {
+        messagesContainer.scrollTo({
+            top: messagesContainer.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
+
+    // ✅ SCROLL AL FINAL AL CARGAR
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            scrollToBottom();
+        }, 100);
+    });
+
+    // ✅ KEYBOARD SHORTCUTS
+    document.addEventListener('keydown', function(event) {
+        // Home key - ir al inicio
+        if (event.key === 'Home') {
+            event.preventDefault();
+            scrollToTop();
+        }
+        
+        // End key - ir al final
+        if (event.key === 'End') {
+            event.preventDefault();
+            scrollToBottom();
+        }
+        
+        // Escape - volver al chat
+        if (event.key === 'Escape') {
+            window.location.href = "{% url 'chat' %}";
+        }
+    });
+
+    // ✅ ANIMACIÓN DE ENTRADA DE MENSAJES
+    const messages = document.querySelectorAll('.message');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    messages.forEach(message => {
+        message.style.opacity = '0';
+        message.style.transform = 'translateY(20px)';
+        message.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(message);
+    });
+</script>
+{% endblock %}
