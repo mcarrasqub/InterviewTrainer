@@ -1,0 +1,2 @@
+# InterviewTrainer
+Interview Trainer is a project designed to help candidates train and prepare for real job interviews. It offers a simple and interactive way to practice answering questions and improve interview skills.
