@@ -1,18 +1,19 @@
 # InterviewTrainer (Lumo)
 
-Instrucciones para configurar y ejecutar el proyecto InterviewTrainer.
+Instructions to set up and run the InterviewTrainer project.
 
-## 1. Clonar el repositorio
+## 1. Clone the repository
 
-Abre tu terminal (por ejemplo, en VS Code) y ejecuta:
+Open your terminal (e.g., in VS Code) and run:
 
 ```bash
 git clone https://github.com/mcarrasqub/InterviewTrainer.git
 cd InterviewTrainer
 ```
 
-## 2. Preparar entorno virtual (lumo_env)
-Para crear y activar un entorno virtual llamado `lumo_env`, ejecuta en la terminal:
+## 2. Set up virtual environment (lumo_env)
+
+To create and activate a virtual environment named `lumo_env`, run in the terminal:
 
 ### macOS / Linux:
 ```bash
@@ -32,26 +33,26 @@ python -m venv lumo_env
 .\lumo_env\Scripts\activate.bat
 ```
 
-Una vez activado, el prompt de tu terminal debería cambiar y mostrar algo como `(lumo_env)` al inicio.
+Once activated, your terminal prompt should change and show something like `(lumo_env)` at the beginning.
 
-## 3. Instalar dependencias
+## 3. Install dependencies
 
-Con el entorno activado, instala las dependencias listadas en `requirements.txt`:
+With the environment activated, install the dependencies listed in `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Esto asegura que todas las bibliotecas necesarias estén instaladas.
+This ensures that all necessary libraries are installed.
 
 
-## 4. Ejecutar el proyecto
+## 4. Run the project
 
-Dependiendo de cómo esté diseñado, podrías usar alguno de los siguientes comandos:
+Depending on how it's designed, you could use any of the following commands:
 
-### Si hay un script de arranque:
+### If there's a startup script:
 
-**Windows (CMD o PowerShell):**
+**Windows (CMD or PowerShell):**
 ```cmd
 run.bat
 ```
@@ -61,18 +62,17 @@ run.bat
 ./setup.sh
 ```
 
-### Si se trata de una app Django:
+### If it's a Django app:
 
 ```bash
 python manage.py runserver
 ```
 
-Esto levantará el servidor local, normalmente accesible en [http://127.0.0.1:8000](http://127.0.0.1:8000).
+This will start the local server, usually accessible at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 ---
 
-## Notas adicionales
+## Additional notes
 
-- Asegúrate de tener Python instalado en tu sistema
-- Si encuentras problemas con permisos en macOS/Linux, es posible que necesites hacer ejecutable el script: `chmod +x setup.sh`
-- Para desactivar el entorno virtual cuando termines, simplemente ejecuta `deactivate` en la terminal
+- Make sure you have Python installed on your system
+- To deactivate the virtual environment when you're done, simply run `deactivate` in the terminal
