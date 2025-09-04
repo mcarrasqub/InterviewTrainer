@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lumo - Entrena Entrevistas con IA{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 2rem;
+        font-weight: 400;
+    }
+
+    .btn-hero {
+        background: white;
+        color: var(--lumo-primary);
+        border: none;
+        border-radius: 30px;
+        padding: 1rem 2.5rem;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-hero:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        color: var(--lumo-primary);
+    }
+
+    .btn-hero.secondary {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-hero.secondary:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+
+    .features-section {
+        padding: 5rem 0;
+        background: var(--lumo-light);
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: none;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--lumo-gradient);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem;
+    }
+
+    .stats-section {
+        background: var(--lumo-gradient);
+        padding: 4rem 0;
+        color: white;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .cta-section {
+        background: white;
+        padding: 5rem 0;
+    }
+
+    .cta-card {
+        background: var(--lumo-gradient);
+        border-radius: 30px;
+        padding: 4rem;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .testimonial-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        height: 100%;
+    }
+
+    .testimonial-avatar {
+        width: 60px;
+        height: 60px;
+        background: var(--lumo-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin: 0 auto 1rem;
+    }
+
+    .floating-elements {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .floating-element {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-element:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .floating-element:nth-child(2) {
+        width: 60px;
+        height: 60px;
+        top: 60%;
+        right: 15%;
+        animation-delay: 2s;
+    }
+
+    .floating-element:nth-child(3) {
+        width: 40px;
+        height: 40px;
+        bottom: 30%;
+        left: 20%;
+        animation-delay: 4s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+        
+        .btn-hero {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .feature-card {
+            padding: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+    
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <div class="hero-content">
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <i class="fas fa-star text-warning me-2"></i>
+                        <span class="text-white-50">Entrenador de Entrevistas #1</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Entrena entrevistas de trabajo 
+                        <span class="text-warning">en tiempo real</span> 
+                        con Inteligencia Artificial
+                    </h1>
+                    <p class="hero-subtitle">
+                        Mejora tus habilidades de entrevista con nuestro entrenador IA personalizado. 
+                        Practica preguntas técnicas, de comportamiento y recibe feedback instantáneo.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'interview_trainer:select_interview_type' %}" class="btn-hero">
+                                <i class="fas fa-rocket me-2"></i>
+                                Ir al Chat
+                            </a>
+                            <a href="{% url 'interview_trainer:profile_settings' %}" class="btn-hero secondary">
+                                <i class="fas fa-cog me-2"></i>
+                                Configuración
+                            </a>
+                        {% else %}
+                            <a href="{% url 'interview_trainer:register' %}" class="btn-hero">
+                                <i class="fas fa-rocket me-2"></i>
+                                Comenzar Gratis
+                            </a>
+                            <a href="{% url 'login' %}" class="btn-hero secondary">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                Iniciar Sesión
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-item">
+                    <div class="stat-number">12K+</div>
+                    <div>Usuarios Activos</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div>Tasa de Éxito</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div>Empresas Confían</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div>Disponibilidad</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="display-4 fw-bold mb-3">¿Por qué elegir Lumo?</h2>
+                <p class="lead text-muted">Nuestro entrenador IA te prepara para cualquier tipo de entrevista con tecnología de vanguardia</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">IA Conversacional</h4>
+                    <p class="text-muted">Interactúa con nuestro entrenador IA que simula entrevistadores reales y adapta las preguntas a tu perfil.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Entrevistas Técnicas</h4>
+                    <p class="text-muted">Practica coding challenges, algoritmos y preguntas técnicas específicas para tu área de especialización.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Preguntas Comportamentales</h4>
+                    <p class="text-muted">Domina las preguntas STAR y desarrolla respuestas convincentes sobre tu experiencia profesional.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Progreso Personalizado</h4>
+                    <p class="text-muted">Guarda tus sesiones y ve tu progreso a lo largo del tiempo con análisis detallado.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="display-5 fw-bold mb-3">Lo que dicen nuestros usuarios</h2>
+                <p class="lead text-muted">Miles de profesionales han mejorado sus habilidades con Lumo</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <p class="mb-3">"Lumo me ayudó a conseguir mi trabajo soñado en Google. Las preguntas técnicas eran exactamente como las reales."</p>
+                    <h6 class="fw-bold">María González</h6>
+                    <small class="text-muted">Software Engineer</small>
+                </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <p class="mb-3">"El feedback instantáneo me permitió mejorar mis respuestas comportamentales. ¡Increíble herramienta!"</p>
+                    <h6 class="fw-bold">Carlos Rodríguez</h6>
+                    <small class="text-muted">Product Manager</small>
+                </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <p class="mb-3">"Practiqué durante una semana y noté una mejora enorme en mi confianza durante las entrevistas."</p>
+                    <h6 class="fw-bold">Ana Martínez</h6>
+                    <small class="text-muted">UX Designer</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card" data-aos="zoom-in">
+            <div style="position: relative; z-index: 2;">
+                <h2 class="display-4 fw-bold mb-4">¿Listo para tu próxima entrevista?</h2>
+                <p class="lead mb-4">Únete a miles de profesionales que han mejorado sus habilidades de entrevista con Lumo</p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'interview_trainer:select_interview_type' %}" class="btn btn-light btn-lg px-5 py-3 fw-bold">
+                        <i class="fas fa-comments me-2"></i>
+                        Ir al Chat
+                    </a>
+                {% else %}
+                    <a href="{% url 'interview_trainer:register' %}" class="btn btn-light btn-lg px-5 py-3 fw-bold">
+                        <i class="fas fa-rocket me-2"></i>
+                        Comenzar Ahora Gratis
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+
+    // Counter animation
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+            const increment = target / 100;
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    counter.textContent = counter.textContent.replace(/\d+/, target);
+                    clearInterval(timer);
+                } else {
+                    counter.textContent = counter.textContent.replace(/\d+/, Math.floor(current));
+                }
+            }, 20);
+        });
+    }
+
+    // Trigger counter animation when stats section is visible
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounters();
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+        observer.observe(statsSection);
+    }
+</script>
+{% endblock %}

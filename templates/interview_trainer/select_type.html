@@ -1,0 +1,405 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Seleccionar Tipo de Entrevista - Lumo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .selection-container {
+        max-width: 800px;
+        margin: 3rem auto;
+        padding: 2rem;
+    }
+
+    .selection-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .selection-header h2 {
+        background: var(--lumo-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .interview-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .interview-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        position: relative;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .interview-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .interview-card.selected {
+        border-color: var(--lumo-primary);
+        background: linear-gradient(135deg, #f8f9ff 0%, #e8edff 100%);
+    }
+
+    .interview-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--lumo-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .interview-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+    }
+
+    .interview-description {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .interview-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .interview-features li {
+        color: #475569;
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .interview-features li::before {
+        content: "✓";
+        color: var(--lumo-primary);
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+
+    .form-section {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-top: 2rem;
+    }
+
+    .session-title-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .session-title-input:focus {
+        outline: none;
+        border-color: var(--lumo-primary);
+    }
+
+    .start-btn {
+        background: var(--lumo-gradient);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .start-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+    }
+
+    .start-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .recommended-badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: #10b981;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .selection-container {
+            margin: 1rem;
+            padding: 1rem;
+        }
+        
+        .interview-types {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="selection-container">
+    <div class="selection-header">
+        <h2><i class="fas fa-robot me-2"></i>¿Qué tipo de entrevista quieres practicar?</h2>
+        <p class="text-muted">Selecciona el tipo de entrevista para que Lumo se prepare adecuadamente</p>
+    </div>
+
+    <form method="POST" id="interviewForm">
+        {% csrf_token %}
+        
+        <div class="interview-types">
+            {% for type_code, type_name in interview_types %}
+            <div class="interview-card" data-type="{{ type_code }}" onclick="selectType('{{ type_code }}')">
+                {% if type_code == profile.preferred_interview_type %}
+                <div class="recommended-badge">Recomendado</div>
+                {% endif %}
+                
+                {% if type_code == 'operations' %}
+                <div class="interview-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="interview-title">Operaciones y Producción</div>
+                <div class="interview-description">
+                    Gestión de procesos, optimización operativa y supervisión de producción.
+                </div>
+                <ul class="interview-features">
+                    <li>Gestión de procesos y flujos</li>
+                    <li>Control de calidad y eficiencia</li>
+                    <li>Optimización de recursos</li>
+                    <li>Resolución de problemas operativos</li>
+                </ul>
+                
+                {% elif type_code == 'sales_marketing' %}
+                <div class="interview-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="interview-title">Ventas y Marketing</div>
+                <div class="interview-description">
+                    Estrategias comerciales, desarrollo de mercado y gestión de clientes.
+                </div>
+                <ul class="interview-features">
+                    <li>Técnicas de venta y negociación</li>
+                    <li>Estrategias de marketing digital</li>
+                    <li>Análisis de mercado y competencia</li>
+                    <li>Gestión de relaciones con clientes</li>
+                </ul>
+                
+                {% elif type_code == 'finance' %}
+                <div class="interview-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="interview-title">Finanzas y Administración</div>
+                <div class="interview-description">
+                    Gestión financiera, análisis contable y administración empresarial.
+                </div>
+                <ul class="interview-features">
+                    <li>Análisis financiero y presupuestos</li>
+                    <li>Contabilidad y reportes</li>
+                    <li>Gestión de riesgos financieros</li>
+                    <li>Planificación estratégica</li>
+                </ul>
+                
+                {% elif type_code == 'hr' %}
+                <div class="interview-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="interview-title">Recursos Humanos</div>
+                <div class="interview-description">
+                    Gestión del talento, desarrollo organizacional y cultura empresarial.
+                </div>
+                <ul class="interview-features">
+                    <li>Reclutamiento y selección</li>
+                    <li>Desarrollo y capacitación</li>
+                    <li>Gestión del desempeño</li>
+                    <li>Cultura organizacional</li>
+                </ul>
+                
+                {% elif type_code == 'it' %}
+                <div class="interview-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div class="interview-title">Tecnología de la Información</div>
+                <div class="interview-description">
+                    Desarrollo de software, infraestructura tecnológica y sistemas.
+                </div>
+                <ul class="interview-features">
+                    <li>Programación y desarrollo</li>
+                    <li>Arquitectura de sistemas</li>
+                    <li>Seguridad informática</li>
+                    <li>Gestión de proyectos tecnológicos</li>
+                </ul>
+                
+                {% elif type_code == 'rd' %}
+                <div class="interview-icon">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <div class="interview-title">Investigación y Desarrollo</div>
+                <div class="interview-description">
+                    Innovación, investigación científica y desarrollo de nuevos productos.
+                </div>
+                <ul class="interview-features">
+                    <li>Metodología de investigación</li>
+                    <li>Innovación y creatividad</li>
+                    <li>Gestión de proyectos I+D</li>
+                    <li>Análisis y validación de resultados</li>
+                </ul>
+                
+                {% elif type_code == 'customer_support' %}
+                <div class="interview-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="interview-title">Atención al Cliente</div>
+                <div class="interview-description">
+                    Servicio al cliente, soporte técnico y gestión de experiencias.
+                </div>
+                <ul class="interview-features">
+                    <li>Comunicación efectiva</li>
+                    <li>Resolución de problemas</li>
+                    <li>Gestión de quejas y reclamos</li>
+                    <li>Orientación al servicio</li>
+                </ul>
+                
+                {% elif type_code == 'management' %}
+                <div class="interview-icon">
+                    <i class="fas fa-chess-king"></i>
+                </div>
+                <div class="interview-title">Dirección General</div>
+                <div class="interview-description">
+                    Liderazgo estratégico, toma de decisiones y gestión organizacional.
+                </div>
+                <ul class="interview-features">
+                    <li>Liderazgo y visión estratégica</li>
+                    <li>Toma de decisiones complejas</li>
+                    <li>Gestión del cambio</li>
+                    <li>Desarrollo organizacional</li>
+                </ul>
+                
+                {% elif type_code == 'health' %}
+                <div class="interview-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="interview-title">Salud y Medicina</div>
+                <div class="interview-description">
+                    Atención médica, diagnóstico clínico y gestión sanitaria.
+                </div>
+                <ul class="interview-features">
+                    <li>Conocimientos médicos especializados</li>
+                    <li>Ética y responsabilidad profesional</li>
+                    <li>Comunicación con pacientes</li>
+                    <li>Trabajo en equipo multidisciplinario</li>
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-section">
+            <label for="session_title" class="form-label fw-bold">
+                <i class="fas fa-tag me-2"></i>Título de la sesión (opcional)
+            </label>
+            <input type="text" 
+                   name="session_title" 
+                   id="session_title"
+                   class="session-title-input" 
+                   placeholder="Ej: Entrevista para desarrollador senior en startup"
+                   maxlength="200">
+            
+            <input type="hidden" name="interview_type" id="selected_type" value="{{ profile.preferred_interview_type }}">
+            
+            <button type="submit" class="start-btn" id="startBtn">
+                <i class="fas fa-rocket me-2"></i>
+                Iniciar Entrevista
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let selectedType = '{{ profile.preferred_interview_type }}';
+    
+    function selectType(type) {
+        // Remover selección anterior
+        document.querySelectorAll('.interview-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        // Seleccionar nuevo tipo
+        document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+        document.getElementById('selected_type').value = type;
+        selectedType = type;
+        
+        // Actualizar título automático si está vacío
+        const titleInput = document.getElementById('session_title');
+        if (!titleInput.value.trim()) {
+            const typeNames = {
+                'operations': 'Entrevista para Operaciones y Producción',
+                'sales_marketing': 'Entrevista para Ventas y Marketing',
+                'finance': 'Entrevista para Finanzas y Administración',
+                'hr': 'Entrevista para Recursos Humanos',
+                'it': 'Entrevista para Tecnología de la Información',
+                'rd': 'Entrevista para Investigación y Desarrollo',
+                'customer_support': 'Entrevista para Atención al Cliente',
+                'management': 'Entrevista para Dirección General',
+                'health': 'Entrevista para Salud y Medicina'
+            };
+            titleInput.placeholder = `${typeNames[type]} - ${new Date().toLocaleDateString()}`;
+        }
+    }
+    
+    // Seleccionar tipo preferido al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        if (selectedType) {
+            selectType(selectedType);
+        }
+    });
+    
+    // Validar formulario
+    document.getElementById('interviewForm').addEventListener('submit', function(e) {
+        if (!selectedType) {
+            e.preventDefault();
+            alert('Por favor selecciona un tipo de entrevista');
+            return false;
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,698 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lumo - Chat{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+        height: 80vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-header {
+        background: var(--lumo-gradient);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+        flex-shrink: 0; /* No se encoge */
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 1.5rem;
+        overflow-y: auto; /* ✅ SCROLL VERTICAL */
+        overflow-x: hidden;
+        background: #f8f9fa;
+        max-height: calc(80vh - 200px); /* ✅ ALTURA MÁXIMA DEFINIDA */
+        min-height: 300px;
+    }
+
+    /* ✅ PERSONALIZAR SCROLLBAR */
+    .chat-messages::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+        background: var(--lumo-primary);
+        border-radius: 10px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb:hover {
+        background: var(--lumo-secondary);
+    }
+
+    .message {
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: flex-start;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+        justify-content: flex-end;
+    }
+
+    .message.ai {
+        justify-content: flex-start;
+    }
+
+    .message-content {
+        max-width: 70%;
+        padding: 1rem 1.25rem;
+        border-radius: 18px;
+        white-space: pre-wrap;
+        word-wrap: break-word; /* ✅ ROMPE PALABRAS LARGAS */
+        line-height: 1.5;
+    }
+
+    .message.user .message-content {
+        background: var(--lumo-gradient);
+        color: white;
+        border-bottom-right-radius: 5px;
+    }
+
+    .message.ai .message-content {
+        background: white;
+        color: var(--lumo-dark);
+        border: 1px solid #e2e8f0;
+        border-bottom-left-radius: 5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .message-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 10px;
+        font-size: 14px;
+        flex-shrink: 0; /* ✅ NO SE ENCOGE */
+    }
+
+    .message.user .message-avatar {
+        background: var(--lumo-primary);
+        color: white;
+        order: 2;
+    }
+
+    .message.ai .message-avatar {
+        background: var(--lumo-gradient);
+        color: white;
+    }
+
+    .chat-input-container {
+        padding: 1.5rem;
+        background: white;
+        border-top: 1px solid #e2e8f0;
+        flex-shrink: 0; /* ✅ NO SE ENCOGE */
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .form-control {
+        border-radius: 25px;
+        border: 2px solid #e2e8f0;
+        padding: 0.75rem 1.25rem;
+        padding-right: 60px;
+        resize: none;
+    }
+
+    .form-control:focus {
+        border-color: var(--lumo-primary);
+        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+    }
+
+    .send-btn {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--lumo-gradient);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .send-btn:hover {
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    .send-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: translateY(-50%);
+    }
+
+    .typing-indicator {
+        display: none;
+        padding: 1rem 1.25rem;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        border-bottom-left-radius: 5px;
+        max-width: 70%;
+    }
+
+    .typing-dots {
+        display: flex;
+        gap: 4px;
+    }
+
+    .typing-dots span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--lumo-primary);
+        animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typing {
+        0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+        40% { transform: scale(1); opacity: 1; }
+    }
+
+    .sidebar {
+        width: 300px;
+        background: white;
+        border-right: 1px solid #e2e8f0;
+        padding: 1rem;
+        overflow-y: auto; /* ✅ SCROLL EN SIDEBAR */
+        max-height: calc(80vh - 100px);
+        flex-shrink: 0;
+    }
+
+    /* ✅ SCROLLBAR PARA SIDEBAR */
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: #f8f9fa;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: #dee2e6;
+        border-radius: 3px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #adb5bd;
+    }
+
+    .session-item {
+        padding: 0.75rem;
+        border-radius: 10px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+
+    .session-item:hover {
+        background: var(--lumo-light);
+        border-color: var(--lumo-primary);
+        transform: translateX(5px);
+    }
+
+    .session-item.active {
+        background: var(--lumo-primary);
+        color: white;
+        transform: translateX(5px);
+    }
+
+    .session-item .session-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .session-item .session-date {
+        font-size: 0.8rem;
+        opacity: 0.8;
+    }
+
+    .welcome-message {
+        text-align: center;
+        padding: 2rem;
+        color: #64748b;
+    }
+
+    .welcome-message i {
+        font-size: 3rem;
+        color: var(--lumo-primary);
+        margin-bottom: 1rem;
+    }
+
+    /* ✅ RESPONSIVE MEJORADO */
+    @media (max-width: 768px) {
+        .chat-container {
+            margin: 1rem;
+            height: 85vh;
+        }
+        
+        .sidebar {
+            display: none;
+        }
+
+        .message-content {
+            max-width: 85%;
+        }
+
+        .chat-messages {
+            max-height: calc(85vh - 180px);
+        }
+    }
+
+    /* ✅ INDICADOR DE SCROLL */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 80px;
+        right: 20px;
+        background: var(--lumo-primary);
+        color: white;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 1000;
+    }
+
+    .scroll-indicator.show {
+        display: flex;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <h3><i class="fas fa-robot me-2"></i>Lumo Interview Trainer</h3>
+            <p>Hola {{ user.first_name|default:user.username }}, ¡listo para entrenar!</p>
+        </div>
+
+        <div class="d-flex" style="flex: 1; overflow: hidden;">
+            <!-- Sidebar con sesiones -->
+            <div class="sidebar d-none d-md-block">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Sesiones Recientes</h6>
+                    <span class="badge bg-primary">{{ sessions|length }}</span>
+                </div>
+                <div id="sessionsList">
+                    {% for session in sessions %}
+                        <div class="session-item" data-session-id="{{ session.id }}" onclick="loadSession(this.dataset.sessionId)">
+                            <div class="session-title">{{ session.title|truncatechars:25 }}</div>
+                            <div class="session-date">{{ session.created_at|date:"d/m/Y H:i" }}</div>
+                            <small class="text-muted">{{ session.session_type|title }}</small>
+                        </div>
+                    {% empty %}
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-inbox fa-2x mb-2"></i>
+                            <p>No hay sesiones aún</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="btn btn-outline-primary btn-sm mt-3 w-100" onclick="startNewSession()">
+                    <i class="fas fa-plus me-2"></i>Nueva Sesión
+                </button>
+            </div>
+            <!-- Chat Messages Container -->
+            <div class="position-relative flex-fill">
+                <div class="chat-messages" id="chatMessages">
+                    {% if current_session and current_session.messages.all %}
+                        <!-- ✅ MOSTRAR MENSAJES EXISTENTES DE LA SESIÓN -->
+                        {% for message in current_session.messages.all %}
+                            <div class="message {% if message.is_user %}user{% else %}ai{% endif %}">
+                                <div class="message-avatar">
+                                    <i class="fas fa-{% if message.is_user %}user{% else %}robot{% endif %}"></i>
+                                </div>
+                                <div class="message-content">
+                                    {{ message.content }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Mensaje de bienvenida solo si NO hay sesión actual -->
+                        <div class="welcome-message">
+                            <i class="fas fa-comments"></i>
+                            <h4>¡Bienvenido de vuelta!</h4>
+                            <p class="text-muted">Selecciona una sesión anterior o comienza una nueva conversación.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Scroll Indicator -->
+                <div class="scroll-indicator" id="scrollIndicator" onclick="scrollToBottom()">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="message ai" id="typingIndicator" style="display: none; margin: 0 1.5rem;">
+            <div class="message-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="typing-indicator">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <div class="input-group">
+                <input type="text" class="form-control" id="messageInput" 
+                       placeholder="Escribe tu mensaje aquí..." 
+                       onkeypress="handleKeyPress(event)">
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- ✅ SOLUCIÓN: Pasar datos desde template a JavaScript de forma segura -->
+<script id="session-data" type="application/json">
+{
+    "currentSessionId": {% if current_session %}{{ current_session.id }}{% else %}null{% endif %},
+    "hasCurrentSession": {% if current_session %}true{% else %}false{% endif %},
+    "hasMessages": {% if current_session and current_session.messages.all %}true{% else %}false{% endif %},
+    "messageCount": {% if current_session %}{{ current_session.messages.count }}{% else %}0{% endif %}
+}
+</script>
+
+<script>
+    // ✅ Leer datos del template sin errores de linting
+    const sessionData = JSON.parse(document.getElementById('session-data').textContent);
+    let currentSessionId = sessionData.currentSessionId;
+    
+    const chatMessages = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const scrollIndicator = document.getElementById('scrollIndicator');
+
+    // ✅ MANEJO DE SCROLL MEJORADO
+    let isUserScrolling = false;
+    let scrollTimeout;
+
+    chatMessages.addEventListener('scroll', function() {
+        isUserScrolling = true;
+        clearTimeout(scrollTimeout);
+        
+        // Mostrar/ocultar indicador de scroll
+        const isAtBottom = chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 50;
+        
+        if (isAtBottom) {
+            scrollIndicator.classList.remove('show');
+        } else {
+            scrollIndicator.classList.add('show');
+        }
+        
+        scrollTimeout = setTimeout(() => {
+            isUserScrolling = false;
+        }, 1000);
+    });
+
+    // CSRF Token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    function addMessage(content, isUser = false, animate = true) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+        
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas fa-${isUser ? 'user' : 'robot'}"></i>
+            </div>
+            <div class="message-content">
+                ${content}
+            </div>
+        `;
+        
+        chatMessages.appendChild(messageDiv);
+        
+        // ✅ SCROLL INTELIGENTE
+        if (!isUserScrolling || isUser) {
+            scrollToBottom(animate);
+        }
+    }
+
+    function scrollToBottom(smooth = true) {
+        if (smooth) {
+            chatMessages.scrollTo({
+                top: chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+        } else {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        scrollIndicator.classList.remove('show');
+    }
+
+    function showTyping() {
+        typingIndicator.style.display = 'flex';
+        if (!isUserScrolling) {
+            scrollToBottom();
+        }
+    }
+
+    function hideTyping() {
+        typingIndicator.style.display = 'none';
+    }
+
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-danger mx-3 my-2';
+        errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>${message}`;
+        chatMessages.appendChild(errorDiv);
+        
+        if (!isUserScrolling) {
+            scrollToBottom();
+        }
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 5000);
+    }
+
+    async function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        // ✅ Verificar que hay una sesión activa
+        if (!currentSessionId) {
+            showError('Primero debes seleccionar un tipo de entrevista.');
+            setTimeout(() => {
+                window.location.href = "{% url 'interview_trainer:select_interview_type' %}";
+            }, 2000);
+            return;
+        }
+
+        // Disable input
+        messageInput.disabled = true;
+        sendBtn.disabled = true;
+
+        // Add user message
+        addMessage(message, true);
+        messageInput.value = '';
+
+        // Show typing
+        showTyping();
+
+        try {
+            const response = await fetch('/api/send-message/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    message: message,
+                    session_id: currentSessionId
+                })
+            });
+
+            const data = await response.json();
+
+            hideTyping();
+
+            if (data.success && data.ai_response && data.ai_response.content) {
+                addMessage(data.ai_response.content, false);
+            } else {
+                showError(data.error || 'Error enviando mensaje');
+            }
+
+        } catch (error) {
+            hideTyping();
+            showError('Error de conexión. Intenta de nuevo.');
+            console.error('Error:', error);
+        } finally {
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    }
+
+    function startNewSession() {
+        // ✅ Redirigir a selección de tipo en lugar de limpiar chat
+        window.location.href = "{% url 'interview_trainer:select_interview_type' %}";
+    }
+
+    async function loadSession(sessionId) {
+        try {
+            // Ensure sessionId is a number
+            sessionId = parseInt(sessionId);
+            
+            // Show loading
+            chatMessages.innerHTML = `
+                <div class="text-center p-4">
+                    <i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i>
+                    <h4>Cargando sesión...</h4>
+                </div>
+            `;
+
+            const response = await fetch(`/api/sessions/${sessionId}/messages/`);
+            const data = await response.json();
+
+            currentSessionId = sessionId;
+            chatMessages.innerHTML = '';
+
+            // Load messages with animation delay
+            data.messages.forEach((message, index) => {
+                setTimeout(() => {
+                    addMessage(message.content, message.is_user, false);
+                }, index * 50); // 50ms delay between messages
+            });
+
+            // Update active session in sidebar
+            document.querySelectorAll('.session-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const sessionElement = document.querySelector(`[data-session-id="${sessionId}"]`);
+            if (sessionElement) {
+                sessionElement.classList.add('active');
+            }
+
+            // Scroll to bottom after loading
+            setTimeout(() => {
+                scrollToBottom(true);
+            }, data.messages.length * 50 + 100);
+
+        } catch (error) {
+            showError('Error cargando sesión');
+            console.error('Error:', error);
+        }
+    }
+
+    // Focus input on load and auto-scroll if there are messages
+    window.addEventListener('load', () => {
+        messageInput.focus();
+        
+        // ✅ Verificar si hay una sesión activa con mensajes usando datos del template
+        const hasCurrentSession = sessionData.hasCurrentSession;
+        const hasMessages = sessionData.hasMessages;
+        const messageCount = sessionData.messageCount;
+        
+        if (hasCurrentSession && hasMessages && messageCount > 0) {
+            // Pequeño delay para asegurar que el DOM esté completamente renderizado
+            setTimeout(() => {
+                scrollToBottom(false); // Sin animación al cargar
+                console.log(`Auto-scroll ejecutado para sesión con ${messageCount} mensajes`);
+            }, 200); // Aumenté el delay a 200ms para mejor estabilidad
+        } else {
+            // Si no hay sesión activa o mensajes, scroll normal
+            setTimeout(() => {
+                scrollToBottom(false);
+            }, 100);
+        }
+    });
+
+    // ✅ KEYBOARD SHORTCUTS
+    document.addEventListener('keydown', function(event) {
+        // Ctrl/Cmd + Enter para enviar
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            sendMessage();
+        }
+        
+        // Escape para nueva sesión
+        if (event.key === 'Escape') {
+            startNewSession();
+        }
+    });
+</script>
+{% endblock %}

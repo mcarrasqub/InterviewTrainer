@@ -1,0 +1,170 @@
+{% extends 'evaluation/base_evaluation.html' %}
+
+{% block title %}Feedback - {{ session.title }} - Lumo{% endblock %}
+
+{% block evaluation_content %}
+<!-- Back Button -->
+<a href="{% url 'interview_trainer:session_detail' session.id %}" class="back-btn">
+    <i class="fas fa-arrow-left"></i>
+    Volver a la Sesión
+</a>
+
+<div class="evaluation-card">
+    <!-- Header -->
+    <div class="evaluation-header">
+        <h2><i class="fas fa-chart-bar me-2"></i>Evaluación de {{ session.title }}</h2>
+        <p class="mb-0">{{ session.get_session_type_display }} • {{ generated_at|date:"d/m/Y H:i" }}</p>
+    </div>
+
+    <!-- Overall Score -->
+    <div class="p-4 text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="score-card">
+                    <div class="score-circle 
+                        {% if performance_class == 'success' %}score-excellent
+                        {% elif performance_class == 'info' %}score-good
+                        {% elif performance_class == 'warning' %}score-average
+                        {% else %}score-poor{% endif %}">
+                        {{ average_score|floatformat:1 }}/10
+                    </div>
+                    <h4>{{ performance_level }}</h4>
+                    <p class="text-muted">Puntuación General</p>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar bg-{{ performance_class }}" 
+                             data-width="{{ average_percentage }}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Session Stats -->
+    <div class="row text-center p-4 border-top">
+        <div class="col-6 col-md-3">
+            <div class="fw-bold text-primary fs-4">{{ user_messages }}</div>
+            <small class="text-muted">Tus Respuestas</small>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="fw-bold text-info fs-4">{{ ai_messages }}</div>
+            <small class="text-muted">Preguntas Lumo</small>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="fw-bold text-success fs-4">{{ session_duration_minutes }}min</div>
+            <small class="text-muted">Duración</small>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="fw-bold text-warning fs-4">{{ questions_count }}</div>
+            <small class="text-muted">Preguntas Analizadas</small>
+        </div>
+    </div>
+</div>
+
+<!-- Overall Feedback -->
+<div class="evaluation-card">
+    <div class="p-4">
+        <h3><i class="fas fa-comments me-2"></i>Feedback General</h3>
+        <div class="alert alert-light border-start border-primary border-4 p-3">
+            <p class="mb-0">{{ feedback_report.overall_feedback }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Competency Scores -->
+<div class="evaluation-card">
+    <div class="p-4">
+        <h3><i class="fas fa-star me-2"></i>Análisis por Competencias</h3>
+        
+        <div class="row g-4">
+            {% for competency in competency_data %}
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">{{ competency.name }}</h5>
+                            <span class="badge 
+                                {% if competency.score >= 8 %}bg-success
+                                {% elif competency.score >= 6 %}bg-info
+                                {% elif competency.score >= 4 %}bg-warning
+                                {% else %}bg-danger{% endif %} fs-6">
+                                {{ competency.score }}/10
+                            </span>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div class="competency-bar">
+                            <div class="competency-progress 
+                                {% if competency.score >= 8 %}bg-success
+                                {% elif competency.score >= 6 %}bg-info
+                                {% elif competency.score >= 4 %}bg-warning
+                                {% else %}bg-danger{% endif %}"
+                                data-width="{{ competency.percentage }}">
+                            </div>
+                        </div>
+                        
+                        <!-- Feedback -->
+                        <div class="mb-3">
+                            <h6 class="text-primary">💬 Observaciones:</h6>
+                            <p class="small mb-0">{{ competency.feedback }}</p>
+                        </div>
+                        
+                        <!-- Example -->
+                        {% if competency.examples %}
+                        <div class="mb-3">
+                            <h6 class="text-success">✅ Ejemplo destacado:</h6>
+                            <p class="small mb-0 fst-italic">"{{ competency.examples }}"</p>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Improvement -->
+                        {% if competency.improvement_areas %}
+                        <div>
+                            <h6 class="text-warning">🎯 Área de mejora:</h6>
+                            <p class="small mb-0">{{ competency.improvement_areas }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Actions -->
+<div class="text-center mb-4">
+    <a href="{% url 'interview_trainer:select_interview_type' %}" class="btn btn-primary btn-lg me-3">
+        <i class="fas fa-plus me-2"></i>Nueva Entrevista
+    </a>
+    <a href="{% url 'evaluation:user_dashboard' %}" class="btn btn-outline-primary btn-lg">
+        <i class="fas fa-chart-line me-2"></i>Ver Progreso
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animar las barras de progreso al cargar
+    window.addEventListener('load', function() {
+        // Animación para barra principal
+        const mainProgressBar = document.querySelector('.progress-bar');
+        if (mainProgressBar) {
+            const width = mainProgressBar.getAttribute('data-width');
+            mainProgressBar.style.width = '0%';
+            setTimeout(() => {
+                mainProgressBar.style.width = width + '%';
+            }, 300);
+        }
+        
+        // Animación para barras de competencias
+        const progressBars = document.querySelectorAll('.competency-progress');
+        progressBars.forEach((bar, index) => {
+            const width = bar.getAttribute('data-width');
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = width + '%';
+            }, 300 + (index * 100));
+        });
+    });
+</script>
+{% endblock %}

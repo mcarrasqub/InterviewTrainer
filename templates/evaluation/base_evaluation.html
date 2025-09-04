@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --evaluation-primary: #4F46E5;
+        --evaluation-success: #10B981;
+        --evaluation-warning: #F59E0B;
+        --evaluation-danger: #EF4444;
+        --evaluation-info: #3B82F6;
+    }
+
+    .evaluation-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .evaluation-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .evaluation-header {
+        background: var(--lumo-gradient);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .score-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .score-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .score-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .score-excellent { background: var(--evaluation-success); }
+    .score-good { background: var(--evaluation-info); }
+    .score-average { background: var(--evaluation-warning); }
+    .score-poor { background: var(--evaluation-danger); }
+
+    .competency-bar {
+        background: #f3f4f6;
+        border-radius: 10px;
+        overflow: hidden;
+        height: 20px;
+        margin-bottom: 1rem;
+    }
+
+    .competency-progress {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.8s ease;
+        width: 0%;
+    }
+
+    .progress-bar {
+        transition: width 0.8s ease;
+        width: 0%;
+    }
+
+    .back-btn {
+        background: white;
+        color: var(--lumo-primary);
+        border: 2px solid var(--lumo-primary);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+        background: var(--lumo-primary);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .evaluation-container {
+            margin: 1rem;
+            padding: 0.5rem;
+        }
+        
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="evaluation-container">
+    {% block evaluation_content %}{% endblock %}
+</div>
+{% endblock %}
