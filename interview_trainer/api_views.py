@@ -5,7 +5,162 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import InterviewSession, ChatMessage, UserProfile
 from .services import GeminiService
+from asgiref.sync import sync_to_async
 import asyncio
+import logging
+
+# Importar servicio de evaluación para generación automática
+try:
+    from evaluation.services import EvaluationService
+    EVALUATION_AVAILABLE = True
+except ImportError:
+    EVALUATION_AVAILABLE = False
+    
+logger = logging.getLogger(__name__)
+
+# Funciones async para operaciones de base de datos
+@sync_to_async
+def create_user_message(session, content):
+    return ChatMessage.objects.create(
+        session=session,
+        is_user=True,
+        content=content
+    )
+
+@sync_to_async
+def create_ai_message(session, content):
+    return ChatMessage.objects.create(
+        session=session,
+        is_user=False,
+        content=content
+    )
+
+@sync_to_async
+def get_conversation_history(session):
+    """Obtener historial de conversación excluyendo el último mensaje"""
+    all_messages = list(session.messages.order_by('timestamp'))
+    conversation_history = []
+    
+    # Todos los mensajes excepto el último (que será el mensaje actual del usuario)
+    for msg in all_messages[:-1]:
+        conversation_history.append({
+            'is_user': msg.is_user,
+            'content': msg.content
+        })
+    
+    return conversation_history
+
+@sync_to_async
+def update_user_profile(user):
+    profile, created = UserProfile.objects.get_or_create(user=user)
+    profile.total_sessions = InterviewSession.objects.filter(user=user).count()
+    profile.save()
+    return profile
+
+async def handle_evaluation_generation(session):
+    """Maneja la generación automática de evaluación"""
+    if not EVALUATION_AVAILABLE:
+        return None
+        
+    try:
+        evaluation_service = EvaluationService()
+        
+        # Verificar si la sesión puede ser evaluada
+        can_eval = await evaluation_service.can_generate_evaluation(session)
+        
+        if can_eval['can_generate']:
+            logger.info(f"🎯 Generando evaluación automática para sesión {session.id}")
+            
+            # Verificar si ya existe evaluación usando sync_to_async
+            has_evaluation = await sync_to_async(
+                lambda: hasattr(session, 'feedback_report') and session.feedback_report
+            )()
+            
+            if not has_evaluation:
+                # Generar evaluación automáticamente
+                evaluation_result = await evaluation_service.generate_session_evaluation(session)
+                
+                if evaluation_result['success']:
+                    evaluation_data = {
+                        'evaluation_generated': True,
+                        'average_score': evaluation_result['average_score'],
+                        'performance_level': evaluation_result['performance_level']
+                    }
+                    logger.info(f"✅ Evaluación generada: {evaluation_result['average_score']}/10")
+                    return evaluation_data
+                else:
+                    logger.error(f"❌ Error generando evaluación: {evaluation_result.get('error', 'Unknown')}")
+            else:
+                logger.info(f"📊 Evaluación ya existe para sesión {session.id}")
+        else:
+            logger.info(f"⏳ Sesión {session.id} no lista para evaluación: {can_eval['reason']}")
+        
+        return None
+        
+    except Exception as e:
+        logger.error(f"❌ Error en evaluación automática: {str(e)}")
+        return {'evaluation_error': str(e)}
+
+async def process_message_async(user, message, session_id):
+    """Procesa el mensaje de forma asíncrona"""
+    try:
+        # Obtener sesión usando sync_to_async
+        session = await sync_to_async(
+            lambda: InterviewSession.objects.get(id=session_id, user=user)
+        )()
+        
+        # Guardar mensaje del usuario
+        user_message = await create_user_message(session, message)
+        
+        # Obtener historial de conversación
+        conversation_history = await get_conversation_history(session)
+        
+        # Debug logging
+        logger.info(f"📤 Enviando a Gemini:")
+        logger.info(f"   • Mensaje actual: '{message[:50]}...'")
+        logger.info(f"   • Historial: {len(conversation_history)} mensajes")
+        if conversation_history:
+            last_sender = 'Usuario' if conversation_history[-1]['is_user'] else 'Lumo'
+            logger.info(f"   • Último en historial: {last_sender}")
+        else:
+            logger.info(f"   • Historial vacío")
+        
+        # Generar respuesta
+        gemini_service = GeminiService()
+        ai_response = await gemini_service.generate_response(
+            message=message,
+            conversation_history=conversation_history,
+            interview_type=session.session_type
+        )
+        
+        # Guardar respuesta de IA
+        ai_message = await create_ai_message(session, ai_response)
+        
+        # Manejar evaluación automática
+        evaluation_data = await handle_evaluation_generation(session)
+        
+        # Actualizar perfil de usuario
+        await update_user_profile(user)
+        
+        return {
+            'success': True,
+            'session_id': session.id,
+            'user_message': {
+                'id': user_message.id,
+                'content': user_message.content,
+                'timestamp': user_message.timestamp.isoformat()
+            },
+            'ai_response': {
+                'id': ai_message.id,
+                'content': ai_message.content,
+                'timestamp': ai_message.timestamp.isoformat()
+            },
+            'evaluation': evaluation_data
+        }
+        
+    except Exception as e:
+        logger.error(f"Error en process_message_async: {str(e)}")
+        raise e
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -22,70 +177,19 @@ def send_message(request):
         if not message:
             return Response({'error': 'Mensaje vacío'}, status=status.HTTP_400_BAD_REQUEST)
         
-        # La sesión debe existir (creada previamente en select_interview_type)
         if not session_id:
             return Response({'error': 'ID de sesión requerido'}, status=status.HTTP_400_BAD_REQUEST)
         
-        session = get_object_or_404(InterviewSession, id=session_id, user=request.user)
-        
-        # Guardar mensaje del usuario
-        user_message = ChatMessage.objects.create(
-            session=session,
-            is_user=True,
-            content=message
-        )
-        
-        # Obtener historial de conversación
-        conversation_history = []
-        recent_messages = session.messages.order_by('timestamp')[:20]
-        for msg in recent_messages:
-            conversation_history.append({
-                'is_user': msg.is_user,
-                'content': msg.content
-            })
-        
-        # ✅ Usar TU servicio centralizado (sin API key del usuario)
-        gemini_service = GeminiService()
-        
+        # Procesar mensaje de forma asíncrona
         try:
-            # Generar respuesta
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            ai_response = loop.run_until_complete(
-                gemini_service.generate_response(
-                    message=message,
-                    conversation_history=conversation_history[:-1],
-                    interview_type=session.session_type
-                )
+            result = loop.run_until_complete(
+                process_message_async(request.user, message, session_id)
             )
             loop.close()
             
-            # Guardar respuesta de IA
-            ai_message = ChatMessage.objects.create(
-                session=session,
-                is_user=False,
-                content=ai_response
-            )
-            
-            # Actualizar contador
-            profile, created = UserProfile.objects.get_or_create(user=request.user)
-            profile.total_sessions = InterviewSession.objects.filter(user=request.user).count()
-            profile.save()
-            
-            return Response({
-                'success': True,
-                'session_id': session.id,
-                'user_message': {
-                    'id': user_message.id,
-                    'content': user_message.content,
-                    'timestamp': user_message.timestamp.isoformat()
-                },
-                'ai_response': {
-                    'id': ai_message.id,
-                    'content': ai_message.content,
-                    'timestamp': ai_message.timestamp.isoformat()
-                }
-            })
+            return Response(result)
             
         except Exception as e:
             return Response({
