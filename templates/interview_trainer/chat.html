@@ -319,6 +319,34 @@
         40% { transform: translateY(-10px); }
         60% { transform: translateY(-5px); }
     }
+
+    /* 🎉 ESTILOS PARA NOTIFICACIÓN DE EVALUACIÓN */
+    .evaluation-notification {
+        border-left: 5px solid #28a745;
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        animation: slideInUp 0.5s ease-out;
+    }
+
+    @keyframes slideInUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .evaluation-notification h5 {
+        color: #155724;
+        font-weight: 600;
+    }
+
+    .evaluation-notification p {
+        color: #155724;
+        margin-bottom: 0.5rem;
+    }
 </style>
 {% endblock %}
 
@@ -542,6 +570,45 @@
         }, 5000);
     }
 
+    function showEvaluationNotification(evaluationData) {
+        // 🎉 NOTIFICACIÓN DE EVALUACIÓN GENERADA
+        const notificationDiv = document.createElement('div');
+        notificationDiv.className = 'alert alert-success mx-3 my-2 evaluation-notification';
+        notificationDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-chart-line fa-2x text-success me-3"></i>
+                <div class="flex-grow-1">
+                    <h5 class="mb-1">🎉 ¡Evaluación Generada!</h5>
+                    <p class="mb-2">Tu entrevista ha sido completada y evaluada automáticamente.</p>
+                    <p class="mb-2"><strong>Puntuación: ${evaluationData.average_score}/10 - ${evaluationData.performance_level}</strong></p>
+                    <div class="d-flex gap-2">
+                        <a href="/evaluation/session/${currentSessionId}/feedback/" class="btn btn-success btn-sm">
+                            <i class="fas fa-eye me-1"></i>Ver Evaluación Completa
+                        </a>
+                        <a href="/sessions/${currentSessionId}/" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-history me-1"></i>Ver Sesión
+                        </a>
+                    </div>
+                </div>
+                <button type="button" class="btn-close ms-2" onclick="this.parentElement.parentElement.remove()"></button>
+            </div>
+        `;
+        
+        // Insertar al final del chat
+        chatMessages.appendChild(notificationDiv);
+        
+        if (!isUserScrolling) {
+            scrollToBottom();
+        }
+        
+        // Auto-remove after 15 seconds (más tiempo porque es importante)
+        setTimeout(() => {
+            if (notificationDiv.parentNode) {
+                notificationDiv.remove();
+            }
+        }, 15000);
+    }
+
     async function sendMessage() {
         const message = messageInput.value.trim();
         if (!message) return;
@@ -585,6 +652,14 @@
 
             if (data.success && data.ai_response && data.ai_response.content) {
                 addMessage(data.ai_response.content, false);
+                
+                // 🎯 VERIFICAR SI SE GENERÓ EVALUACIÓN AUTOMÁTICA
+                if (data.evaluation && data.evaluation.evaluation_generated) {
+                    // Mostrar notificación de evaluación generada
+                    setTimeout(() => {
+                        showEvaluationNotification(data.evaluation);
+                    }, 1000); // Esperar un segundo después del mensaje
+                }
             } else {
                 showError(data.error || 'Error enviando mensaje');
             }

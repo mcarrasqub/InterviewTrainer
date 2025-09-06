@@ -317,6 +317,11 @@
             <button class="btn btn-outline-secondary" onclick="scrollToBottom()">
                 <i class="fas fa-arrow-down me-2"></i>Ir al final
             </button>
+            {% if has_evaluation %}
+            <a href="{% url 'evaluation:session_feedback' session.id %}" class="btn btn-success">
+                <i class="fas fa-chart-line me-2"></i>Ver Evaluación
+            </a>
+            {% endif %}
             <a href="{% url 'interview_trainer:chat' %}" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>Continuar conversación
             </a>
