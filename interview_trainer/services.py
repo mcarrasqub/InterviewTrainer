@@ -42,39 +42,32 @@ class GeminiService:
         
         department_name = department_names.get(interview_type, 'Operaciones y Producción')
         
-        return f"""Eres Lumo, un entrenador de entrevistas especializado en el área de {department_name}. 
+        return f"""Eres Lumo, entrevistador especializado en {department_name}.
 
-📌 MÉTODOS A UTILIZAR:
-- **STAR (Situation, Task, Action, Result)**: Formula preguntas que lleven al candidato a estructurar sus respuestas siguiendo este modelo.
-- **SJT (Situational Judgment Test)**: Presenta escenarios hipotéticos del área de {department_name} y pide al candidato que explique cómo actuaría.
+🎯 OBJETIVO: Realizar entrevista práctica con EXACTAMENTE 10 preguntas.
+
+📌 REGLAS CRÍTICAS:
+1. **LÍMITE ESTRICTO**: Solo 10 preguntas en total (¡NO MÁS!)
+2. **RESPUESTAS BREVES**: Máximo 2-3 líneas por respuesta
+3. **UNA pregunta por mensaje**: Sin feedback extenso entre preguntas
+4. **SIN comentarios largos**: Ir directo a la siguiente pregunta
 
 📌 COMPETENCIAS A EVALUAR:
-1. Comunicación
-2. Pensamiento crítico
-3. Adaptabilidad
-4. Trabajo en equipo
-5. Inteligencia emocional
+- Comunicación, pensamiento crítico, adaptabilidad, trabajo en equipo, inteligencia emocional
 
-🎯 OBJETIVO:
-- Evaluar cómo el candidato aplica estas competencias en situaciones reales y simuladas.
-- Hacer preguntas abiertas que permitan ejemplos concretos (STAR).
-- Hacer escenarios hipotéticos que midan juicio y toma de decisiones (SJT).
+📌 TIPOS DE PREGUNTAS:
+- Experiencias pasadas: "Cuéntame de una situación donde..."
+- Escenarios hipotéticos: "¿Qué harías si...?"
+- Específicas de {department_name}
 
-📌 INSTRUCCIONES PARA LA ENTREVISTA:
-1. **Contexto**: Estás entrevistando para una posición en {department_name}.
-2. **Preguntas Posteriores**:
-    - La entrevista debe consistir en 10-15 preguntas
-   - Haz preguntas con formato STAR (ejemplo: "Cuéntame de una situación donde tuviste que resolver un conflicto en tu equipo").
-   - Haz preguntas SJT (ejemplo: "Imagina que un cliente clave se queja de un error importante. ¿Qué harías?").
-   - Asegúrate de cubrir todas las competencias en el transcurso de la entrevista.
-3. **Estilo**:
-   - Una sola pregunta a la vez.
-   - Lenguaje profesional pero cercano.
-   - Usa ejemplos del área de {department_name}.
-   - Puedes usar emojis ocasionalmente para hacerlo más amigable.
+� ESTILO REQUERIDO:
+- Profesional pero cercano
+- Máximo 50-80 palabras por respuesta
+- Una sola pregunta directa
+- Sin análisis extenso de respuestas
+- Emojis ocasionales (1-2 máximo)
 
-OBJETIVO FINAL:
-Ayudar al candidato a prepararse para una entrevista real en {department_name}, practicando con preguntas que evalúan competencias clave usando STAR y SJT (no menciones explicitamente STAR o SJT)"""
+IMPORTANTE: Después de la pregunta 10, finaliza amablemente la entrevista."""
 
     async def generate_initial_welcome(self, interview_type='operations'):
         """
@@ -101,32 +94,30 @@ Ayudar al candidato a prepararse para una entrevista real en {department_name}, 
             department_name = department_names.get(interview_type, 'Operaciones y Producción')
             
             # Prompt específico para mensaje inicial
-            initial_prompt = f"""Eres Lumo, un entrevistador profesional especializado en {department_name}.
+            initial_prompt = f"""Eres Lumo, entrevistador especializado en {department_name}.
 
-Tu tarea es generar UN MENSAJE INICIAL de bienvenida para comenzar una entrevista de trabajo.
+TAREA: Genera UN saludo inicial breve y profesional.
 
-INSTRUCCIONES:
-1. Saluda de forma profesional pero amigable
-2. Preséntate como Lumo, tu entrevistador especializado en {department_name}
-3. Menciona que realizarás una entrevista para evaluar competencias
-4. Haz la primera pregunta típica: "Cuéntame un poco sobre ti y qué te motiva a aplicar para una posición en {department_name}"
-5. Usa un tono profesional pero cercano
-6. Máximo 3-4 líneas
-7. Usa algún emoji para ser más amigable
+REQUISITOS:
+1. Máximo 2-3 líneas
+2. Preséntate como Lumo
+3. Haz la primera pregunta: "Cuéntame sobre ti y por qué te interesa {department_name}"
+4. Tono profesional pero amigable
+5. Solo 1 emoji máximo
 
-EJEMPLO:
-¡Hola! 👋 Soy Lumo, tu entrevistador especializado en {department_name}. Me da mucho gusto conocerte y estoy emocionado de conocer más sobre tu experiencia profesional. Para comenzar, ¿podrías contarme un poco sobre ti y qué te motiva a aplicar para una posición en {department_name}?
+FORMATO EJEMPLO:
+¡Hola! Soy Lumo, tu entrevistador para {department_name}. Para comenzar, ¿podrías contarme sobre ti y por qué te interesa esta área?
 
-Genera SOLO el mensaje inicial:"""
+Genera SOLO el saludo inicial:"""
 
             # Generar mensaje inicial
             response = self.model.generate_content(
                 initial_prompt,
                 generation_config=genai.types.GenerationConfig(
-                    temperature=0.8,  # Más creativo para variedad
-                    top_k=40,
-                    top_p=0.9,
-                    max_output_tokens=200,  # Mensaje corto
+                    temperature=0.7,  # Menos creativo para ser más directo
+                    top_k=30,
+                    top_p=0.8,
+                    max_output_tokens=100,  # Mensaje muy corto (reducido de 200)
                 )
             )
             
@@ -137,15 +128,63 @@ Genera SOLO el mensaje inicial:"""
             # Mensaje de respaldo
             return f"¡Hola! 👋 Soy Lumo, tu entrevistador especializado en {department_name}. Me da mucho gusto conocerte y estoy emocionado de conocer más sobre tu experiencia profesional. Para comenzar, ¿podrías contarme un poco sobre ti y qué te motiva a aplicar para una posición en {department_name}?"
     
+    def _count_ai_questions(self, conversation_history):
+        """
+        🔢 PROPÓSITO: Contar las preguntas que ha hecho Lumo en la conversación
+        📝 QUÉ HACE: Analiza el historial y cuenta mensajes de IA que contienen preguntas
+        ⚠️  IMPORTANTE: Cuenta mensajes de IA como preguntas (1 pregunta = 1 mensaje de IA)
+        """
+        if not conversation_history:
+            return 0
+            
+        ai_message_count = 0
+        
+        for msg in conversation_history:
+            if not msg.get('is_user'):  # Es mensaje de la IA
+                ai_message_count += 1
+        
+        # Cada mensaje de IA cuenta como una pregunta
+        # (Excepto mensajes de finalización que contienen "completado las 10 preguntas")
+        question_count = 0
+        for msg in conversation_history:
+            if not msg.get('is_user'):  # Es mensaje de la IA
+                content = msg.get('content', '')
+                # No contar mensajes de finalización
+                if "completado las 10 preguntas" not in content.lower():
+                    question_count += 1
+        
+        logger.info(f"🔢 AI messages: {ai_message_count}, Questions counted: {question_count}")
+        return question_count
+
     async def generate_response(self, message, conversation_history=None, interview_type='operations'):
         """
-        🎯 PROPÓSITO: Genera respuesta de la IA con contexto dinámico
+        🎯 PROPÓSITO: Genera respuesta de la IA con contexto dinámico y límite de 10 preguntas
         📝 QUÉ HACE: Toma el mensaje del usuario y devuelve respuesta especializada
+        🚨 LÍMITE CRÍTICO: Máximo 10 preguntas por sesión
         """
         if not self.model:
             raise ValueError("API key de Gemini no configurada")
         
         try:
+            # 🔢 CONTAR PREGUNTAS REALIZADAS (CRÍTICO)
+            questions_asked = self._count_ai_questions(conversation_history or [])
+            
+            logger.info(f"🔢 CONTROL DE PREGUNTAS: {questions_asked}/10 realizadas")
+            logger.info(f"📝 Historial recibido: {len(conversation_history or [])} mensajes")
+            
+            # 🚨 VERIFICAR LÍMITE DE 10 PREGUNTAS
+            if questions_asked >= 10:
+                logger.info("🚨 LÍMITE ALCANZADO: Finalizando entrevista")
+                return (
+                    "¡Excelente! 🎉 Hemos completado las 10 preguntas de esta entrevista. "
+                    "Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. "
+                    "Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. "
+                    "¡Te deseo mucho éxito en tu proceso de selección! 🌟\n\n"
+                    "La entrevista ha finalizado. Puedes revisar tu evaluación en el panel de resultados."
+                )
+            
+            logger.info(f"✅ CONTINUAR: Generando pregunta #{questions_asked + 1}/10")
+            
             # Construir contexto completo con información dinámica
             system_prompt = self.get_system_prompt(interview_type)
             
@@ -169,38 +208,48 @@ Genera SOLO el mensaje inicial:"""
             
             if is_first_message:
                 # Para el primer mensaje, usar prompt específico
-                session_context = f"\n🎯 CONTEXTO DE SESIÓN INICIAL:\n- Departamento: {department_name}\n- ESTE ES EL PRIMER MENSAJE: Genera el saludo inicial de bienvenida siguiendo las instrucciones del prompt\n- NO hay historial previo, empieza la entrevista\n\n"
+                session_context = f"\n🎯 SESIÓN INICIAL - {department_name}\n🔢 Pregunta: 1/10\n⚠️ RESPUESTA BREVE: Máximo 2-3 líneas\n\n"
                 full_context = f"{system_prompt}{session_context}"
                 
                 # Si hay un mensaje del usuario, es porque ya escribió algo (no debería pasar, pero por si acaso)
                 if message and message.strip():
                     full_context += f"El candidato dice: {message}\n"
                 
-                full_context += "Entrevistador (Lumo):"
+                full_context += "Respuesta breve de Lumo:"
             else:
                 # Para mensajes posteriores, usar el flujo normal
-                session_context = f"\n🎯 CONTEXTO DE SESIÓN ACTUAL:\n- Departamento: {department_name}\n- Tipo de entrevista: Especializada en {department_name}\n- Número de mensajes previos: {len(conversation_history)}\n\n"
+                remaining_questions = 10 - questions_asked
+                session_context = f"\n🎯 SESIÓN: {department_name}\n� Preguntas: {questions_asked}/10 | Restantes: {remaining_questions}\n"
+                
+                if remaining_questions == 1:
+                    session_context += "⚠️ ÚLTIMA PREGUNTA - Después finaliza la entrevista\n"
+                elif remaining_questions <= 3:
+                    session_context += f"⚠️ Solo {remaining_questions} preguntas restantes\n"
+                
+                session_context += "⚠️ RESPUESTA BREVE: Máximo 2-3 líneas, una sola pregunta\n\n"
                 
                 full_context = f"{system_prompt}{session_context}"
                 
-                # Agregar historial de conversación
+                # Agregar historial de conversación (solo últimos 6 mensajes para contexto)
                 if conversation_history:
-                    full_context += "HISTORIAL DE CONVERSACIÓN:\n"
-                    for msg in conversation_history:
-                        sender = "Candidato" if msg.get('is_user') else "Entrevistador (Lumo)"
-                        full_context += f"{sender}: {msg.get('content')}\n"
+                    full_context += "CONTEXTO RECIENTE:\n"
+                    recent_history = conversation_history[-6:] if len(conversation_history) > 6 else conversation_history
+                    for msg in recent_history:
+                        sender = "Candidato" if msg.get('is_user') else "Lumo"
+                        content = msg.get('content', '')[:150] + '...' if len(msg.get('content', '')) > 150 else msg.get('content', '')
+                        full_context += f"{sender}: {content}\n"
                     full_context += "\n"
                 
-                full_context += f"Candidato: {message}\nEntrevistador (Lumo):"
+                full_context += f"Candidato: {message}\nRespuesta breve de Lumo:"
             
             # Generar respuesta
             response = self.model.generate_content(
                 full_context,
                 generation_config=genai.types.GenerationConfig(
-                    temperature=0.7,
-                    top_k=40,
-                    top_p=0.95,
-                    max_output_tokens=1024,
+                    temperature=0.6,  # Menos creativo para ser más directo
+                    top_k=30,
+                    top_p=0.8,
+                    max_output_tokens=150,  # Respuestas muy breves (reducido de 1024)
                 )
             )
             
@@ -241,77 +290,77 @@ Genera SOLO el mensaje inicial:"""
                 conversation_text += f"{sender}: {msg.content}\n"
 
             # Prompt de evaluación con formato JSON
-            feedback_prompt = f"""Eres un evaluador experto de entrevistas de trabajo especializado en {department_name}.
+            feedback_prompt = f"""Eres un evaluador experto en {department_name}.
 
-🎯 TU TAREA: Analizar esta entrevista completa y generar un feedback detallado en formato JSON.
+🎯 ANALIZA esta entrevista y genera feedback CONCISO en JSON.
 
-HISTORIAL COMPLETO DE LA ENTREVISTA:
+ENTREVISTA:
 {conversation_text}
 
-📊 COMPETENCIAS A EVALUAR (Puntaje 1-10):
-1. **Comunicación**: Claridad, estructura, capacidad de expresar ideas
-2. **Pensamiento crítico**: Análisis, lógica, resolución de problemas
-3. **Adaptabilidad**: Flexibilidad, manejo de cambios, aprendizaje
-4. **Trabajo en equipo**: Colaboración, liderazgo, habilidades interpersonales
-5. **Inteligencia emocional**: Autoconocimiento, empatía, manejo de emociones
+📊 EVALÚA (1-10):
+- Comunicación: Claridad y expresión
+- Pensamiento crítico: Análisis y lógica  
+- Adaptabilidad: Flexibilidad y aprendizaje
+- Trabajo en equipo: Colaboración
+- Inteligencia emocional: Autoconocimiento y empatía
 
-CRITERIOS DE PUNTAJE:
-- 8-10: Excelente, respuestas muy sólidas con ejemplos concretos
-- 6-7: Bueno, respuestas adecuadas con algunos ejemplos
-- 4-5: Regular, respuestas básicas, falta profundidad
-- 1-3: Deficiente, respuestas vagas o insuficientes
+PUNTAJES:
+- 8-10: Excelente con ejemplos concretos
+- 6-7: Bueno con algunos ejemplos
+- 4-5: Regular, falta profundidad
+- 1-3: Deficiente, respuestas vagas
 
-FORMATO DE RESPUESTA REQUERIDO (JSON VÁLIDO):
+FORMATO JSON REQUERIDO:
 {{
-    "overall_feedback": "Un párrafo de 3-4 líneas con feedback general del desempeño que incluya areas de mejora y fortalezas específicas",
+    "overall_feedback": "Feedback general en 2-3 líneas máximo con fortalezas y áreas de mejora principales",
     "competency_scores": {{
         "Comunicación": {{
             "score": 8,
-            "feedback": "Feedback específico de 1-2 líneas sobre esta competencia",
-            "example": "Ejemplo concreto extraído de la entrevista",
+            "feedback": "Máximo 1-2 líneas sobre esta competencia",
+            "example": "Ejemplo breve de la entrevista",
             "improvement_area": "Área específica de mejora"
         }},
         "Pensamiento crítico": {{
             "score": 7,
-            "feedback": "Feedback específico de 1-2 líneas sobre esta competencia",
-            "example": "Ejemplo concreto extraído de la entrevista",
+            "feedback": "Máximo 1-2 líneas sobre esta competencia",
+            "example": "Ejemplo breve de la entrevista", 
             "improvement_area": "Área específica de mejora"
         }},
         "Adaptabilidad": {{
             "score": 6,
-            "feedback": "Feedback específico de 1-2 líneas sobre esta competencia",
-            "example": "Ejemplo concreto extraído de la entrevista",
+            "feedback": "Máximo 1-2 líneas sobre esta competencia",
+            "example": "Ejemplo breve de la entrevista",
             "improvement_area": "Área específica de mejora"
         }},
         "Trabajo en equipo": {{
             "score": 7,
-            "feedback": "Feedback específico de 1-2 líneas sobre esta competencia",
-            "example": "Ejemplo concreto extraído de la entrevista",
+            "feedback": "Máximo 1-2 líneas sobre esta competencia",
+            "example": "Ejemplo breve de la entrevista",
             "improvement_area": "Área específica de mejora"
         }},
         "Inteligencia emocional": {{
             "score": 8,
-            "feedback": "Feedback específico de 1-2 líneas sobre esta competencia",
-            "example": "Ejemplo concreto extraído de la entrevista",
+            "feedback": "Máximo 1-2 líneas sobre esta competencia",
+            "example": "Ejemplo breve de la entrevista",
             "improvement_area": "Área específica de mejora"
         }}
     }}
 }}
 
-IMPORTANTE: 
-- Responde ÚNICAMENTE con el JSON válido, sin texto adicional
-- Sé constructivo y específico en las áreas de mejora
-- Mantén un tono profesional pero alentador
-- Asegúrate de que el JSON sea válido (sin comas finales, comillas correctas)"""
+REQUISITOS:
+- SOLO JSON válido, sin texto adicional
+- Feedback breve y directo
+- Tono profesional pero constructivo
+- JSON sin errores de sintaxis"""
 
             # Generar evaluación con configuración específica para JSON
             response = self.model.generate_content(
                 feedback_prompt,
                 generation_config=genai.types.GenerationConfig(
-                    temperature=0.2,  # Más bajo para consistencia en formato
-                    top_k=10,        # Más restrictivo para formato
-                    top_p=0.7,       # Más determinístico
-                    max_output_tokens=2048,
+                    temperature=0.3,  # Más bajo para consistencia y brevedad
+                    top_k=20,        # Más restrictivo para formato
+                    top_p=0.8,       # Más determinístico
+                    max_output_tokens=1200,  # Reducido para respuestas más breves
                 )
             )
             
