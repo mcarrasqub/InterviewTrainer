@@ -174,12 +174,16 @@ def session_detail(request, session_id):
     else:
         session_duration = "0 min"
     
+    # Verificar si existe evaluación
+    has_evaluation = hasattr(session, 'feedback_report')
+    
     context = {
         'session': session,
         'messages': messages_list,
         'user_messages_count': user_messages_count,
         'ai_messages_count': ai_messages_count,
         'session_duration': session_duration,
+        'has_evaluation': has_evaluation,
     }
     return render(request, 'interview_trainer/session_detail.html', context)
 
