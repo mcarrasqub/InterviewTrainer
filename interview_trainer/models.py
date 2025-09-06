@@ -25,6 +25,8 @@ class InterviewSession(models.Model):
     created_at = models.DateTimeField(default=timezone.now)  # ¿Cuándo se creó?
     updated_at = models.DateTimeField(auto_now=True)  # ¿Cuándo se actualizó?
     is_active = models.BooleanField(default=True)  # ¿Está activa?
+    is_completed = models.BooleanField(default=False)  # ¿Ya completó las 10 preguntas?
+    questions_asked = models.IntegerField(default=0)  # Contador de preguntas realizadas por Lumo
     
     class Meta:
         ordering = ['-created_at']  # Más recientes primero
