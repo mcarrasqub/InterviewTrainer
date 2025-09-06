@@ -6,6 +6,7 @@ from interview_trainer.models import InterviewSession, ChatMessage
 from interview_trainer.services import GeminiService
 from .models import CompetencyScore, FeedbackReport, UserAnalytics, CompetencyDefinition
 from django.utils import timezone
+from asgiref.sync import sync_to_async
 
 logger = logging.getLogger(__name__)
 
@@ -18,53 +19,92 @@ class EvaluationService:
     def __init__(self):
         self.gemini_service = GeminiService()
     
-    def can_generate_evaluation(self, session: InterviewSession) -> Dict:
+    async def can_generate_evaluation(self, session: InterviewSession) -> Dict:
         """
-        ✅ PROPÓSITO: Verifica si una sesión puede ser evaluada
+        ✅ PROPÓSITO: Verifica si una sesión puede ser evaluada (10 preguntas)
         """
-        if hasattr(session, 'feedback_report') and session.feedback_report:
+        # Verificar si ya existe evaluación
+        has_feedback = await sync_to_async(
+            lambda: hasattr(session, 'feedback_report') and session.feedback_report
+        )()
+        
+        if has_feedback:
             return {
                 'can_generate': False,
                 'reason': 'Ya existe evaluación',
                 'existing': True
             }
         
-        questions_count = self._count_session_questions(session)
-        min_questions = 15
+        questions_count = await self._count_session_questions(session)
+        user_responses = await sync_to_async(
+            lambda: session.messages.filter(is_user=True).count()
+        )()
+        
+        # Para evaluación necesitamos al menos 10 preguntas y 9 respuestas del usuario
+        # (el usuario responde a 9 preguntas, la 10ma es la despedida)
+        min_questions = 10
+        min_user_responses = 9
+        
+        can_evaluate = questions_count >= min_questions and user_responses >= min_user_responses
         
         return {
-            'can_generate': questions_count == min_questions,
+            'can_generate': can_evaluate,
             'questions_count': questions_count,
-            'min_required': min_questions,
-            'reason': f'Se necesitan al menos {min_questions} preguntas' if questions_count < min_questions else 'Listo para evaluar'
+            'user_responses': user_responses,
+            'min_required_questions': min_questions,
+            'min_required_responses': min_user_responses,
+            'reason': f'✅ Listo: {questions_count} preguntas, {user_responses} respuestas' if can_evaluate else f'❌ Necesita: {min_questions} preguntas y {min_user_responses} respuestas (actual: {questions_count}/{user_responses})'
         }
     
-    def _count_session_questions(self, session: InterviewSession) -> int:
+    async def _count_session_questions(self, session: InterviewSession) -> int:
         """
         🔢 PROPÓSITO: Cuenta las preguntas realizadas por Lumo
+        ⚠️  IMPORTANTE: Usa la misma lógica que el servicio de entrevista
         """
-        ai_messages = session.messages.filter(is_user=False)
-        questions_count = 0
+        ai_messages = await sync_to_async(
+            lambda: list(session.messages.filter(is_user=False).order_by('timestamp'))
+        )()
+        
+        question_count = 0
         
         for message in ai_messages:
-            # Contar mensajes que contienen '?'
-            if '?' in message.content:
-                questions_count += message.content.count('?')
+            content = message.content
+            # No contar mensajes de finalización
+            if "completado las 10 preguntas" not in content.lower():
+                question_count += 1
         
-        return questions_count
+        return question_count
+    
+    def _is_welcome_message(self, message) -> bool:
+        """
+        🎯 PROPÓSITO: Detecta si un mensaje es el saludo inicial de bienvenida
+        """
+        if not message:
+            return False
+            
+        content = message.content.lower()
+        welcome_indicators = [
+            'hola', 'soy lumo', 'bienvenido', 'entrevistador', 
+            'comenzar', 'para empezar', 'cuéntame sobre ti',
+            'me da mucho gusto conocerte'
+        ]
+        
+        return any(indicator in content for indicator in welcome_indicators)
     
     async def generate_session_evaluation(self, session: InterviewSession) -> Dict:
         """
         📊 PROPÓSITO: Genera evaluación completa de una sesión
         """
         # Verificar si se puede evaluar
-        can_eval = self.can_generate_evaluation(session)
+        can_eval = await self.can_generate_evaluation(session)
         if not can_eval['can_generate']:
             raise ValueError(can_eval['reason'])
         
-        messages = session.messages.order_by('timestamp')
+        messages = await sync_to_async(
+            lambda: list(session.messages.order_by('timestamp'))
+        )()
         
-        if messages.count() < 5:
+        if len(messages) < 5:
             raise ValueError("Sesión insuficiente para evaluación (mínimo 5 mensajes)")
         
         # Usar GeminiService para generar el análisis
@@ -84,28 +124,25 @@ class EvaluationService:
             performance_level = self._get_performance_level(average_score)
             
             # Calcular duración de sesión
-            session_duration = self._calculate_session_duration(session)
+            session_duration = await self._calculate_session_duration(session)
             
-            # Crear reporte principal
-            feedback_report = FeedbackReport.objects.create(
+            # Crear reporte principal usando sync_to_async
+            feedback_report = await sync_to_async(FeedbackReport.objects.create)(
                 session=session,
                 overall_feedback=feedback_data['overall_feedback'],
                 average_score=average_score,
                 performance_level=performance_level,
-                questions_analyzed=questions_count,
                 session_duration_minutes=session_duration
             )
             
             # Crear puntajes de competencias
             competency_scores = []
             for comp_name, comp_data in scores.items():
-                comp_score = CompetencyScore.objects.create(
+                comp_score = await sync_to_async(CompetencyScore.objects.create)(
                     session=session,
                     competency_name=comp_name,
                     score=comp_data['score'],
-                    feedback=comp_data['feedback'],
-                    examples=comp_data.get('example', ''),
-                    improvement_areas=comp_data.get('improvement_area', '')
+                    feedback=comp_data['feedback']
                 )
                 competency_scores.append(comp_score)
             
@@ -118,7 +155,6 @@ class EvaluationService:
                 'competency_scores': competency_scores,
                 'average_score': average_score,
                 'performance_level': performance_level,
-                'questions_analyzed': questions_count,
                 'session_duration': session_duration
             }
             
@@ -139,16 +175,25 @@ class EvaluationService:
         else:
             return "Necesita Mejora"
     
-    def _calculate_session_duration(self, session: InterviewSession) -> int:
+    async def _calculate_session_duration(self, session: InterviewSession) -> int:
         """
         ⏱️ PROPÓSITO: Calcula duración de la sesión en minutos
         """
-        messages = session.messages.order_by('timestamp')
-        if messages.count() < 2:
+        messages_count = await sync_to_async(
+            lambda: session.messages.count()
+        )()
+        
+        if messages_count < 2:
             return 0
         
-        first_message = messages.first()
-        last_message = messages.last()
+        first_message = await sync_to_async(
+            lambda: session.messages.order_by('timestamp').first()
+        )()
+        
+        last_message = await sync_to_async(
+            lambda: session.messages.order_by('timestamp').last()
+        )()
+        
         duration = last_message.timestamp - first_message.timestamp
         return max(1, duration.seconds // 60)
     
@@ -156,38 +201,57 @@ class EvaluationService:
         """
         📈 PROPÓSITO: Actualiza analytics del usuario
         """
-        analytics, created = UserAnalytics.objects.get_or_create(user=user)
+        analytics, created = await sync_to_async(UserAnalytics.objects.get_or_create)(user=user)
         
-        # Recalcular estadísticas
-        user_reports = FeedbackReport.objects.filter(session__user=user)
+        # Recalcular estadísticas usando sync_to_async para queries complejas
+        user_reports_count = await sync_to_async(
+            lambda: FeedbackReport.objects.filter(session__user=user).count()
+        )()
         
-        if user_reports.exists():
-            analytics.total_sessions_evaluated = user_reports.count()
-            analytics.average_overall_score = user_reports.aggregate(
-                avg_score=models.Avg('average_score')
-            )['avg_score'] or 0
+        if user_reports_count > 0:
+            analytics.total_sessions_evaluated = user_reports_count
+            
+            # Calcular promedio de puntajes
+            avg_score = await sync_to_async(
+                lambda: FeedbackReport.objects.filter(session__user=user).aggregate(
+                    avg_score=models.Avg('average_score')
+                )['avg_score']
+            )()
+            analytics.average_overall_score = avg_score or 0
             
             # Calcular totales
-            analytics.total_questions_answered = user_reports.aggregate(
-                total_questions=models.Sum('questions_analyzed')
-            )['total_questions'] or 0
+            total_questions = await sync_to_async(
+                lambda: FeedbackReport.objects.filter(session__user=user).aggregate(
+                    total_questions=models.Sum('questions_analyzed')
+                )['total_questions']
+            )()
+            analytics.total_questions_answered = total_questions or 0
             
-            analytics.total_session_time_minutes = user_reports.aggregate(
-                total_time=models.Sum('session_duration_minutes')
-            )['total_time'] or 0
+            total_time = await sync_to_async(
+                lambda: FeedbackReport.objects.filter(session__user=user).aggregate(
+                    total_time=models.Sum('session_duration_minutes')
+                )['total_time']
+            )()
+            analytics.total_session_time_minutes = total_time or 0
             
             # Encontrar competencia más fuerte y más débil
-            all_scores = CompetencyScore.objects.filter(session__user=user)
-            if all_scores.exists():
-                competency_avgs = all_scores.values('competency_name').annotate(
-                    avg_score=models.Avg('score')
-                ).order_by('-avg_score')
+            competency_scores_exist = await sync_to_async(
+                lambda: CompetencyScore.objects.filter(session__user=user).exists()
+            )()
+            
+            if competency_scores_exist:
+                competency_avgs = await sync_to_async(
+                    lambda: list(CompetencyScore.objects.filter(session__user=user)
+                                 .values('competency_name')
+                                 .annotate(avg_score=models.Avg('score'))
+                                 .order_by('-avg_score'))
+                )()
                 
                 if competency_avgs:
-                    analytics.strongest_competency = competency_avgs.first()['competency_name']
-                    analytics.weakest_competency = competency_avgs.last()['competency_name']
+                    analytics.strongest_competency = competency_avgs[0]['competency_name']
+                    analytics.weakest_competency = competency_avgs[-1]['competency_name']
             
-            analytics.save()
+            await sync_to_async(analytics.save)()
     
     def get_user_progress(self, user: User) -> Dict:
         """
@@ -289,8 +353,6 @@ class EvaluationService:
                     'name': comp_score.competency_name,
                     'score': comp_score.score,
                     'feedback': comp_score.feedback,
-                    'examples': comp_score.examples,
-                    'improvement_areas': comp_score.improvement_areas,
                     'percentage': (comp_score.score / 10) * 100
                 })
             
@@ -300,7 +362,6 @@ class EvaluationService:
                 'competency_data': competency_data,
                 'average_score': feedback_report.average_score,
                 'performance_level': feedback_report.performance_level,
-                'questions_analyzed': feedback_report.questions_analyzed,
                 'session_duration': feedback_report.session_duration_minutes,
                 'generated_at': feedback_report.generated_at
             }
