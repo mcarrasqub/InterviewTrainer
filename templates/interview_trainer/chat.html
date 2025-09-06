@@ -15,6 +15,7 @@
         height: 80vh;
         display: flex;
         flex-direction: column;
+        position: relative;
     }
 
     .chat-header {
@@ -23,6 +24,7 @@
         padding: 1.5rem;
         text-align: center;
         flex-shrink: 0; /* No se encoge */
+        position: relative; /* <- necesario para posicionar el botón */
     }
 
     .chat-messages {
@@ -125,6 +127,7 @@
         background: white;
         border-top: 1px solid #e2e8f0;
         flex-shrink: 0; /* ✅ NO SE ENCOGE */
+        position: relative; /* necesario para posicionar el botón por debajo */
     }
 
     .input-group {
@@ -314,6 +317,47 @@
         animation: bounce 2s infinite;
     }
 
+
+
+
+/* Estilo visual para el botón dentro del contenedor de estadísticas */
+.stats-button-container .btn {
+    background: var(--lumo-primary);
+    background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff !important;
+    border: none;
+    border-radius: 12px;
+    padding: .35rem .9rem;
+    box-shadow: 0 6px 18px rgba(79,70,229,0.18);
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin-top: 10px;
+}
+
+.stats-button-container .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(79,70,229,0.25);
+    opacity: 1;
+}
+
+.stats-button-container .btn-sm {
+    font-size: .85rem;
+    padding: .4rem .85rem;
+}
+
+@media (max-width: 768px) {
+    .stats-button-container {
+        justify-content: center;
+        margin-top: 10px;
+    }
+    .stats-button-container .btn {
+        width: 95%;
+        max-width: 320px;
+    }
+}
+
     @keyframes bounce {
         0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
         40% { transform: translateY(-10px); }
@@ -409,6 +453,8 @@
                     {% endif %}
                 </div>
 
+               
+
                 <!-- Scroll Indicator -->
                 <div class="scroll-indicator" id="scrollIndicator" onclick="scrollToBottom()">
                     <i class="fas fa-arrow-down"></i>
@@ -416,6 +462,8 @@
             </div>
 
         </div>
+
+        
 
         <!-- Typing Indicator -->
         <div class="message ai" id="typingIndicator" style="display: none; margin: 0 1.5rem;">
@@ -440,6 +488,15 @@
                 <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
+            </div>
+
+            <!-- Contenedor para el botón de estadísticas (render inicial si hay sesión) -->
+            <div id="statsButtonContainer" class="stats-button-container">
+                {% if current_session %}
+                    <a href="{% url 'evaluation:session_feedback' current_session.id %}" class="btn btn-success btn-sm">
+                        <i class="fas fa-chart-line me-1"></i>Ver Estadísticas
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -713,6 +770,9 @@
                 }, index * 50); // 50ms delay between messages
             });
 
+            // Actualizar botón de estadísticas para la sesión cargada
+            updateStatsButton(currentSessionId);
+
             // Update active session in sidebar
             document.querySelectorAll('.session-item').forEach(item => {
                 item.classList.remove('active');
@@ -734,10 +794,31 @@
         }
     }
 
+    // Actualiza el contenedor del botón con el enlace correcto para la sesión
+    function updateStatsButton(sessionId) {
+        const container = document.getElementById('statsButtonContainer');
+        if (!container) return;
+        if (sessionId) {
+            container.innerHTML = `
+                <a href="/evaluation/session/${sessionId}/feedback/" class="btn btn-success btn-sm">
+                    <i class="fas fa-chart-line me-1"></i>Ver Estadísticas
+                </a>
+            `;
+        } else {
+            container.innerHTML = '';
+        }
+    }
+
+
     // Focus input on load and auto-scroll if there are messages
     window.addEventListener('load', () => {
         messageInput.focus();
-        
+
+        // Si hay sesión inicial pasada por el template, asegurarse de que el botón esté correcto
+        if (sessionData.currentSessionId) {
+            updateStatsButton(sessionData.currentSessionId);
+        }
+
         // ✅ Verificar si hay una sesión activa con mensajes usando datos del template
         const hasCurrentSession = sessionData.hasCurrentSession;
         const hasMessages = sessionData.hasMessages;

@@ -1,9 +1,11 @@
 import logging
+import profile
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from urllib3 import request
 from .models import InterviewSession, ChatMessage, UserProfile
 
 logger = logging.getLogger(__name__)
@@ -150,7 +152,19 @@ def chat(request):
     💬 PROPÓSITO: Vista principal del chat - redirige a selección
     📝 QUÉ HACE: Redirige a la selección de tipo de entrevista
     """
-    return redirect('interview_trainer:select_interview_type')
+    try:
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        sessions = InterviewSession.objects.filter(user=request.user)[:10]
+        context = {
+            'profile': profile,
+            'sessions': sessions,
+            'current_session': None,
+            'has_api_key': True,
+        }
+        return render(request, 'interview_trainer/chat.html', context)
+    except Exception as e:
+        messages.error(request, f'Error accediendo al chat: {str(e)}')
+        return redirect('interview_trainer:home')
 
 @login_required
 def session_detail(request, session_id):
