@@ -1,0 +1,27 @@
+# Entorno virtual
+lumo_env/
+
+# Base de datos
+db.sqlite3
+
+# Archivos de configuración local
+.env
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de base de datos adicionales
+db.sqlite3
+*.db
+*.sqlite3
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Migraciones: solo ignora caché, NO los archivos .py
+*/migrations/__pycache__/
+*/migrations/*.pyc
