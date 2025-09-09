@@ -247,3 +247,13 @@ def get_session_messages(request, session_id):
         },
         'messages': messages_data
     })
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_session(request, session_id):
+    """
+    🗑️ PROPÓSITO: API para eliminar una sesión
+    """
+    session = get_object_or_404(InterviewSession, id=session_id, user=request.user)
+    session.delete()
+    return Response({'success': True}, status=status.HTTP_204_NO_CONTENT)

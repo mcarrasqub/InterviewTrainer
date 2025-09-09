@@ -409,19 +409,31 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="fw-bold mb-0">Sesiones Recientes</h6>
                     <span class="badge bg-primary">{{ sessions|length }}</span>
+                    <button id="deleteSessionsBtn" class="btn btn-outline-danger btn-sm ms-2" title="Eliminar sesiones seleccionadas" style="border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
                 <div id="sessionsList">
                     {% for session in sessions %}
-                        <div class="session-item" data-session-id="{{ session.id }}" onclick="loadSession(this.dataset.sessionId)">
+                    <div class="session-item d-flex align-items-center" data-session-id="{{ session.id }}">
+                        <input type="checkbox"
+                               class="form-check-input me-2 session-checkbox"
+                               value="{{ session.id }}"
+                               style="margin-top:0;"
+                               onclick="event.stopPropagation();">
+                        <div class="flex-grow-1 session-clickable"
+                             style="cursor:pointer;"
+                             onclick="window.loadSession({{ session.id }})">
                             <div class="session-title">{{ session.title|truncatechars:25 }}</div>
                             <div class="session-date">{{ session.created_at|date:"d/m/Y H:i" }}</div>
                             <small class="text-muted">{{ session.session_type|title }}</small>
                         </div>
+                    </div>
                     {% empty %}
-                        <div class="text-center text-muted py-3">
-                            <i class="fas fa-inbox fa-2x mb-2"></i>
-                            <p>No hay sesiones aún</p>
-                        </div>
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-inbox fa-2x mb-2"></i>
+                        <p>No hay sesiones aún</p>
+                    </div>
                     {% endfor %}
                 </div>
                 <button class="btn btn-outline-primary btn-sm mt-3 w-100" onclick="startNewSession()">
@@ -499,6 +511,27 @@
                 {% endif %}
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar sesiones -->
+<div id="deleteSessionsModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);z-index:2000;align-items:center;justify-content:center;">
+    <div style="background:white;padding:2rem 2.5rem;border-radius:16px;max-width:350px;margin:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;position:relative;top:30vh;">
+        <i class="fas fa-exclamation-triangle" style="font-size:2.5rem;color:#dc3545;"></i>
+        <h4 style="margin-top:1rem;">¿Eliminar sesiones seleccionadas?</h4>
+        <p style="color:#555;">Esta acción no se puede deshacer.<br>¿Estás seguro?</p>
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;">
+            <button class="btn btn-secondary" onclick="hideDeleteSessionsModal()">Cancelar</button>
+            <button class="btn btn-danger" onclick="confirmDeleteSessions()">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de éxito -->
+<div id="deleteSessionsSuccessModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);z-index:2100;align-items:center;justify-content:center;">
+    <div style="background:white;padding:1.5rem 2rem;border-radius:16px;max-width:300px;margin:auto;box-shadow:0 4px 16px rgba(0,0,0,0.12);text-align:center;position:relative;top:35vh;">
+        <i class="fas fa-check-circle" style="font-size:2rem;color:#28a745;"></i>
+        <h5 style="margin-top:0.5rem;">Sesiones eliminadas</h5>
     </div>
 </div>
 {% endblock %}
@@ -850,5 +883,165 @@
             startNewSession();
         }
     });
+
+    // Eliminar sesiones seleccionadas
+    document.getElementById('deleteSessionsBtn').addEventListener('click', function() {
+        const selectedSessions = Array.from(document.querySelectorAll('.session-checkbox:checked'));
+        
+        if (selectedSessions.length === 0) {
+            return showError('No hay sesiones seleccionadas para eliminar.');
+        }
+        
+        // Mostrar modal de confirmación
+        const modal = document.getElementById('deleteSessionsModal');
+        modal.style.display = 'flex';
+    });
+
+    function hideDeleteSessionsModal() {
+        const modal = document.getElementById('deleteSessionsModal');
+        modal.style.display = 'none';
+    }
+
+    async function confirmDeleteSessions() {
+        const selectedSessions = Array.from(document.querySelectorAll('.session-checkbox:checked'));
+        
+        if (selectedSessions.length === 0) return;
+
+        const sessionIds = selectedSessions.map(checkbox => checkbox.value);
+
+        try {
+            // Llamar a la API para eliminar sesiones
+            const response = await fetch('/api/sessions/delete/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    session_ids: sessionIds
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Ocultar modal de confirmación
+                hideDeleteSessionsModal();
+                
+                // Mostrar modal de éxito
+                const successModal = document.getElementById('deleteSessionsSuccessModal');
+                successModal.style.display = 'flex';
+
+                // Eliminar sesiones del DOM
+                sessionIds.forEach(id => {
+                    const sessionElement = document.querySelector(`[data-session-id="${id}"]`);
+                    if (sessionElement) {
+                        sessionElement.remove();
+                    }
+                });
+
+                // Actualizar contador de sesiones
+                const sessionCount = document.querySelectorAll('.session-item').length;
+                document.querySelector('.badge.bg-primary').innerText = sessionCount;
+
+                // Actualizar botón de estadísticas
+                updateStatsButton(currentSessionId);
+
+                // Hacer scroll hacia arriba si se eliminó la sesión activa
+                if (currentSessionId && !document.querySelector(`.session-item[data-session-id="${currentSessionId}"]`)) {
+                    currentSessionId = null;
+                    chatMessages.innerHTML = '';
+                    scrollToBottom();
+                }
+
+            } else {
+                showError(data.error || 'Error eliminando sesiones');
+            }
+
+        } catch (error) {
+            showError('Error de conexión. Intenta de nuevo.');
+            console.error('Error:', error);
+        }
+    }
+
+    // Cerrar modals al hacer clic fuera de ellos
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('deleteSessionsModal');
+        const successModal = document.getElementById('deleteSessionsSuccessModal');
+        
+        if (modal.style.display === 'flex' && !modal.contains(event.target)) {
+            hideDeleteSessionsModal();
+        }
+        
+        if (successModal.style.display === 'flex' && !successModal.contains(event.target)) {
+            successModal.style.display = 'none';
+        }
+    });
+
+    window.addEventListener('DOMContentLoaded', function() {
+        const deleteBtn = document.getElementById('deleteSessionsBtn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function() {
+                const checked = Array.from(document.querySelectorAll('.session-checkbox:checked'));
+                if (checked.length === 0) {
+                    alert('Selecciona al menos una sesión para eliminar.');
+                    return;
+                }
+                showDeleteSessionsModal();
+            });
+        }
+    });
+
+    function showDeleteSessionsModal() {
+        document.getElementById('deleteSessionsModal').style.display = 'block';
+    }
+    function hideDeleteSessionsModal() {
+        document.getElementById('deleteSessionsModal').style.display = 'none';
+    }
+    function showDeleteSessionsSuccess() {
+        const successModal = document.getElementById('deleteSessionsSuccessModal');
+        successModal.style.display = 'block';
+        setTimeout(() => {
+            successModal.style.display = 'none';
+        }, 1000);
+    }
+    async function confirmDeleteSessions() {
+        const checked = Array.from(document.querySelectorAll('.session-checkbox:checked'));
+        const ids = checked.map(cb => cb.value);
+        let successCount = 0;
+        for (const id of ids) {
+            try {
+                const response = await fetch(`/api/sessions/${id}/delete/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.status === 204) {
+                    successCount++;
+                    document.querySelector(`.session-item[data-session-id="${id}"]`).remove();
+                }
+            } catch (e) {}
+        }
+        hideDeleteSessionsModal();
+        if (successCount > 0) {
+            showDeleteSessionsSuccess();
+        }
+    }
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 </script>
 {% endblock %}
