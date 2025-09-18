@@ -45,6 +45,12 @@ pip install -r requirements.txt
 
 This ensures that all necessary libraries are installed.
 
+Create your APIkey on aistudio.google.com and paste it in a new file called .env:
+/.env: 
+SECRET_KEY=tu-clave-secreta-super-segura-aqui
+DEBUG=True
+GEMINI_API_KEY= (insert APIkey)
+
 
 ## 4. Run the project
 
