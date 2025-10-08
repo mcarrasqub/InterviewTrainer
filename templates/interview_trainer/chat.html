@@ -12,7 +12,7 @@
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         overflow: hidden;
-        height: 80vh;
+        height: 85vh; /* ✅ AUMENTADO de 80vh a 85vh */
         display: flex;
         flex-direction: column;
         position: relative;
@@ -33,8 +33,9 @@
         overflow-y: auto; /* ✅ SCROLL VERTICAL */
         overflow-x: hidden;
         background: #f8f9fa;
-        max-height: calc(80vh - 200px); /* ✅ ALTURA MÁXIMA DEFINIDA */
-        min-height: 300px;
+        max-height: calc(85vh - 220px); /* ✅ AUMENTADO de 180px a 220px para compensar barra de entrada */
+        min-height: 400px; /* ✅ AUMENTADO de 300px a 400px */
+        padding-bottom: 3rem; /* ✅ AUMENTADO padding extra abajo para evitar que se tape */
     }
 
     /* ✅ PERSONALIZAR SCROLLBAR */
@@ -57,7 +58,7 @@
     }
 
     .message {
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem; /* ✅ AUMENTADO de 1rem a 1.5rem para más separación */
         display: flex;
         align-items: flex-start;
         animation: fadeIn 0.3s ease-in;
@@ -77,12 +78,12 @@
     }
 
     .message-content {
-        max-width: 70%;
-        padding: 1rem 1.25rem;
+        max-width: 85%; /* ✅ AUMENTADO de 70% a 85% para más espacio */
+        padding: 1rem 1.5rem; /* ✅ AUMENTADO padding horizontal */
         border-radius: 18px;
         white-space: pre-wrap;
         word-wrap: break-word; /* ✅ ROMPE PALABRAS LARGAS */
-        line-height: 1.5;
+        line-height: 1.6; /* ✅ AUMENTADO de 1.5 a 1.6 para mejor legibilidad */
     }
 
     .message.user .message-content {
@@ -97,6 +98,12 @@
         border: 1px solid #e2e8f0;
         border-bottom-left-radius: 5px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 1rem; /* ✅ MARGEN EXTRA PARA MENSAJES DE LUMO */
+    }
+
+    /* ✅ ÚLTIMO MENSAJE DE LUMO CON MÁS ESPACIO */
+    .message.ai:last-child .message-content {
+        margin-bottom: 2.5rem; /* ✅ EXTRA ESPACIO PARA EL ÚLTIMO MENSAJE */
     }
 
     .message-avatar {
@@ -355,6 +362,27 @@
     .stats-button-container .btn {
         width: 95%;
         max-width: 320px;
+    }
+    
+    /* ✅ MEJORAR CHAT EN MÓVILES */
+    .chat-container {
+        height: 90vh !important; /* ✅ MÁS ALTURA EN MÓVILES */
+    }
+    
+    .chat-messages {
+        max-height: calc(90vh - 200px) !important; /* ✅ AJUSTADO PARA MÓVILES - MÁS ESPACIO PARA LA BARRA */
+        padding: 1rem; /* ✅ MENOS PADDING EN MÓVILES */
+        padding-bottom: 3rem !important; /* ✅ EXTRA PADDING ABAJO EN MÓVILES */
+    }
+    
+    .message-content {
+        max-width: 90% !important; /* ✅ MÁS ANCHO EN MÓVILES */
+        padding: 0.8rem 1rem; /* ✅ MENOS PADDING EN MÓVILES */
+    }
+    
+    /* ✅ EXTRA ESPACIO PARA ÚLTIMO MENSAJE EN MÓVILES */
+    .message.ai:last-child .message-content {
+        margin-bottom: 3rem !important;
     }
 }
 
@@ -666,6 +694,11 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         scrollIndicator.classList.remove('show');
+        
+        // ✅ ASEGURAR que el scroll llegue completamente abajo - MÁS AGRESIVO
+        setTimeout(() => {
+            chatMessages.scrollTop = chatMessages.scrollHeight + 100; // ✅ +100px extra para asegurar
+        }, smooth ? 400 : 50); // ✅ MÁS TIEMPO PARA SMOOTH SCROLL
     }
 
     function showTyping() {
