@@ -18,9 +18,27 @@ class GeminiService:
         self.api_key = settings.GEMINI_API_KEY
         if self.api_key:
             genai.configure(api_key=self.api_key)
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            self.model = genai.GenerativeModel('models/gemini-2.0-flash')
+            logger.info("✅ Usando modelo: models/gemini-2.0-flash")
         else:
+            logger.error("❌ API Key de Gemini no configurada")
             self.model = None
+    
+    def _extract_response_text(self, response):
+        """
+        🔧 PROPÓSITO: Extraer texto de respuesta de Gemini de forma robusta
+        📝 QUÉ HACE: Maneja diferentes formatos de respuesta de la API
+        """
+        try:
+            # Método 1: Acceso simple (para respuestas básicas)
+            return response.text.strip()
+        except Exception:
+            try:
+                # Método 2: Acceso complejo (para respuestas complejas)
+                return response.candidates[0].content.parts[0].text.strip()
+            except Exception as e:
+                logger.error(f"❌ Error extrayendo texto de respuesta: {e}")
+                return "Error procesando respuesta de IA"
     
     def get_system_prompt(self, interview_type='operations'):
         """
@@ -121,7 +139,7 @@ Genera SOLO el saludo inicial:"""
                 )
             )
             
-            return response.text.strip()
+            return self._extract_response_text(response)
             
         except Exception as e:
             logger.error(f"Error generando mensaje inicial: {str(e)}")
@@ -253,7 +271,7 @@ Genera SOLO el saludo inicial:"""
                 )
             )
             
-            return response.text
+            return self._extract_response_text(response)
             
         except Exception as e:
             logger.error(f"Error generando respuesta con Gemini: {str(e)}")
@@ -365,7 +383,7 @@ REQUISITOS:
             )
             
             # Procesar respuesta JSON
-            return self._parse_json_feedback_response(response.text)
+            return self._parse_json_feedback_response(self._extract_response_text(response))
             
         except Exception as e:
             logger.error(f"Error generando feedback: {str(e)}")
