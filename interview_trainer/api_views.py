@@ -252,8 +252,93 @@ def get_session_messages(request, session_id):
 @permission_classes([IsAuthenticated])
 def delete_session(request, session_id):
     """
-    🗑️ PROPÓSITO: API para eliminar una sesión
+    🗑️ PROPÓSITO: API para eliminar una sesión específica
     """
-    session = get_object_or_404(InterviewSession, id=session_id, user=request.user)
-    session.delete()
-    return Response({'success': True}, status=status.HTTP_204_NO_CONTENT)
+    try:
+        session = get_object_or_404(InterviewSession, id=session_id, user=request.user)
+        
+        # Guardar información antes de eliminar
+        session_title = session.title
+        messages_count = session.messages.count()
+        
+        # Eliminar sesión (CASCADE eliminará mensajes automáticamente)
+        session.delete()
+        
+        return Response({
+            'success': True,
+            'message': f'Sesión "{session_title}" eliminada exitosamente',
+            'deleted_messages': messages_count
+        })
+        
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': f'Error eliminando sesión: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_sessions_bulk(request):
+    """
+    🗑️ PROPÓSITO: API para eliminar múltiples sesiones
+    """
+    try:
+        session_ids = request.data.get('session_ids', [])
+        
+        if not session_ids:
+            return Response({
+                'success': False,
+                'error': 'No se proporcionaron IDs de sesiones'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Filtrar solo las sesiones del usuario
+        sessions = InterviewSession.objects.filter(
+            id__in=session_ids, 
+            user=request.user
+        )
+        
+        deleted_count = sessions.count()
+        total_messages = sum(session.messages.count() for session in sessions)
+        
+        # Eliminar sesiones
+        sessions.delete()
+        
+        return Response({
+            'success': True,
+            'message': f'Se eliminaron {deleted_count} sesiones y {total_messages} mensajes',
+            'deleted_sessions': deleted_count,
+            'deleted_messages': total_messages
+        })
+        
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': f'Error eliminando sesiones: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_all_sessions(request):
+    """
+    🗑️ PROPÓSITO: API para eliminar TODAS las sesiones del usuario
+    """
+    try:
+        sessions = InterviewSession.objects.filter(user=request.user)
+        total_sessions = sessions.count()
+        total_messages = sum(session.messages.count() for session in sessions)
+        
+        # Eliminar todas las sesiones
+        sessions.delete()
+        
+        return Response({
+            'success': True,
+            'message': f'Se eliminaron {total_sessions} sesiones y {total_messages} mensajes',
+            'deleted_sessions': total_sessions,
+            'deleted_messages': total_messages
+        })
+        
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': f'Error eliminando todas las sesiones: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
