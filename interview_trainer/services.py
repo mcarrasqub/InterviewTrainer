@@ -62,13 +62,14 @@ class GeminiService:
         
         return f"""Eres Lumo, entrevistador especializado en {department_name}.
 
-🎯 OBJETIVO: Realizar entrevista práctica con EXACTAMENTE 10 preguntas.
+🎯 OBJETIVO: Realizar entrevista práctica con EXACTAMENTE 7 preguntas.
 
 📌 REGLAS CRÍTICAS:
-1. **LÍMITE ESTRICTO**: Solo 10 preguntas en total (¡NO MÁS!)
+1. **LÍMITE ESTRICTO**: Solo 7 preguntas en total (¡NO MÁS!)
 2. **RESPUESTAS BREVES**: Máximo 2-3 líneas por respuesta
-3. **UNA pregunta por mensaje**: Sin feedback extenso entre preguntas
+3. **UNA pregunta por mensaje**: Sin feedback  entre preguntas
 4. **SIN comentarios largos**: Ir directo a la siguiente pregunta
+5. **PREGUNTAS CON CONTEXTO**: Basadas en respuestas previas
 
 📌 COMPETENCIAS A EVALUAR:
 - Comunicación, pensamiento crítico, adaptabilidad, trabajo en equipo, inteligencia emocional
@@ -85,7 +86,7 @@ class GeminiService:
 - Sin análisis extenso de respuestas
 - Emojis ocasionales (1-2 máximo)
 
-IMPORTANTE: Después de la pregunta 10, finaliza amablemente la entrevista."""
+IMPORTANTE: Después de la pregunta 7, finaliza amablemente la entrevista."""
 
     async def generate_initial_welcome(self, interview_type='operations'):
         """
@@ -168,7 +169,7 @@ Genera SOLO el saludo inicial:"""
             if not msg.get('is_user'):  # Es mensaje de la IA
                 content = msg.get('content', '')
                 # No contar mensajes de finalización
-                if "completado las 10 preguntas" not in content.lower():
+                if "completado las 7 preguntas" not in content.lower():
                     question_count += 1
         
         logger.info(f"🔢 AI messages: {ai_message_count}, Questions counted: {question_count}")
@@ -176,9 +177,9 @@ Genera SOLO el saludo inicial:"""
 
     async def generate_response(self, message, conversation_history=None, interview_type='operations'):
         """
-        🎯 PROPÓSITO: Genera respuesta de la IA con contexto dinámico y límite de 10 preguntas
+        🎯 PROPÓSITO: Genera respuesta de la IA con contexto dinámico y límite de 7 preguntas
         📝 QUÉ HACE: Toma el mensaje del usuario y devuelve respuesta especializada
-        🚨 LÍMITE CRÍTICO: Máximo 10 preguntas por sesión
+        🚨 LÍMITE CRÍTICO: Máximo 7 preguntas por sesión
         """
         if not self.model:
             raise ValueError("API key de Gemini no configurada")
@@ -187,22 +188,22 @@ Genera SOLO el saludo inicial:"""
             # 🔢 CONTAR PREGUNTAS REALIZADAS (CRÍTICO)
             questions_asked = self._count_ai_questions(conversation_history or [])
             
-            logger.info(f"🔢 CONTROL DE PREGUNTAS: {questions_asked}/10 realizadas")
+            logger.info(f"🔢 CONTROL DE PREGUNTAS: {questions_asked}/7 realizadas")
             logger.info(f"📝 Historial recibido: {len(conversation_history or [])} mensajes")
-            
-            # 🚨 VERIFICAR LÍMITE DE 10 PREGUNTAS
-            if questions_asked >= 10:
+
+            # 🚨 VERIFICAR LÍMITE DE 7 PREGUNTAS
+            if questions_asked >= 7:
                 logger.info("🚨 LÍMITE ALCANZADO: Finalizando entrevista")
                 return (
-                    "¡Excelente! 🎉 Hemos completado las 10 preguntas de esta entrevista. "
+                    "¡Excelente! 🎉 Hemos completado las 7 preguntas de esta entrevista. "
                     "Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. "
                     "Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. "
                     "¡Te deseo mucho éxito en tu proceso de selección! 🌟\n\n"
                     "La entrevista ha finalizado. Puedes revisar tu evaluación en el panel de resultados."
                 )
-            
-            logger.info(f"✅ CONTINUAR: Generando pregunta #{questions_asked + 1}/10")
-            
+
+            logger.info(f"✅ CONTINUAR: Generando pregunta #{questions_asked + 1}/7")
+
             # Construir contexto completo con información dinámica
             system_prompt = self.get_system_prompt(interview_type)
             
@@ -226,7 +227,7 @@ Genera SOLO el saludo inicial:"""
             
             if is_first_message:
                 # Para el primer mensaje, usar prompt específico
-                session_context = f"\n🎯 SESIÓN INICIAL - {department_name}\n🔢 Pregunta: 1/10\n⚠️ RESPUESTA BREVE: Máximo 2-3 líneas\n\n"
+                session_context = f"\n🎯 SESIÓN INICIAL - {department_name}\n🔢 Pregunta: 1/7\n\n"
                 full_context = f"{system_prompt}{session_context}"
                 
                 # Si hay un mensaje del usuario, es porque ya escribió algo (no debería pasar, pero por si acaso)
@@ -236,8 +237,8 @@ Genera SOLO el saludo inicial:"""
                 full_context += "Respuesta breve de Lumo:"
             else:
                 # Para mensajes posteriores, usar el flujo normal
-                remaining_questions = 10 - questions_asked
-                session_context = f"\n🎯 SESIÓN: {department_name}\n� Preguntas: {questions_asked}/10 | Restantes: {remaining_questions}\n"
+                remaining_questions = 7 - questions_asked
+                session_context = f"\n🎯 SESIÓN: {department_name}\n🔢 Preguntas: {questions_asked}/7 | Restantes: {remaining_questions}\n"
                 
                 if remaining_questions == 1:
                     session_context += "⚠️ ÚLTIMA PREGUNTA - Después finaliza la entrevista\n"

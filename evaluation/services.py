@@ -21,7 +21,7 @@ class EvaluationService:
     
     async def can_generate_evaluation(self, session: InterviewSession) -> Dict:
         """
-        ✅ PROPÓSITO: Verifica si una sesión puede ser evaluada (10 preguntas)
+        ✅ PROPÓSITO: Verifica si una sesión puede ser evaluada (7 preguntas)
         """
         # Verificar si ya existe evaluación
         has_feedback = await sync_to_async(
@@ -40,11 +40,11 @@ class EvaluationService:
             lambda: session.messages.filter(is_user=True).count()
         )()
         
-        # Para evaluación necesitamos al menos 10 preguntas y 9 respuestas del usuario
-        # (el usuario responde a 9 preguntas, la 10ma es la despedida)
-        min_questions = 10
-        min_user_responses = 9
-        
+        # Para evaluación necesitamos al menos 7 preguntas y 6 respuestas del usuario
+        # (el usuario responde a 6 preguntas, la 7ma es la despedida)
+        min_questions = 7
+        min_user_responses = 6
+
         can_evaluate = questions_count >= min_questions and user_responses >= min_user_responses
         
         return {
@@ -70,7 +70,7 @@ class EvaluationService:
         for message in ai_messages:
             content = message.content
             # No contar mensajes de finalización
-            if "completado las 10 preguntas" not in content.lower():
+            if "completado las 7 preguntas" not in content.lower():
                 question_count += 1
         
         return question_count
