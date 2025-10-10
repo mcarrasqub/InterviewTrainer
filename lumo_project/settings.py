@@ -126,7 +126,7 @@ GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
 
 # Login/Logout URLs
 LOGIN_URL = '/auth/login/'
-LOGIN_REDIRECT_URL = '/chat/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Configuración adicional para CSRF

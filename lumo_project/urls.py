@@ -13,6 +13,7 @@ urlpatterns = [
     path('evaluation/', include('evaluation.urls')),
     path('api/evaluation/', include('evaluation.api_urls')),
     path('auth/', include('django.contrib.auth.urls')),
+    
 ]
 
 if settings.DEBUG:

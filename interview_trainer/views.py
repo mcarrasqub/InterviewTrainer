@@ -31,7 +31,7 @@ def register(request):
                 UserProfile.objects.get_or_create(user=user)
                 login(request, user)
                 messages.success(request, '¡Cuenta creada exitosamente!')
-                return redirect('interview_trainer:chat')
+                return redirect('interview_trainer:home')
             except Exception as e:
                 messages.error(request, f'Error creando la cuenta: {str(e)}')
         else:
