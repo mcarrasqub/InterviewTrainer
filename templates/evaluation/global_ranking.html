@@ -1,0 +1,153 @@
+{% extends 'evaluation/base_evaluation.html' %}
+
+{% block title %}Ranking Global - Lumo{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .ranking-container {
+        background: linear-gradient(160deg, #6a5af9, #d66efd);
+        padding: 2rem;
+        border-radius: 20px;
+        color: white;
+    }
+
+    .ranking-header {
+        margin-bottom: 2rem;
+    }
+
+    .role-selector .form-select {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .role-selector .form-select option {
+        color: #333;
+    }
+
+    .ranking-list .ranking-item {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 12px;
+        background-color: rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .ranking-list .ranking-item:hover {
+        transform: scale(1.02);
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .ranking-item .rank-position {
+        font-size: 1.2rem;
+        font-weight: 700;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.1);
+        margin-right: 1rem;
+    }
+
+    .ranking-item .user-info {
+        flex-grow: 1;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+    
+    .ranking-item .user-info .fas {
+        margin-right: 0.5rem;
+        opacity: 0.8;
+    }
+
+    .ranking-item .user-score {
+        font-size: 1.3rem;
+        font-weight: 700;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Destacar usuario actual */
+    .ranking-item.current-user {
+        background-color: #ff007f; /* Color fucsia para destacar */
+        box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+    }
+
+    /* Colores por posición */
+    .ranking-item.rank-1 { background-color: #ffc107; color: #333; }
+    .ranking-item.rank-1 .rank-position { background-color: rgba(0,0,0,0.1); }
+    .ranking-item.rank-1 .user-score { background-color: rgba(0,0,0,0.1); }
+    .ranking-item.rank-2 { background-color: #c0c0c0; color: #333; }
+    .ranking-item.rank-3 { background-color: #cd7f32; color: white; }
+
+</style>
+{% endblock %}
+
+{% block evaluation_content %}
+<div class="ranking-container">
+    <div class="ranking-header text-center">
+        <h1 class="display-5 fw-bold">Ranking Global</h1>
+        <p class="lead">Tu posición frente a otros profesionales en <strong>{{ selected_role_name }}</strong></p>
+    </div>
+
+    <!-- Selector de Rol -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6 role-selector">
+            <label for="roleSelector" class="form-label">Seleccionar Rol:</label>
+            <select id="roleSelector" class="form-select form-select-lg">
+                {% for slug, name in all_roles %}
+                    <option value="{{ slug }}" {% if slug == selected_role %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Lista de Ranking -->
+    <div class="ranking-list">
+        {% for user in ranked_users %}
+            <div class="ranking-item {% if user.session__user_id == request.user.id %}current-user{% endif %} rank-{{ user.rank }}">
+                <div class="rank-position">{{ user.rank }}</div>
+                <div class="user-info">
+                    {% if user.rank == 1 %}<i class="fas fa-crown text-warning"></i>{% endif %}
+                    {{ user.session__user__username }}
+                </div>
+                <div class="user-score">{{ user.average_score|floatformat:1 }}</div>
+            </div>
+        {% empty %}
+            <div class="text-center p-5">
+                <h4>Aún no hay ranking para este rol</h4>
+                <p>¡Sé el primero en completar una entrevista!</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Posición del usuario actual si no está en el Top -->
+    {% if current_user_rank and current_user_rank.rank > 20 %}
+        <div class="mt-4 text-center">...</div>
+        <div class="ranking-list mt-2">
+            <div class="ranking-item current-user">
+                <div class="rank-position">{{ current_user_rank.rank }}</div>
+                <div class="user-info">
+                    <i class="fas fa-user"></i>
+                    {{ current_user_rank.session__user__username }} (Tú)
+                </div>
+                <div class="user-score">{{ current_user_rank.average_score|floatformat:1 }}</div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('roleSelector').addEventListener('change', function() {
+        const selectedRole = this.value;
+        window.location.href = `/evaluation/ranking/${selectedRole}/`;
+    });
+</script>
+{% endblock %}

@@ -9,4 +9,6 @@ urlpatterns = [
     path('dashboard/', views.user_dashboard, name='user_dashboard'),
     path('competencies/', views.competency_analysis, name='competency_analysis'),
     path('history/', views.evaluation_history, name='evaluation_history'),
+    path('ranking/', views.global_ranking, name='global_ranking_default'),
+    path('ranking/<slug:role_slug>/', views.global_ranking, name='global_ranking'),
 ]
