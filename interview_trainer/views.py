@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from urllib3 import request
 from .models import InterviewSession, ChatMessage, UserProfile
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 
@@ -218,3 +219,36 @@ def profile_settings(request):
         return redirect('interview_trainer:profile_settings')
     
     return render(request, 'interview_trainer/profile_settings.html', {'profile': profile})
+
+@login_required
+def progreso_view(request):
+    """
+    📈 PROPÓSITO: Página de progreso del usuario
+    📝 QUÉ HACE: Muestra los charts de estadísticas del usuario
+    """
+    return render(request, 'interview_trainer/progreso.html')
+
+@login_required
+def progreso_data(request):
+    """
+    API: Devuelve datos de progreso del usuario para los charts
+    """
+    user = request.user
+    sessions = InterviewSession.objects.filter(user=user).order_by('-created_at')[:7]
+    # Score promedio
+    scores = [s.average_score for s in sessions if hasattr(s, 'average_score') and s.average_score is not None]
+    average_score = round(sum(scores)/len(scores), 2) if scores else 0
+    # Sesiones recientes
+    sessions_labels = [s.title for s in sessions]
+    sessions_scores = [s.average_score if hasattr(s, 'average_score') and s.average_score is not None else 0 for s in sessions]
+    # Radar de competencias (ejemplo: puedes adaptar a tus modelos reales)
+    skills_labels = ['Comunicación', 'Resolución', 'Liderazgo', 'Técnico', 'Creatividad']
+    # Simulación: promedios por competencia
+    skills_scores = [round(average_score - i*0.7, 2) if average_score - i*0.7 > 0 else 0 for i in range(len(skills_labels))]
+    return JsonResponse({
+        'average_score': average_score,
+        'sessions_labels': sessions_labels,
+        'sessions_scores': sessions_scores,
+        'skills_labels': skills_labels,
+        'skills_scores': skills_scores,
+    })

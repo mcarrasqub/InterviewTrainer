@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Progreso - Lumo{% endblock %}
+
+{% block extra_css %}
+<style>
+  .progress-charts-container {
+    max-width: 1100px;
+    margin: 2.5rem auto;
+    background: linear-gradient(120deg, #f8fafc 60%, #e0e7ff 100%);
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(79,70,229,0.13);
+    padding: 2.7rem 2.2rem 2.2rem 2.2rem;
+  }
+  .chart-title {
+    font-weight: 800;
+    color: #4F46E5;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 8px rgba(124,58,237,0.08);
+    transition: color 0.2s;
+  }
+  .chart-card {
+    background: linear-gradient(135deg, #f3f0ff 60%, #e0e7ff 100%);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(79,70,229,0.10);
+    padding: 1.7rem 1.2rem;
+    margin-bottom: 2rem;
+    transition: box-shadow 0.25s, transform 0.18s, background 0.25s;
+    border: 1.5px solid #ede9fe;
+    position: relative;
+    z-index: 1;
+  }
+  .chart-card:hover, .chart-card:focus-within {
+    box-shadow: 0 8px 36px 0 rgba(124,58,237,0.18), 0 1.5px 8px 0 rgba(79,70,229,0.10);
+    background: linear-gradient(120deg, #ede9fe 60%, #c7d2fe 100%);
+    transform: translateY(-6px) scale(1.025);
+  }
+  .chart-title:hover, .chart-card:hover .chart-title {
+    color: #7C3AED;
+  }
+  .chart-icon {
+    font-size: 1.7rem;
+    color: #7C3AED;
+    filter: drop-shadow(0 2px 6px #e0e7ff);
+    transition: color 0.2s;
+  }
+  .chart-card:hover .chart-icon {
+    color: #4F46E5;
+  }
+  .progress-charts-container h1 {
+    background: linear-gradient(90deg, #4F46E5 10%, #7C3AED 90%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    font-size: 2.3rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.2rem;
+    text-shadow: 0 2px 12px rgba(79,70,229,0.10);
+  }
+  .progress-charts-container .lead {
+    color: #6366f1;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 1px 6px #e0e7ff;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="progress-charts-container">
+  <div class="text-center mb-5">
+    <div style="font-size:2.5rem; color:#7C3AED; margin-bottom:0.5rem;">
+      <i class="fas fa-trophy fa-bounce"></i>
+    </div>
+    <h1 style="font-weight:900; color:#4F46E5; letter-spacing:1px;">¡Bienvenido a tu Dashboard de Progreso!</h1>
+    <p class="lead" style="color:#6366f1; font-weight:500; margin-top:0.5rem;">Aquí puedes visualizar tu avance, desempeño y estadísticas en tiempo real.<br>¡Sigue entrenando y supera tus límites!</p>
+  </div>
+  <div class="row g-4 align-items-stretch">
+    <div class="col-lg-4 col-md-6 d-flex">
+      <div class="chart-card flex-fill d-flex flex-column align-items-center justify-content-center">
+        <div class="chart-title"><i class="fas fa-bullseye chart-icon"></i>Score Promedio</div>
+        <canvas id="scoreChart" style="max-width:220px;"></canvas>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6 d-flex">
+      <div class="chart-card flex-fill d-flex flex-column align-items-center justify-content-center">
+        <div class="chart-title"><i class="fas fa-history chart-icon"></i>Sesiones Recientes</div>
+        <canvas id="sessionsChart" style="max-width:260px;"></canvas>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-12 d-flex">
+      <div class="chart-card flex-fill d-flex flex-column align-items-center justify-content-center">
+        <div class="chart-title"><i class="fas fa-star chart-icon"></i>Desempeño por Competencia</div>
+        <canvas id="skillsRadarChart" style="max-width:320px;"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Cargar datos vía AJAX
+fetch("{% url 'interview_trainer:progreso_data' %}")
+  .then(response => response.json())
+  .then(data => {
+    // Score promedio (Doughnut)
+    new Chart(document.getElementById('scoreChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Score', 'Restante'],
+        datasets: [{
+          data: [data.average_score, 10 - data.average_score],
+          backgroundColor: ['#7C3AED', '#E0E7FF'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true },
+          title: { display: false }
+        }
+      }
+    });
+
+    // Sesiones recientes (Bar)
+    new Chart(document.getElementById('sessionsChart'), {
+      type: 'bar',
+      data: {
+        labels: data.sessions_labels,
+        datasets: [{
+          label: 'Score',
+          data: data.sessions_scores,
+          backgroundColor: '#4F46E5',
+          borderRadius: 8,
+          maxBarThickness: 32
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          y: { min: 0, max: 10, ticks: { stepSize: 2 } }
+        }
+      }
+    });
+
+    // Radar de competencias
+    new Chart(document.getElementById('skillsRadarChart'), {
+      type: 'radar',
+      data: {
+        labels: data.skills_labels,
+        datasets: [{
+          label: 'Desempeño',
+          data: data.skills_scores,
+          backgroundColor: 'rgba(124,58,237,0.2)',
+          borderColor: '#7C3AED',
+          pointBackgroundColor: '#4F46E5',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: '#7C3AED'
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          r: {
+            min: 0,
+            max: 10,
+            ticks: { stepSize: 2 },
+            pointLabels: { font: { size: 14 } }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
