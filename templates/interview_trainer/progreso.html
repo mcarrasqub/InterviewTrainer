@@ -5,71 +5,89 @@
 
 {% block extra_css %}
 <style>
+  body {
+    background: linear-gradient(135deg, #f8fafc 0%, #a7c7ff 40%, #fbc2eb 100%) !important;
+  }
   .progress-charts-container {
-    max-width: 1100px;
+    max-width: 1150px;
     margin: 2.5rem auto;
-    background: linear-gradient(120deg, #f8fafc 60%, #e0e7ff 100%);
-    border-radius: 22px;
-    box-shadow: 0 12px 40px rgba(79,70,229,0.13);
-    padding: 2.7rem 2.2rem 2.2rem 2.2rem;
+    background: linear-gradient(120deg, #fff1eb 0%, #ace0f9 100%);
+    border-radius: 38px;
+    box-shadow: 0 18px 56px rgba(37,99,235,0.13), 0 1.5px 8px 0 rgba(251,194,235,0.10);
+    padding: 3.1rem 2.7rem 2.7rem 2.7rem;
+    border: 2.5px solid #a7c7ff;
+    animation: popin 1.2s cubic-bezier(.23,1.12,.32,1) 1;
+  }
+  @keyframes popin {
+    0% { transform: scale(0.97) translateY(30px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
   }
   .chart-title {
-    font-weight: 800;
-    color: #4F46E5;
+    font-weight: 900;
+    color: #334155;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.7rem;
     letter-spacing: 0.5px;
-    text-shadow: 0 2px 8px rgba(124,58,237,0.08);
+    text-shadow: 0 2px 8px #e0e7ef;
     transition: color 0.2s;
+    font-size: 1.35rem;
   }
   .chart-card {
-    background: linear-gradient(135deg, #f3f0ff 60%, #e0e7ff 100%);
-    border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(79,70,229,0.10);
-    padding: 1.7rem 1.2rem;
+    background: linear-gradient(135deg, #fbc2eb 0%, #a7c7ff 100%);
+    border-radius: 26px;
+    box-shadow: 0 8px 36px rgba(124,58,237,0.10), 0 1.5px 8px 0 rgba(6,182,212,0.08);
+    padding: 2.1rem 1.3rem 1.7rem 1.3rem;
     margin-bottom: 2rem;
     transition: box-shadow 0.25s, transform 0.18s, background 0.25s;
-    border: 1.5px solid #ede9fe;
+    border: 2px solid #a7c7ff;
     position: relative;
     z-index: 1;
+    animation: popin 1.2s cubic-bezier(.23,1.12,.32,1) 1;
   }
   .chart-card:hover, .chart-card:focus-within {
-    box-shadow: 0 8px 36px 0 rgba(124,58,237,0.18), 0 1.5px 8px 0 rgba(79,70,229,0.10);
-    background: linear-gradient(120deg, #ede9fe 60%, #c7d2fe 100%);
-    transform: translateY(-6px) scale(1.025);
+    box-shadow: 0 16px 56px 0 #7c3aed, 0 1.5px 8px 0 #06b6d4;
+    background: linear-gradient(135deg, #a7c7ff 0%, #fbc2eb 100%);
+    transform: translateY(-8px) scale(1.035);
   }
   .chart-title:hover, .chart-card:hover .chart-title {
-    color: #7C3AED;
+    color: #3fa7ff;
   }
   .chart-icon {
-    font-size: 1.7rem;
-    color: #7C3AED;
-    filter: drop-shadow(0 2px 6px #e0e7ff);
-    transition: color 0.2s;
-  }
-  .chart-card:hover .chart-icon {
-    color: #4F46E5;
-  }
-  .progress-charts-container h1 {
-    background: linear-gradient(90deg, #4F46E5 10%, #7C3AED 90%);
+    font-size: 2.1rem;
+    color: #ff853fff;
+    filter: drop-shadow(0 2px 8px #e0e7ef);
+    transition: color 0.2s, filter 0.2s;
+    background: linear-gradient(135deg, #306492ff 0%, S#09470dff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
-    font-size: 2.3rem;
+  }
+  .chart-card:hover .chart-icon {
+    color: #232946;
+    filter: drop-shadow(0 2px 12px #3fa7ff);
+    background: linear-gradient(135deg, #232946 0%, #3fa7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
+  .progress-charts-container h1 {
+    color: #334155;
+    font-size: 2.5rem;
     font-weight: 900;
     letter-spacing: 1.5px;
     margin-bottom: 0.2rem;
-    text-shadow: 0 2px 12px rgba(79,70,229,0.10);
+    text-shadow: 0 2px 16px #e0e7ef;
   }
   .progress-charts-container .lead {
-    color: #6366f1;
-    font-weight: 600;
+    color: #64748b;
+    font-weight: 700;
     margin-top: 0.5rem;
     margin-bottom: 1.5rem;
-    text-shadow: 0 1px 6px #e0e7ff;
+    text-shadow: 0 1px 8px #e0e7ef;
   }
 </style>
 {% endblock %}
@@ -77,28 +95,28 @@
 {% block content %}
 <div class="progress-charts-container">
   <div class="text-center mb-5">
-    <div style="font-size:2.5rem; color:#7C3AED; margin-bottom:0.5rem;">
-      <i class="fas fa-trophy fa-bounce"></i>
+    <div style="font-size:3.2rem; margin-bottom:0.5rem;">
+      <i class="fas fa-award fa-bounce" style="color:#64748b; filter: drop-shadow(0 0 8px #e0e7ef);"></i>
     </div>
-    <h1 style="font-weight:900; color:#4F46E5; letter-spacing:1px;">¡Bienvenido a tu Dashboard de Progreso!</h1>
-    <p class="lead" style="color:#6366f1; font-weight:500; margin-top:0.5rem;">Aquí puedes visualizar tu avance, desempeño y estadísticas en tiempo real.<br>¡Sigue entrenando y supera tus límites!</p>
+    <h1>¡Bienvenido a tu Dashboard de Progreso!</h1>
+    <p class="lead">Aquí puedes visualizar tu avance, desempeño y estadísticas en tiempo real.<br>¡Sigue entrenando y supera tus límites!</p>
   </div>
   <div class="row g-4 align-items-stretch">
     <div class="col-lg-4 col-md-6 d-flex">
       <div class="chart-card flex-fill d-flex flex-column align-items-center justify-content-center">
-        <div class="chart-title"><i class="fas fa-bullseye chart-icon"></i>Score Promedio</div>
+                <div class="chart-title"><i class="fas fa-bullseye chart-icon" style="color:#3b82f6; background:none; filter:none; opacity:1;"></i>Score Promedio</div>
         <canvas id="scoreChart" style="max-width:220px;"></canvas>
       </div>
     </div>
     <div class="col-lg-4 col-md-6 d-flex">
       <div class="chart-card flex-fill d-flex flex-column align-items-center justify-content-center">
-        <div class="chart-title"><i class="fas fa-history chart-icon"></i>Sesiones Recientes</div>
+                <div class="chart-title"><i class="fas fa-history chart-icon" style="color:#06b6d4; background:none; filter:none; opacity:1;"></i>Sesiones Recientes</div>
         <canvas id="sessionsChart" style="max-width:260px;"></canvas>
       </div>
     </div>
     <div class="col-lg-4 col-md-12 d-flex">
       <div class="chart-card flex-fill d-flex flex-column align-items-center justify-content-center">
-        <div class="chart-title"><i class="fas fa-star chart-icon"></i>Desempeño por Competencia</div>
+                <div class="chart-title"><i class="fas fa-star chart-icon" style="color:#fbbf24; background:none; filter:none; opacity:1;"></i>Desempeño por Competencia</div>
         <canvas id="skillsRadarChart" style="max-width:320px;"></canvas>
       </div>
     </div>
@@ -109,7 +127,18 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Cargar datos vía AJAX
+// Dark & Blue Chart.js Colors
+const stunningColors = {
+  blue: '#030303ff', // violeta
+  blueDark: '#070707ff', // celeste vibrante
+  blueDeep: '#e30aa6ff', // rosa claro
+  white: '#fff1eb',
+  accent: '#fbbf24', // amarillo vibrante
+  accent2: '#094ec7ff',
+  accent3: '#ace0f9',
+  bg1: 'rgba(228, 198, 0, 0.1)',
+  bg2: 'rgba(90, 131, 141, 0.1)'
+};
 fetch("{% url 'interview_trainer:progreso_data' %}")
   .then(response => response.json())
   .then(data => {
@@ -120,8 +149,10 @@ fetch("{% url 'interview_trainer:progreso_data' %}")
         labels: ['Score', 'Restante'],
         datasets: [{
           data: [data.average_score, 10 - data.average_score],
-          backgroundColor: ['#7C3AED', '#E0E7FF'],
-          borderWidth: 2
+          backgroundColor: [stunningColors.blue, stunningColors.blueDeep],
+          borderWidth: 3,
+          hoverOffset: 10,
+          borderColor: [stunningColors.white, stunningColors.bg1]
         }]
       },
       options: {
@@ -130,7 +161,8 @@ fetch("{% url 'interview_trainer:progreso_data' %}")
           legend: { display: false },
           tooltip: { enabled: true },
           title: { display: false }
-        }
+        },
+        animation: { animateRotate: true, animateScale: true }
       }
     });
 
@@ -142,9 +174,12 @@ fetch("{% url 'interview_trainer:progreso_data' %}")
         datasets: [{
           label: 'Score',
           data: data.sessions_scores,
-          backgroundColor: '#4F46E5',
-          borderRadius: 8,
-          maxBarThickness: 32
+          backgroundColor: [stunningColors.blue, stunningColors.blueDark, stunningColors.blueDeep, stunningColors.white, stunningColors.accent, stunningColors.accent2, stunningColors.accent3],
+          borderRadius: 12,
+          maxBarThickness: 36,
+          borderWidth: 2,
+          borderColor: stunningColors.bg2,
+          hoverBackgroundColor: stunningColors.blue
         }]
       },
       options: {
@@ -153,8 +188,10 @@ fetch("{% url 'interview_trainer:progreso_data' %}")
           tooltip: { enabled: true }
         },
         scales: {
-          y: { min: 0, max: 10, ticks: { stepSize: 2 } }
-        }
+          y: { min: 0, max: 10, ticks: { stepSize: 2, color: stunningColors.white }, grid: { color: stunningColors.bg2 } },
+          x: { grid: { color: stunningColors.bg1 }, ticks: { color: stunningColors.white } }
+        },
+        animation: { duration: 1200, easing: 'easeOutBounce' }
       }
     });
 
@@ -166,12 +203,12 @@ fetch("{% url 'interview_trainer:progreso_data' %}")
         datasets: [{
           label: 'Desempeño',
           data: data.skills_scores,
-          backgroundColor: 'rgba(124,58,237,0.2)',
-          borderColor: '#7C3AED',
-          pointBackgroundColor: '#4F46E5',
-          pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: '#7C3AED'
+          backgroundColor: 'rgba(73, 229, 0, 0.18)',
+          borderColor: stunningColors.blue,
+          pointBackgroundColor: stunningColors.white,
+          pointBorderColor: stunningColors.blue,
+          pointHoverBackgroundColor: stunningColors.blueDark,
+          pointHoverBorderColor: stunningColors.white
         }]
       },
       options: {
@@ -183,10 +220,12 @@ fetch("{% url 'interview_trainer:progreso_data' %}")
           r: {
             min: 0,
             max: 10,
-            ticks: { stepSize: 2 },
-            pointLabels: { font: { size: 14 } }
+            ticks: { stepSize: 2, color: stunningColors.white },
+            pointLabels: { font: { size: 15, weight: 'bold' }, color: stunningColors.blue },
+            grid: { color: stunningColors.bg1 }
           }
-        }
+        },
+        animation: { duration: 1200, easing: 'easeInOutQuart' }
       }
     });
   });
