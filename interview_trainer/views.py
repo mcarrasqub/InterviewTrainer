@@ -234,17 +234,32 @@ def progreso_data(request):
     API: Devuelve datos de progreso del usuario para los charts
     """
     user = request.user
+    from evaluation.models import FeedbackReport, CompetencyScore, CompetencyDefinition
     sessions = InterviewSession.objects.filter(user=user).order_by('-created_at')[:7]
-    # Score promedio
-    scores = [s.average_score for s in sessions if hasattr(s, 'average_score') and s.average_score is not None]
+    feedbacks = FeedbackReport.objects.filter(session__in=sessions).order_by('-generated_at')
+    # Score promedio real
+    scores = [f.average_score for f in feedbacks if f.average_score is not None]
     average_score = round(sum(scores)/len(scores), 2) if scores else 0
     # Sesiones recientes
     sessions_labels = [s.title for s in sessions]
-    sessions_scores = [s.average_score if hasattr(s, 'average_score') and s.average_score is not None else 0 for s in sessions]
-    # Radar de competencias (ejemplo: puedes adaptar a tus modelos reales)
-    skills_labels = ['Comunicación', 'Resolución', 'Liderazgo', 'Técnico', 'Creatividad']
-    # Simulación: promedios por competencia
-    skills_scores = [round(average_score - i*0.7, 2) if average_score - i*0.7 > 0 else 0 for i in range(len(skills_labels))]
+    sessions_scores = []
+    for s in sessions:
+        feedback = getattr(s, 'feedback_report', None)
+        if feedback and feedback.average_score is not None:
+            sessions_scores.append(round(feedback.average_score, 2))
+        else:
+            sessions_scores.append(0)
+    # Competencias reales
+    competencies = CompetencyDefinition.get_default_competencies()
+    skills_labels = [c.name for c in competencies]
+    skills_scores = []
+    for comp in competencies:
+        comp_scores = CompetencyScore.objects.filter(session__in=sessions, competency_name=comp.name)
+        if comp_scores.exists():
+            avg = round(sum(cs.score for cs in comp_scores)/comp_scores.count(), 2)
+        else:
+            avg = 0
+        skills_scores.append(avg)
     return JsonResponse({
         'average_score': average_score,
         'sessions_labels': sessions_labels,
