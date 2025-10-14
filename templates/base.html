@@ -140,22 +140,22 @@
                         <a class="nav-link" href="{% url 'interview_trainer:select_interview_type' %}">
                             <i class="fas fa-comments me-1"></i>Chat
                         </a>
-                        <a class="nav-link" href="{% url 'interview_trainer:profile_settings' %}">
-                            <i class="fas fa-user-cog me-1"></i>Perfil
+                        <a class="nav-link" href="{% url 'evaluation:global_ranking_default' %}">
+                            <i class="fas fa-trophy me-1"></i>Ranking
                         </a>
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user me-1"></i>{{ user.first_name|default:user.username }}
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'interview_trainer:profile_settings' %}">
-                                    <i class="fas fa-cog me-2"></i>Configuración
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'interview_trainer:profile_settings' %}">
+                                <i class="fas fa-cog me-2"></i>Configuración
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'logout' %}">
                                     <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
                                 </a></li>
-                            </ul>
+                            </div>
                         </div>
                     {% else %}
                         <a class="nav-link" href="{% url 'interview_trainer:home' %}">Inicio</a>

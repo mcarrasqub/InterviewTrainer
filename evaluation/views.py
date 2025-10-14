@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from interview_trainer.models import InterviewSession
 from .services import EvaluationService, ReportGenerator
 from .models import FeedbackReport, UserAnalytics, CompetencyDefinition
+from django.db.models import Avg, Window, F
+from django.db.models.functions import Rank
 
 @login_required
 def session_feedback(request, session_id):
@@ -171,3 +173,50 @@ def evaluation_history(request):
     }
     
     return render(request, 'evaluation/evaluation_history.html', context)
+
+@login_required
+def global_ranking(request, role_slug='it'):
+    """
+    🏆 PROPÓSITO: Muestra el ranking global de usuarios para un rol específico.
+    """
+    # Obtener todos los tipos de entrevista para el selector
+    all_roles = InterviewSession.INTERVIEW_TYPES
+
+    # Filtrar reportes de feedback para el rol seleccionado
+    feedback_reports = FeedbackReport.objects.filter(
+        session__session_type=role_slug
+    ).select_related('session__user')
+
+    # Calcular el puntaje promedio por usuario para ese rol
+    user_scores = feedback_reports.values(
+        'session__user__username', 'session__user_id'
+    ).annotate(
+        average_score=Avg('average_score')
+    ).order_by('-average_score')
+
+    # Añadir el ranking usando Window functions
+    ranked_users = user_scores.annotate(
+        rank=Window(
+            expression=Rank(),
+            order_by=F('average_score').desc()
+        )
+    )
+
+    # Obtener la posición del usuario actual
+    current_user_rank = None
+    for user in ranked_users:
+        if user['session__user_id'] == request.user.id:
+            current_user_rank = user
+            break
+
+    # Obtener el nombre legible del rol
+    selected_role_name = dict(all_roles).get(role_slug, 'General')
+
+    context = {
+        'ranked_users': ranked_users[:20],  # Top 20
+        'current_user_rank': current_user_rank,
+        'all_roles': all_roles,
+        'selected_role': role_slug,
+        'selected_role_name': selected_role_name,
+    }
+    return render(request, 'evaluation/global_ranking.html', context)
