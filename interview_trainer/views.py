@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from urllib3 import request
 from .models import InterviewSession, ChatMessage, UserProfile
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 
@@ -218,3 +219,51 @@ def profile_settings(request):
         return redirect('interview_trainer:profile_settings')
     
     return render(request, 'interview_trainer/profile_settings.html', {'profile': profile})
+
+@login_required
+def progreso_view(request):
+    """
+    📈 PROPÓSITO: Página de progreso del usuario
+    📝 QUÉ HACE: Muestra los charts de estadísticas del usuario
+    """
+    return render(request, 'interview_trainer/progreso.html')
+
+@login_required
+def progreso_data(request):
+    """
+    API: Devuelve datos de progreso del usuario para los charts
+    """
+    user = request.user
+    from evaluation.models import FeedbackReport, CompetencyScore, CompetencyDefinition
+    sessions = InterviewSession.objects.filter(user=user).order_by('-created_at')[:7]
+    feedbacks = FeedbackReport.objects.filter(session__in=sessions).order_by('-generated_at')
+    # Score promedio real
+    scores = [f.average_score for f in feedbacks if f.average_score is not None]
+    average_score = round(sum(scores)/len(scores), 2) if scores else 0
+    # Sesiones recientes
+    sessions_labels = [s.title for s in sessions]
+    sessions_scores = []
+    for s in sessions:
+        feedback = getattr(s, 'feedback_report', None)
+        if feedback and feedback.average_score is not None:
+            sessions_scores.append(round(feedback.average_score, 2))
+        else:
+            sessions_scores.append(0)
+    # Competencias reales
+    competencies = CompetencyDefinition.get_default_competencies()
+    skills_labels = [c.name for c in competencies]
+    skills_scores = []
+    for comp in competencies:
+        comp_scores = CompetencyScore.objects.filter(session__in=sessions, competency_name=comp.name)
+        if comp_scores.exists():
+            avg = round(sum(cs.score for cs in comp_scores)/comp_scores.count(), 2)
+        else:
+            avg = 0
+        skills_scores.append(avg)
+    return JsonResponse({
+        'average_score': average_score,
+        'sessions_labels': sessions_labels,
+        'sessions_scores': sessions_scores,
+        'skills_labels': skills_labels,
+        'skills_scores': skills_scores,
+    })
