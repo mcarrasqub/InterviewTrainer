@@ -51,6 +51,10 @@ SECRET_KEY=tu-clave-secreta-super-segura-aqui
 DEBUG=True
 GEMINI_API_KEY= (insert APIkey)
 
+Before running, generate the respective migrations for the database model, using the following commands:
+python manage.py perform migrations
+python manage.py migrate
+
 
 ## 4. Run the project
 
