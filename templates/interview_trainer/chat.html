@@ -533,11 +533,16 @@
             <!-- Contenedor para el botón de estadísticas (render inicial si hay sesión) -->
             <div id="statsButtonContainer" class="stats-button-container">
                 {% if current_session %}
-                    <a href="{% url 'evaluation:session_feedback' current_session.id %}" class="btn btn-success btn-sm">
+                    <a
+                        href="{% url 'evaluation:session_feedback' current_session.id %}"
+                        class="btn btn-success btn-sm no-exit-warning"
+                        data-safe-exit="true"
+                    >
                         <i class="fas fa-chart-line me-1"></i>Ver Estadísticas
                     </a>
                 {% endif %}
             </div>
+
         </div>
     </div>
 </div>
@@ -598,74 +603,114 @@
 </script>
 
 <script>
-    // =================================================================================
-    // INITIALIZATION & GLOBAL VARIABLES
-    // =================================================================================
-    const sessionData = JSON.parse(document.getElementById('session-data').textContent);
-    let currentSessionId = sessionData.currentSessionId;
-    let isActiveInterview = false; // Controla si una entrevista está en curso
+// =================================================================================
+// INITIALIZATION & GLOBAL VARIABLES
+// =================================================================================
+const sessionData = JSON.parse(document.getElementById('session-data').textContent);
+let currentSessionId = sessionData.currentSessionId;
+let isActiveInterview = false; // Controla si una entrevista está en curso
+let isSafeNavigation = false;  // <--- NUEVO: bandera de salida segura
 
-    const chatMessages = document.getElementById('chatMessages');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const typingIndicator = document.getElementById('typingIndicator');
-    const scrollIndicator = document.getElementById('scrollIndicator');
-    const csrftoken = getCookie('csrftoken');
+const chatMessages = document.getElementById('chatMessages');
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const typingIndicator = document.getElementById('typingIndicator');
+const scrollIndicator = document.getElementById('scrollIndicator');
+const csrftoken = getCookie('csrftoken');
 
-    // =================================================================================
-    // EXIT WARNING LOGIC
-    // =================================================================================
+// Por si vuelves a esta página desde el historial, resetea el flag
+window.addEventListener('pageshow', () => { isSafeNavigation = false; });
 
-    function showExitWarning(event) {
-        if (!isActiveInterview) return true;
-        
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        const modal = document.getElementById('exitWarningModal');
-        if(modal) modal.style.display = 'block';
-        return false;
+// =================================================================================
+// EXIT WARNING LOGIC
+// =================================================================================
+
+function showExitWarning(event) {
+    if (!isActiveInterview) return true;
+
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
     }
+    const modal = document.getElementById('exitWarningModal');
+    if (modal) modal.style.display = 'block';
+    return false;
+}
 
-    function hideExitWarning() {
-        const modal = document.getElementById('exitWarningModal');
-        if(modal) modal.style.display = 'none';
+function hideExitWarning() {
+    const modal = document.getElementById('exitWarningModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function confirmExit() {
+    isActiveInterview = false;
+    hideExitWarning();
+    window.location.href = "{% url 'interview_trainer:home' %}";
+}
+
+// Listener para antes de que la página se descargue (cerrar pestaña, recargar)
+window.addEventListener('beforeunload', function(e) {
+    // <--- Solo advertir si hay entrevista activa y NO es una navegación segura
+    if (isActiveInterview && !isSafeNavigation) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
     }
+});
 
-    function confirmExit() {
+// ====== UTILIDAD: chequeos de “click con modificadores” o nuevas pestañas
+function isNewTabClick(evt) {
+    // botón medio (1) o Ctrl/Cmd/Shift/Alt para abrir en nueva pestaña/ventana
+    return evt.button === 1 || evt.ctrlKey || evt.metaKey || evt.shiftKey || evt.altKey;
+}
+
+// ====== Whitelist de destinos seguros por patrón de URL (opcional pero útil)
+const SAFE_URL_PATTERNS = [
+    /\/evaluation\/session_feedback\/\d+\/?$/, // Ver estadísticas
+    /\/evaluation\/session_detail\/\d+\/?$/    // Detalle de sesión (si lo usas)
+];
+
+// Listener para clics en enlaces
+document.addEventListener('click', function(e) {
+    const target = e.target.closest('a');
+    if (!target) return;
+
+    // Si no hay entrevista activa, no hay nada que advertir
+    if (!isActiveInterview) return;
+
+    // Si se abre en nueva pestaña/ventana, no estorbar
+    if (isNewTabClick(e) || target.getAttribute('target') === '_blank') return;
+
+    const href = target.getAttribute('href') || '';
+
+    // 1) Bypass explícito por clase o data-atributo
+    const hasBypassClass = target.classList.contains('no-exit-warning');
+    const hasBypassData  = target.dataset.safeExit === 'true';
+
+    // 2) Bypass por anclas/links “internos” que no abandonan la vista
+    const isHashLink = href.startsWith('#') || href === '';
+    const isMailOrTel = href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:');
+
+    // 3) Bypass por patrón de URL permitido
+    const isSafePattern = SAFE_URL_PATTERNS.some(rx => rx.test(href));
+
+    // 4) Opcional: si el enlace está dentro del contenedor del chat y quieres permitirlos
+    const isInsideChat = !!target.closest('.chat-container');
+
+    // ¿Es un enlace “seguro”?
+    const isSafeLink = hasBypassClass || hasBypassData || isHashLink || isMailOrTel || isSafePattern || isInsideChat;
+
+    if (isSafeLink) {
+        // Marcar esta navegación como segura y desactivar entrevista activa
+        isSafeNavigation = true;
         isActiveInterview = false;
-        hideExitWarning();
-        // Redirige a la página de inicio de forma segura
-        window.location.href = "{% url 'interview_trainer:home' %}";
+        // No bloquees la navegación
+        return;
     }
 
-    // Listener para antes de que la página se descargue (cerrar pestaña, recargar)
-    window.addEventListener('beforeunload', function(e) {
-        if (isActiveInterview) {
-            e.preventDefault();
-            // Estándar para la mayoría de los navegadores modernos
-            e.returnValue = '';
-            return ''; // Para navegadores más antiguos
-        }
-    });
-
-    // Listener para clics en enlaces
-    document.addEventListener('click', function(e) {
-        const target = e.target.closest('a');
-        if (!target || !isActiveInterview) return;
-
-        const href = target.getAttribute('href');
-
-        // Excepciones: no mostrar advertencia para enlaces internos del chat
-        const isInternalLink = target.classList.contains('internal-chat-link') ||
-                               target.closest('.chat-container') ||
-                               (href && (href.startsWith('#') || href.includes('feedback') || href.includes('session_detail')));
-
-        if (!isInternalLink) {
-            showExitWarning(e);
-        }
-    });
+    // Si no es seguro, muestra el warning y bloquea la navegación
+    showExitWarning(e);
+});
 
 
     // =================================================================================
