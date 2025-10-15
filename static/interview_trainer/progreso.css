@@ -1,0 +1,86 @@
+/* progreso.css - styles for the Progreso page */
+
+/* Page background & container tweaks */
+.progreso-page { padding-top: 3.25rem; padding-bottom: 3.25rem; }
+body.progreso-theme { background: linear-gradient(120deg, #e0e7ff 0%, #f3e8ff 100%); }
+
+/* Stat row */
+.stat-row { display:flex; gap:1rem; justify-content:center; margin-bottom:1.25rem; flex-wrap:wrap; }
+.stat-card { background: #fff; border-radius: 10px; padding: 0.8rem 1rem; min-width:160px; box-shadow: 0 8px 20px rgba(2,6,23,0.06); text-align:center; }
+.stat-label { font-size:0.85rem; color:#6b7280; }
+.stat-value { font-size:1.25rem; font-weight:700; color:#111827; }
+
+/* Charts container */
+.chart-container { padding: 0.3rem 0.1rem; }
+#sessionsChartWrapper, #skillsLineWrapper { height: 180px; }
+#sessionsChart, #skillsLineChart { height: 180px !important; max-height: 180px !important; }
+
+/* Skills grid and sparkline cards */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.sparkline-card { background: #fff; border-radius: 12px; padding: 0.75rem; display: flex; flex-direction: column; gap: 6px; align-items: stretch; box-shadow: 0 6px 18px rgba(0,0,0,0.06); border-left: 6px solid transparent; transition: transform 0.18s, box-shadow 0.18s; }
+.sparkline-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0,0,0,0.08); }
+.sparkline-title { display:flex; justify-content:space-between; align-items:center; }
+.sparkline-value { font-size: 1.05rem; font-weight: 800; color: #4F46E5; }
+.sparkline-canvas { width: 100% !important; height: 84px !important; max-height: 84px !important; }
+@media (max-width: 576px) { .sparkline-canvas { height: 64px !important; max-height: 64px !important; } }
+
+/* Header above skills grid */
+.skills-header { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-top: 0.6rem; }
+.skills-header h3 { margin:0; font-size:1rem; font-weight:700; color:#111827; }
+.skills-controls { display:flex; gap:0.5rem; align-items:center; }
+.skills-controls .btn { padding: .35rem .6rem; font-size:0.85rem; }
+
+/* Delta badge */
+.delta-badge { padding: 0.18rem 0.45rem; border-radius: 999px; font-weight:700; font-size:0.82rem; color: #fff; }
+.delta-pos { background: linear-gradient(90deg,#10b981,#059669); }
+.delta-neg { background: linear-gradient(90deg,#ef4444,#dc2626); }
+.delta-neutral { background: #6b7280; }
+
+/* Ensure consistent card height for grid */
+.sparkline-card { min-height: 140px; display:flex; justify-content:space-between; }
+.skills-grid { grid-auto-rows: minmax(140px, auto); }
+
+/* Chart wrapper to keep placeholders and charts in flow and avoid absolute overlap */
+.chart-wrapper { width:100%; display:flex; align-items:center; justify-content:center; position:relative; gap:0.75rem; }
+.chart-wrapper--narrow { max-width:400px; min-height:220px; }
+.chart-wrapper--wide { max-width:700px; min-height:260px; }
+
+/* Ensure the evolution chart keeps a stable height and doesn't collapse */
+.score-evolution-container { min-height:320px; width:100%; display:flex; align-items:center; justify-content:center; }
+
+/* Placeholder participates in layout (not absolute) to avoid overlapping adjacent elements */
+.placeholder { display:none; flex-direction:column; align-items:center; justify-content:center; width:100%; min-height:160px; }
+.placeholder i { font-size:3rem; color:#7C3AED; margin-bottom:1rem; }
+.placeholder div { color:#4F46E5; font-size:1.1rem; font-weight:600; letter-spacing:1px; }
+
+/* Prevent overlapping with header/stats: ensure chart-row starts below header */
+.chart-row { margin-top: 0.6rem; }
+.chart-container, .skills-grid, .sparkline-card { z-index: 1; position: relative; }
+.main-title { margin-bottom: 0.6rem; }
+
+/* Right column for skills: keep contained and scrollable on tall lists */
+.skills-column { display: flex; flex-direction: column; }
+@media (min-width: 992px) {
+  .skills-column { max-height: calc(100vh - 220px); overflow-y: auto; padding-right: 0.5rem; }
+}
+
+/* Slight spacing inside skills header area */
+.skills-header { padding: 0.2rem 0.2rem; }
+.sparkline-top { display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; }
+.sparkline-meta { display:flex; flex-direction:column; gap:0.25rem; }
+
+/* Placeholder styling */
+#sessionsPlaceholder, #skillsPlaceholder { display:none; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; position:absolute; top:0; left:0; }
+#sessionsPlaceholder i, #skillsPlaceholder i { font-size:3rem; color:#7C3AED; margin-bottom:1rem; }
+#sessionsPlaceholder div, #skillsPlaceholder div { color:#4F46E5; font-size:1.1rem; font-weight:600; letter-spacing:1px; }
+
+/* Modal tweaks */
+.modal-body .fw-bold { color: #111827; }
+
+/* Small helpers */
+.chart-title { font-weight:700; color:#111827; margin-bottom:0.65rem; }
+
+/* Responsive spacing adjustments */
+@media (min-width: 992px) {
+  .chart-container { padding: 0.5rem; }
+}

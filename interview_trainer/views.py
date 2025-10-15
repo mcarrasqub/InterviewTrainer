@@ -2,7 +2,8 @@ import logging
 import profile
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
+from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from urllib3 import request
@@ -211,10 +212,45 @@ def profile_settings(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
+        # Preferencia existente
         preferred_type = request.POST.get('preferred_interview_type', 'general')
         profile.preferred_interview_type = preferred_type
         profile.save()
-        
+
+        # Manejo opcional de cambio de username / contraseña
+        new_username = request.POST.get('username', '').strip()
+        pw1 = request.POST.get('password1', '')
+        pw2 = request.POST.get('password2', '')
+        user = request.user
+        changed = False
+
+        # Cambiar username si se proporcionó y es distinto
+        if new_username and new_username != user.username:
+            if User.objects.filter(username=new_username).exclude(pk=user.pk).exists():
+                messages.error(request, 'El nombre de usuario ya está en uso.')
+                return redirect('interview_trainer:profile_settings')
+            user.username = new_username
+            changed = True
+
+        # Cambiar contraseña si se proporcionó ambos campos
+        if pw1 or pw2:
+            if pw1 != pw2:
+                messages.error(request, 'Las contraseñas no coinciden.')
+                return redirect('interview_trainer:profile_settings')
+            if len(pw1) < 6:
+                messages.error(request, 'La contraseña debe tener al menos 6 caracteres.')
+                return redirect('interview_trainer:profile_settings')
+            user.set_password(pw1)
+            changed = True
+
+        if changed:
+            user.save()
+            # Mantener sesión si la contraseña cambió
+            try:
+                update_session_auth_hash(request, user)
+            except Exception:
+                pass
+
         messages.success(request, 'Configuración guardada exitosamente!')
         return redirect('interview_trainer:profile_settings')
     
@@ -235,35 +271,64 @@ def progreso_data(request):
     """
     user = request.user
     from evaluation.models import FeedbackReport, CompetencyScore, CompetencyDefinition
-    sessions = InterviewSession.objects.filter(user=user).order_by('-created_at')[:7]
-    feedbacks = FeedbackReport.objects.filter(session__in=sessions).order_by('-generated_at')
-    # Score promedio real
-    scores = [f.average_score for f in feedbacks if f.average_score is not None]
-    average_score = round(sum(scores)/len(scores), 2) if scores else 0
-    # Sesiones recientes
-    sessions_labels = [s.title for s in sessions]
+
+    # Tomar las sesiones evaluadas más recientes (hasta 12 para una buena vista)
+    sessions = InterviewSession.objects.filter(user=user).order_by('created_at')
+    sessions = sessions.order_by('-created_at')[:12][::-1]  # ordenar cronológicamente asc
+
+    # Series de evolución por sesión (usar feedback_report.average_score cuando exista)
+    sessions_labels = []
     sessions_scores = []
     for s in sessions:
+        sessions_labels.append(s.created_at.strftime('%d/%m/%Y'))
         feedback = getattr(s, 'feedback_report', None)
         if feedback and feedback.average_score is not None:
             sessions_scores.append(round(feedback.average_score, 2))
         else:
-            sessions_scores.append(0)
-    # Competencias reales
-    competencies = CompetencyDefinition.get_default_competencies()
+            # si no hay feedback, colocar None para que la gráfica muestre huecos
+            sessions_scores.append(None)
+
+    # Puntaje promedio calculado sobre feedbacks existentes
+    feedbacks = FeedbackReport.objects.filter(session__user=user).order_by('-generated_at')[:50]
+    scores = [f.average_score for f in feedbacks if f.average_score is not None]
+    average_score = round(sum(scores) / len(scores), 2) if scores else 0
+
+    # Competencias: obtener definiciones activas y construir series por cada competencia
+    competencies = list(CompetencyDefinition.get_default_competencies())
     skills_labels = [c.name for c in competencies]
-    skills_scores = []
-    for comp in competencies:
-        comp_scores = CompetencyScore.objects.filter(session__in=sessions, competency_name=comp.name)
-        if comp_scores.exists():
-            avg = round(sum(cs.score for cs in comp_scores)/comp_scores.count(), 2)
-        else:
-            avg = 0
-        skills_scores.append(avg)
+    skills_series = {c.name: [] for c in competencies}
+
+    # Para cada sesión, calcular el puntaje promedio por competencia (1-10). Si falta, None.
+    for s in sessions:
+        for comp in competencies:
+            comp_scores = CompetencyScore.objects.filter(session=s, competency_name=comp.name)
+            if comp_scores.exists():
+                avg = round(sum(cs.score for cs in comp_scores) / comp_scores.count(), 2)
+                skills_series[comp.name].append(avg)
+            else:
+                skills_series[comp.name].append(None)
+
+    # Construir serie acumulada (running average) por competencia
+    skills_series_cumulative = {}
+    for name, series in skills_series.items():
+        cum = []
+        ssum = 0.0
+        scount = 0
+        for v in series:
+            if v is not None:
+                ssum += v
+                scount += 1
+                cum.append(round(ssum / scount, 2))
+            else:
+                # mantener None hasta que haya al menos un valor
+                cum.append(None if scount == 0 else round(ssum / scount, 2))
+        skills_series_cumulative[name] = cum
+
     return JsonResponse({
         'average_score': average_score,
         'sessions_labels': sessions_labels,
         'sessions_scores': sessions_scores,
         'skills_labels': skills_labels,
-        'skills_scores': skills_scores,
+        'skills_series': skills_series,
+        'skills_series_cumulative': skills_series_cumulative,
     })
