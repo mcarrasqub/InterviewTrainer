@@ -98,42 +98,42 @@
         </div>
 
         <div class="config-body">
-            <!-- Info Section -->
-            <div class="info-section">
-                <h5 class="info-title">
-                    <i class="fas fa-check-circle"></i>
-                    ¡Todo Configurado!
-                </h5>
-                <p class="mb-3">Lumo está listo para usar. No necesitas configurar ninguna API key.</p>
-                
-                <div class="feature-list">
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-robot text-primary"></i> IA entrenadora activada</li>
-                        <li><i class="fas fa-infinity text-primary"></i> Sesiones ilimitadas</li>
-                        <li><i class="fas fa-shield-alt text-primary"></i> Datos seguros</li>
-                        <li><i class="fas fa-clock text-primary"></i> Disponible 24/7</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Preferences Section -->
+            <!-- Account & Preferences Form (replaces Info Section) -->
             <form method="post">
                 {% csrf_token %}
-                <div class="mb-4">
-                    <label for="preferredType" class="form-label fw-bold">
-                        <i class="fas fa-heart me-2"></i>Tipo de Entrevista Preferido
-                    </label>
-                    <select class="form-select" id="preferredType" name="preferred_interview_type">
-                        <option value="general" {% if profile.preferred_interview_type == 'general' %}selected{% endif %}>General</option>
-                        <option value="technical" {% if profile.preferred_interview_type == 'technical' %}selected{% endif %}>Técnica</option>
-                        <option value="behavioral" {% if profile.preferred_interview_type == 'behavioral' %}selected{% endif %}>Comportamental</option>
-                        <option value="simulation" {% if profile.preferred_interview_type == 'simulation' %}selected{% endif %}>Simulación</option>
-                    </select>
-                    <div class="form-text">Esto personalizará las sugerencias iniciales en el chat</div>
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <label for="username" class="form-label fw-bold"><i class="fas fa-user me-2"></i>Cambiar usuario</label>
+                        <input type="text" id="username" name="username" class="form-control" value="{{ user.username }}" placeholder="Nuevo nombre de usuario">
+                        <div class="form-text">Dejar igual si no quieres cambiarlo.</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="password1" class="form-label fw-bold"><i class="fas fa-lock me-2"></i>Nueva contraseña</label>
+                        <input type="password" id="password1" name="password1" class="form-control" placeholder="Dejar vacío para mantener">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="password2" class="form-label fw-bold"><i class="fas fa-lock me-2"></i>Confirmar contraseña</label>
+                        <input type="password" id="password2" name="password2" class="form-control" placeholder="Repetir contraseña">
+                        <div class="form-text">Introduce ambas para cambiar la contraseña. Mínimo 6 caracteres.</div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="preferredType" class="form-label fw-bold">
+                            <i class="fas fa-heart me-2"></i>Tipo de Entrevista Preferido
+                        </label>
+                        <select class="form-select" id="preferredType" name="preferred_interview_type">
+                            <option value="general" {% if profile.preferred_interview_type == 'general' %}selected{% endif %}>General</option>
+                            <option value="technical" {% if profile.preferred_interview_type == 'technical' %}selected{% endif %}>Técnica</option>
+                            <option value="behavioral" {% if profile.preferred_interview_type == 'behavioral' %}selected{% endif %}>Comportamental</option>
+                            <option value="simulation" {% if profile.preferred_interview_type == 'simulation' %}selected{% endif %}>Simulación</option>
+                        </select>
+                        <div class="form-text">Esto personalizará las sugerencias iniciales en el chat</div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-2"></i>Guardar Preferencias
+                    <i class="fas fa-save me-2"></i>Guardar Preferencias y Cuenta
                 </button>
             </form>
 
