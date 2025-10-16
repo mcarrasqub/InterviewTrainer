@@ -169,41 +169,6 @@ def chat(request):
         return redirect('interview_trainer:home')
 
 @login_required
-def session_detail(request, session_id):
-    """
-    📊 PROPÓSITO: Ver detalles de una sesión específica
-    📝 QUÉ HACE: Muestra historial completo de una conversación
-    """
-    session = get_object_or_404(InterviewSession, id=session_id, user=request.user)
-    messages_list = session.messages.all()
-    
-    # Calcular estadísticas
-    user_messages_count = messages_list.filter(is_user=True).count()
-    ai_messages_count = messages_list.filter(is_user=False).count()
-    
-    # Calcular duración
-    if messages_list.exists():
-        first_message = messages_list.first()
-        last_message = messages_list.last()
-        duration = last_message.timestamp - first_message.timestamp
-        session_duration = f"{duration.seconds // 60} min"
-    else:
-        session_duration = "0 min"
-    
-    # Verificar si existe evaluación
-    has_evaluation = hasattr(session, 'feedback_report')
-    
-    context = {
-        'session': session,
-        'messages': messages_list,
-        'user_messages_count': user_messages_count,
-        'ai_messages_count': ai_messages_count,
-        'session_duration': session_duration,
-        'has_evaluation': has_evaluation,
-    }
-    return render(request, 'interview_trainer/session_detail.html', context)
-
-@login_required
 def profile_settings(request):
     """
     ⚙️ PROPÓSITO: Configuración del perfil del usuario
