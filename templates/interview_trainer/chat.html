@@ -664,10 +664,9 @@ function isNewTabClick(evt) {
     return evt.button === 1 || evt.ctrlKey || evt.metaKey || evt.shiftKey || evt.altKey;
 }
 
-// ====== Whitelist de destinos seguros por patrón de URL (opcional pero útil)
+// ====== Whitelist de destinos seguros por patrón de URL 
 const SAFE_URL_PATTERNS = [
     /\/evaluation\/session_feedback\/\d+\/?$/, // Ver estadísticas
-    /\/evaluation\/session_detail\/\d+\/?$/    // Detalle de sesión (si lo usas)
 ];
 
 // Listener para clics en enlaces
@@ -917,19 +916,21 @@ document.addEventListener('click', function(e) {
         const notificationDiv = document.createElement('div');
         notificationDiv.className = 'alert alert-success mx-3 my-2 evaluation-notification';
         notificationDiv.innerHTML = `
-            <div class="d-flex align-items-center">
-                <i class="fas fa-chart-line fa-2x text-success me-3"></i>
-                <div class="flex-grow-1">
-                    <h5 class="mb-1">🎉 ¡Evaluación Generada!</h5>
-                    <p class="mb-2">Tu entrevista ha sido completada y evaluada.</p>
-                    <p class="mb-2"><strong>Puntuación: ${evaluationData.average_score}/10 - ${evaluationData.performance_level}</strong></p>
-                    <div class="d-flex gap-2">
-                        <a href="/evaluation/session/${currentSessionId}/feedback/" class="btn btn-success btn-sm"><i class="fas fa-eye me-1"></i>Ver Evaluación</a>
-                        <a href="/sessions/${currentSessionId}/" class="btn btn-outline-primary btn-sm"><i class="fas fa-history me-1"></i>Ver Sesión</a>
-                    </div>
-                </div>
-                <button type="button" class="btn-close ms-2" onclick="this.parentElement.parentElement.remove()"></button>
-            </div>`;
+    <div class="d-flex align-items-center">
+        <i class="fas fa-chart-line fa-2x text-success me-3"></i>
+        <div class="flex-grow-1">
+            <h5 class="mb-1">🎉 ¡Evaluación Generada!</h5>
+            <p class="mb-2">Tu entrevista ha sido completada y evaluada.</p>
+            <p class="mb-2"><strong>Puntuación: ${evaluationData.average_score}/10 - ${evaluationData.performance_level}</strong></p>
+            <div class="d-flex gap-2">
+                <a href="/evaluation/session/${currentSessionId}/feedback/" class="btn btn-success btn-sm">
+                    <i class="fas fa-eye me-1"></i>Ver Evaluación
+                </a>
+                <!-- ELIMINADO botón Ver Sesión -->
+            </div>
+        </div>
+        <button type="button" class="btn-close ms-2" onclick="this.parentElement.parentElement.remove()"></button>
+    </div>`;
         chatMessages.appendChild(notificationDiv);
         if (!isUserScrolling) scrollToBottom();
         setTimeout(() => notificationDiv.remove(), 15000);

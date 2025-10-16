@@ -3,11 +3,7 @@
 {% block title %}Feedback - {{ session.title }} - Lumo{% endblock %}
 
 {% block evaluation_content %}
-<!-- Back Button -->
-<a href="{% url 'interview_trainer:session_detail' session.id %}" class="back-btn">
-    <i class="fas fa-arrow-left"></i>
-    Volver a la Sesión
-</a>
+
 
 <div class="evaluation-card">
     <!-- Header -->
@@ -26,7 +22,7 @@
                         {% elif performance_class == 'info' %}score-good
                         {% elif performance_class == 'warning' %}score-average
                         {% else %}score-poor{% endif %}">
-                        {{ average_score|floatformat:1 }}/10
+                        {{ average_score|floatformat:1 }}/10,0
                     </div>
                     <h4>{{ performance_level }}</h4>
                     <p class="text-muted">Puntuación General</p>

@@ -178,36 +178,29 @@ Genera SOLO el saludo inicial:"""
     async def generate_response(self, message, conversation_history=None, interview_type='operations'):
         """
         🎯 PROPÓSITO: Genera respuesta de la IA con contexto dinámico y límite de 7 preguntas
-        📝 QUÉ HACE: Toma el mensaje del usuario y devuelve respuesta especializada
-        🚨 LÍMITE CRÍTICO: Máximo 7 preguntas por sesión
         """
         if not self.model:
             raise ValueError("API key de Gemini no configurada")
         
         try:
-            # 🔢 CONTAR PREGUNTAS REALIZADAS (CRÍTICO)
+            # Límite de preguntas establecido en 7
             questions_asked = self._count_ai_questions(conversation_history or [])
-            
-            logger.info(f"🔢 CONTROL DE PREGUNTAS: {questions_asked}/7 realizadas")
-            logger.info(f"📝 Historial recibido: {len(conversation_history or [])} mensajes")
+            max_questions = 7
 
-            # 🚨 VERIFICAR LÍMITE DE 7 PREGUNTAS
-            if questions_asked >= 7:
+            # Si ya se hicieron las 7 preguntas, envía el mensaje de cierre
+            if questions_asked >= max_questions:
                 logger.info("🚨 LÍMITE ALCANZADO: Finalizando entrevista")
                 return (
                     "¡Excelente! 🎉 Hemos completado las 7 preguntas de esta entrevista. "
                     "Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. "
                     "Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. "
                     "¡Te deseo mucho éxito en tu proceso de selección! 🌟\n\n"
-                    "La entrevista ha finalizado. Puedes revisar tu evaluación en el panel de resultados."
+                    "La entrevista ha finalizado. Puedes revisar tu evaluación en el panel de ver estadísticas."
                 )
 
-            logger.info(f"✅ CONTINUAR: Generando pregunta #{questions_asked + 1}/7")
-
-            # Construir contexto completo con información dinámica
+            # Construir el prompt para la pregunta actual
+            pregunta_num = questions_asked + 1
             system_prompt = self.get_system_prompt(interview_type)
-            
-            # Agregar contexto de la sesión actual
             department_names = {
                 'operations': 'Operaciones y Producción',
                 'sales_marketing': 'Ventas y Marketing', 
@@ -219,61 +212,35 @@ Genera SOLO el saludo inicial:"""
                 'management': 'Dirección General y Estratégica',
                 'health': 'Salud y Medicina'
             }
-            
             department_name = department_names.get(interview_type, 'Operaciones y Producción')
-            
-            # 🎯 DETECTAR SI ES EL PRIMER MENSAJE (SIN HISTORIAL)
-            is_first_message = not conversation_history or len(conversation_history) == 0
-            
-            if is_first_message:
-                # Para el primer mensaje, usar prompt específico
-                session_context = f"\n🎯 SESIÓN INICIAL - {department_name}\n🔢 Pregunta: 1/7\n\n"
-                full_context = f"{system_prompt}{session_context}"
-                
-                # Si hay un mensaje del usuario, es porque ya escribió algo (no debería pasar, pero por si acaso)
-                if message and message.strip():
-                    full_context += f"El candidato dice: {message}\n"
-                
-                full_context += "Respuesta breve de Lumo:"
-            else:
-                # Para mensajes posteriores, usar el flujo normal
-                remaining_questions = 7 - questions_asked
-                session_context = f"\n🎯 SESIÓN: {department_name}\n🔢 Preguntas: {questions_asked}/7 | Restantes: {remaining_questions}\n"
-                
-                if remaining_questions == 1:
-                    session_context += "⚠️ ÚLTIMA PREGUNTA - Después finaliza la entrevista\n"
-                elif remaining_questions <= 3:
-                    session_context += f"⚠️ Solo {remaining_questions} preguntas restantes\n"
-                
-                session_context += "⚠️ RESPUESTA BREVE: Máximo 2-3 líneas, una sola pregunta\n\n"
-                
-                full_context = f"{system_prompt}{session_context}"
-                
-                # Agregar historial de conversación (solo últimos 6 mensajes para contexto)
-                if conversation_history:
-                    full_context += "CONTEXTO RECIENTE:\n"
-                    recent_history = conversation_history[-6:] if len(conversation_history) > 6 else conversation_history
-                    for msg in recent_history:
-                        sender = "Candidato" if msg.get('is_user') else "Lumo"
-                        content = msg.get('content', '')[:150] + '...' if len(msg.get('content', '')) > 150 else msg.get('content', '')
-                        full_context += f"{sender}: {content}\n"
-                    full_context += "\n"
-                
-                full_context += f"Candidato: {message}\nRespuesta breve de Lumo:"
-            
+
+            # Prompt para la pregunta actual
+            pregunta_context = f"\n🔢 Pregunta {pregunta_num}/7\n"
+            session_context = f"\n🎯 SESIÓN: {department_name}{pregunta_context}"
+
+            # Agregar historial de conversación (solo últimos 6 mensajes para contexto)
+            full_context = f"{system_prompt}{session_context}"
+            if conversation_history:
+                full_context += "CONTEXTO RECIENTE:\n"
+                recent_history = conversation_history[-6:] if len(conversation_history) > 6 else conversation_history
+                for msg in recent_history:
+                    sender = "Candidato" if msg.get('is_user') else "Lumo"
+                    content = msg.get('content', '')[:150] + '...' if len(msg.get('content', '')) > 150 else msg.get('content', '')
+                    full_context += f"{sender}: {content}\n"
+                full_context += "\n"
+            full_context += f"Candidato: {message}\nRespuesta breve de Lumo (incluye 'Pregunta {pregunta_num}/7' al inicio):"
+
             # Generar respuesta
             response = self.model.generate_content(
                 full_context,
                 generation_config=genai.types.GenerationConfig(
-                    temperature=0.6,  # Menos creativo para ser más directo
+                    temperature=0.6,
                     top_k=30,
                     top_p=0.8,
-                    max_output_tokens=150,  # Respuestas muy breves (reducido de 1024)
+                    max_output_tokens=150,
                 )
             )
-            
             return self._extract_response_text(response)
-            
         except Exception as e:
             logger.error(f"Error generando respuesta con Gemini: {str(e)}")
             raise e
