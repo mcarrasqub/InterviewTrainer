@@ -58,7 +58,7 @@ def session_feedback(request, session_id):
         'user_messages': user_messages,
         'ai_messages': ai_messages,
         'session_duration_minutes': evaluation_data['session_duration'],
-        'questions_count': ai_messages,  # Usar el conteo de mensajes de AI
+        'responses_count': user_messages,
         'generated_at': evaluation_data['generated_at'],
     }
     
