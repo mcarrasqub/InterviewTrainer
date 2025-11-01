@@ -7,7 +7,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
 <style>
     .hero-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #334960 0%, #667688 100%);
         min-height: 80vh;
         display: flex;
         align-items: center;
@@ -226,6 +226,14 @@
         50% { transform: translateY(-20px) rotate(180deg); }
     }
 
+    .texto_subrayado {
+        color: #6dd695; /* verde */
+        font-weight: 800;
+        text-decoration: underline;
+        text-decoration-color: rgba(109,214,149,0.25);
+        text-underline-offset: 6px;
+    }
+
     @media (max-width: 768px) {
         .hero-title {
             font-size: 2.5rem;
@@ -270,7 +278,7 @@
                     </div>
                     <h1 class="hero-title">
                         Realiza entrevistas de trabajo 
-                        <span class="text-warning">en tiempo real</span> 
+                        <span class="texto_subrayado">en tiempo real</span> 
                         con Inteligencia Artificial
                     </h1>
                     <p class="hero-subtitle">
