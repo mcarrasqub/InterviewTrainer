@@ -51,6 +51,20 @@
         flex-direction: column;
     }
 
+        /* Animación de latido */
+        .heartbeat {
+            animation: heartbeat 2s ease-out;
+            animation-iteration-count: 2;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            10% { transform: scale(1.03); }
+            20% { transform: scale(1); }
+            30% { transform: scale(1.05); }
+            40% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
     .interview-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
@@ -65,7 +79,7 @@
         width: 60px;
         height: 60px;
         border-radius: 50%;
-        background: var(--lumo-gradient);
+        background: #6dd695;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -133,7 +147,7 @@
     }
 
     .start-btn {
-        background: var(--lumo-gradient);
+        background: #6dd695;
         color: white;
         border: none;
         padding: 1rem 2rem;
@@ -186,24 +200,7 @@
         }
     }
 
-   /* Botón secundario debajo de Iniciar Entrevista */
-   .secondary-btn {
-       display: inline-flex;
-       align-items: center;
-       justify-content: center;
-       gap: 0.5rem;
-       margin-top: 1rem;
-       width: 100%;
-       padding: 0.75rem 1rem;
-       border-radius: 12px;
-       border: 1px solid rgba(15,23,42,0.06);
-       background: white;
-       color: var(--lumo-primary);
-       font-weight: 700;
-       text-decoration: none;
-       box-shadow: 0 6px 18px rgba(16,24,40,0.04);
-       transition: transform .15s ease, box-shadow .15s ease;
-   }
+
 
    .secondary-btn:hover {
        transform: translateY(-3px);
@@ -223,8 +220,9 @@
         {% csrf_token %}
         
         <div class="interview-types">
-            {% for type_code, type_name in interview_types %}
-            <div class="interview-card" data-type="{{ type_code }}" onclick="selectType('{{ type_code }}')">
+                {% for type_code, type_name in interview_types %}
+                <div class="interview-card-wrapper">
+                    <div class="interview-card" data-type="{{ type_code }}" onclick="selectType('{{ type_code }}')">
                 {% if type_code == profile.preferred_interview_type %}
                 <div class="recommended-badge">Recomendado</div>
                 {% endif %}
@@ -364,43 +362,108 @@
                     <li>Trabajo en equipo multidisciplinario</li>
                 </ul>
                 {% endif %}
-            </div>
+                    </div>
+                </div>
             {% endfor %}
         </div>
 
-        <div class="form-section">
-            <label for="session_title" class="form-label fw-bold">
-                <i class="fas fa-tag me-2"></i>Título de la sesión (opcional)
-            </label>
-            <input type="text" 
-                   name="session_title" 
-                   id="session_title"
-                   class="session-title-input" 
-                   placeholder="Ej: Entrevista para desarrollador senior en startup"
-                   maxlength="200">
-            
-            <input type="hidden" name="interview_type" id="selected_type" value="{{ profile.preferred_interview_type }}">
-            
-            <button type="submit" class="start-btn" id="startBtn">
-                <i class="fas fa-rocket me-2"></i>
-                Iniciar Entrevista
-            </button>
-
-            <a id="openChatsBtn" class="secondary-btn" href="{% url 'interview_trainer:chat' %}">
-                 <i class="fas fa-comments me-2"></i> Ver mis chats
-            </a>
-
-
-
-
-        </div>
+        <input type="hidden" name="interview_type" id="selected_type" value="{{ profile.preferred_interview_type }}">
     </form>
+</div>
+
+<!-- Modal para el título de la sesión -->
+<div class="modal fade" id="sessionTitleModal" tabindex="-1" aria-labelledby="sessionTitleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sessionTitleModalLabel">
+                    <i class="fas fa-tag me-2"></i>Configurar sesión
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="session_title" class="form-label fw-bold">Título de la sesión (opcional)</label>
+                    <input type="text" 
+                           name="session_title" 
+                           id="session_title"
+                           class="form-control" 
+                           placeholder="Ej: Entrevista para desarrollador senior en startup"
+                           maxlength="200">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success start-btn" id="startBtn" onclick="startInterview()">
+                    <i class="fas fa-rocket me-2"></i>Iniciar Entrevista
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     let selectedType = '{{ profile.preferred_interview_type }}';
+    let modal;
+
+    // Animación secuencial de latido en las cartas
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.interview-card');
+        let i = 0;
+        function animateNextCard() {
+            if (i >= cards.length) return;
+            const card = cards[i];
+            card.classList.add('heartbeat');
+            setTimeout(() => {
+                card.classList.remove('heartbeat');
+                i++;
+                setTimeout(animateNextCard, 700); // Pausa entre cartas
+            }, 700); // Duración de la animación
+        }
+        animateNextCard();
+    });
     
-    function selectType(type) {
+    document.addEventListener('DOMContentLoaded', function() {
+        modal = new bootstrap.Modal(document.getElementById('sessionTitleModal'));
+        if (selectedType) {
+            selectType(selectedType, false);
+        }
+
+        // Animación cíclica de latido en las cartas
+        const cards = document.querySelectorAll('.interview-card');
+        let currentIndex = 0;
+
+        function animateCard() {
+            // Remover la animación de todas las cartas
+            cards.forEach(card => card.classList.remove('heartbeat'));
+            
+            // Añadir la animación a la carta actual
+            cards[currentIndex].classList.add('heartbeat');
+            
+            // Esperar a que termine la animación antes de pasar a la siguiente carta
+            setTimeout(() => {
+                // Incrementar el índice o volver a 0 si llegamos al final
+                currentIndex = (currentIndex + 1) % cards.length;
+                animateCard(); // Llamar recursivamente para continuar el ciclo
+            }, 1400); // 700ms x 2 iteraciones de la animación
+        }
+
+        // Iniciar la animación cíclica
+        animateCard();
+    });
+
+    const typeNames = {
+        'operations': 'Entrevista para Operaciones y Producción',
+        'sales_marketing': 'Entrevista para Ventas y Marketing',
+        'finance': 'Entrevista para Finanzas y Administración',
+        'hr': 'Entrevista para Recursos Humanos',
+        'it': 'Entrevista para Tecnología de la Información',
+        'rd': 'Entrevista para Investigación y Desarrollo',
+        'customer_support': 'Entrevista para Atención al Cliente',
+        'management': 'Entrevista para Dirección General',
+        'health': 'Entrevista para Salud y Medicina'
+    };
+    
+    function selectType(type, showModal = true) {
         // Remover selección anterior
         document.querySelectorAll('.interview-card').forEach(card => {
             card.classList.remove('selected');
@@ -411,38 +474,37 @@
         document.getElementById('selected_type').value = type;
         selectedType = type;
         
-        // Actualizar título automático si está vacío
+        // Actualizar título automático
         const titleInput = document.getElementById('session_title');
         if (!titleInput.value.trim()) {
-            const typeNames = {
-                'operations': 'Entrevista para Operaciones y Producción',
-                'sales_marketing': 'Entrevista para Ventas y Marketing',
-                'finance': 'Entrevista para Finanzas y Administración',
-                'hr': 'Entrevista para Recursos Humanos',
-                'it': 'Entrevista para Tecnología de la Información',
-                'rd': 'Entrevista para Investigación y Desarrollo',
-                'customer_support': 'Entrevista para Atención al Cliente',
-                'management': 'Entrevista para Dirección General',
-                'health': 'Entrevista para Salud y Medicina'
-            };
             titleInput.placeholder = `${typeNames[type]} - ${new Date().toLocaleDateString()}`;
+        }
+
+        // Mostrar modal al seleccionar tipo
+        if (showModal) {
+            modal.show();
         }
     }
     
-    // Seleccionar tipo preferido al cargar
-    document.addEventListener('DOMContentLoaded', function() {
-        if (selectedType) {
-            selectType(selectedType);
-        }
-    });
-    
-    // Validar formulario
-    document.getElementById('interviewForm').addEventListener('submit', function(e) {
+    function startInterview() {
         if (!selectedType) {
-            e.preventDefault();
             alert('Por favor selecciona un tipo de entrevista');
-            return false;
+            return;
         }
-    });
+
+        const title = document.getElementById('session_title').value.trim();
+        const form = document.getElementById('interviewForm');
+
+        // Si hay título, añadirlo al formulario
+        if (title) {
+            const titleInput = document.createElement('input');
+            titleInput.type = 'hidden';
+            titleInput.name = 'session_title';
+            titleInput.value = title;
+            form.appendChild(titleInput);
+        }
+
+        form.submit();
+    };
 </script>
 {% endblock %}
