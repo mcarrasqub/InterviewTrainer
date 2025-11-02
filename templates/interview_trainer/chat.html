@@ -10,9 +10,10 @@
         margin: 2rem auto;
         background: white;
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-        height: 85vh; /* ✅ AUMENTADO de 80vh a 85vh */
+        height: 85vh;
+        /* ✅ AUMENTADO de 80vh a 85vh */
         display: flex;
         flex-direction: column;
         position: relative;
@@ -23,19 +24,25 @@
         color: white;
         padding: 1.5rem;
         text-align: center;
-        flex-shrink: 0; /* No se encoge */
-        position: relative; /* <- necesario para posicionar el botón */
+        flex-shrink: 0;
+        /* No se encoge */
+        position: relative;
+        /* <- necesario para posicionar el botón */
     }
 
     .chat-messages {
         flex: 1;
         padding: 1.5rem;
-        overflow-y: auto; /* ✅ SCROLL VERTICAL */
+        overflow-y: auto;
+        /* ✅ SCROLL VERTICAL */
         overflow-x: hidden;
         background: #f8f9fa;
-        max-height: calc(85vh - 220px); /* ✅ AUMENTADO de 180px a 220px para compensar barra de entrada */
-        min-height: 400px; /* ✅ AUMENTADO de 300px a 400px */
-        padding-bottom: 3rem; /* ✅ AUMENTADO padding extra abajo para evitar que se tape */
+        max-height: calc(85vh - 220px);
+        /* ✅ AUMENTADO de 180px a 220px para compensar barra de entrada */
+        min-height: 400px;
+        /* ✅ AUMENTADO de 300px a 400px */
+        padding-bottom: 3rem;
+        /* ✅ AUMENTADO padding extra abajo para evitar que se tape */
     }
 
     /* ✅ PERSONALIZAR SCROLLBAR */
@@ -58,15 +65,23 @@
     }
 
     .message {
-        margin-bottom: 1.5rem; /* ✅ AUMENTADO de 1rem a 1.5rem para más separación */
+        margin-bottom: 1.5rem;
+        /* ✅ AUMENTADO de 1rem a 1.5rem para más separación */
         display: flex;
         align-items: flex-start;
         animation: fadeIn 0.3s ease-in;
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .message.user {
@@ -78,12 +93,16 @@
     }
 
     .message-content {
-        max-width: 85%; /* ✅ AUMENTADO de 70% a 85% para más espacio */
-        padding: 1rem 1.5rem; /* ✅ AUMENTADO padding horizontal */
+        max-width: 85%;
+        /* ✅ AUMENTADO de 70% a 85% para más espacio */
+        padding: 1rem 1.5rem;
+        /* ✅ AUMENTADO padding horizontal */
         border-radius: 18px;
         white-space: pre-wrap;
-        word-wrap: break-word; /* ✅ ROMPE PALABRAS LARGAS */
-        line-height: 1.6; /* ✅ AUMENTADO de 1.5 a 1.6 para mejor legibilidad */
+        word-wrap: break-word;
+        /* ✅ ROMPE PALABRAS LARGAS */
+        line-height: 1.6;
+        /* ✅ AUMENTADO de 1.5 a 1.6 para mejor legibilidad */
     }
 
     .message.user .message-content {
@@ -97,13 +116,15 @@
         color: var(--lumo-dark);
         border: 1px solid #e2e8f0;
         border-bottom-left-radius: 5px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin-bottom: 1rem; /* ✅ MARGEN EXTRA PARA MENSAJES DE LUMO */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        /* ✅ MARGEN EXTRA PARA MENSAJES DE LUMO */
     }
 
     /* ✅ ÚLTIMO MENSAJE DE LUMO CON MÁS ESPACIO */
     .message.ai:last-child .message-content {
-        margin-bottom: 2.5rem; /* ✅ EXTRA ESPACIO PARA EL ÚLTIMO MENSAJE */
+        margin-bottom: 2.5rem;
+        /* ✅ EXTRA ESPACIO PARA EL ÚLTIMO MENSAJE */
     }
 
     .message-avatar {
@@ -115,7 +136,8 @@
         justify-content: center;
         margin: 0 10px;
         font-size: 14px;
-        flex-shrink: 0; /* ✅ NO SE ENCOGE */
+        flex-shrink: 0;
+        /* ✅ NO SE ENCOGE */
     }
 
     .message.user .message-avatar {
@@ -133,8 +155,10 @@
         padding: 1.5rem;
         background: white;
         border-top: 1px solid #e2e8f0;
-        flex-shrink: 0; /* ✅ NO SE ENCOGE */
-        position: relative; /* necesario para posicionar el botón por debajo */
+        flex-shrink: 0;
+        /* ✅ NO SE ENCOGE */
+        position: relative;
+        /* necesario para posicionar el botón por debajo */
     }
 
     .input-group {
@@ -202,12 +226,27 @@
         animation: typing 1.4s infinite ease-in-out;
     }
 
-    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
-    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+    .typing-dots span:nth-child(1) {
+        animation-delay: -0.32s;
+    }
+
+    .typing-dots span:nth-child(2) {
+        animation-delay: -0.16s;
+    }
 
     @keyframes typing {
-        0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-        40% { transform: scale(1); opacity: 1; }
+
+        0%,
+        80%,
+        100% {
+            transform: scale(0.8);
+            opacity: 0.5;
+        }
+
+        40% {
+            transform: scale(1);
+            opacity: 1;
+        }
     }
 
     .sidebar {
@@ -215,7 +254,8 @@
         background: white;
         border-right: 1px solid #e2e8f0;
         padding: 1rem;
-        overflow-y: auto; /* ✅ SCROLL EN SIDEBAR */
+        overflow-y: auto;
+        /* ✅ SCROLL EN SIDEBAR */
         max-height: calc(80vh - 100px);
         flex-shrink: 0;
     }
@@ -287,7 +327,7 @@
             margin: 1rem;
             height: 85vh;
         }
-        
+
         .sidebar {
             display: none;
         }
@@ -315,7 +355,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         z-index: 1000;
     }
 
@@ -327,69 +367,89 @@
 
 
 
-/* Estilo visual para el botón dentro del contenedor de estadísticas */
-.stats-button-container .btn {
-    background: var(--lumo-primary);
-    background-image: linear-gradient(135deg, #6dd695 0%, #3DC971 100%);
-    color: #fff !important;
-    border: none;
-    border-radius: 12px;
-    padding: .35rem .9rem;
-    box-shadow: 0 6px 18px rgba(79,70,229,0.18);
-    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: .4rem;
-    margin-top: 10px;
-}
-
-.stats-button-container .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(79,70,229,0.25);
-    opacity: 1;
-}
-
-.stats-button-container .btn-sm {
-    font-size: .85rem;
-    padding: .4rem .85rem;
-}
-
-@media (max-width: 768px) {
-    .stats-button-container {
-        justify-content: center;
+    /* Estilo visual para el botón dentro del contenedor de estadísticas */
+    .stats-button-container .btn {
+        background: var(--lumo-primary);
+        background-image: linear-gradient(135deg, #6dd695 0%, #3DC971 100%);
+        color: #fff !important;
+        border: none;
+        border-radius: 12px;
+        padding: .35rem .9rem;
+        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
+        transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
         margin-top: 10px;
     }
-    .stats-button-container .btn {
-        width: 95%;
-        max-width: 320px;
+
+    .stats-button-container .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(79, 70, 229, 0.25);
+        opacity: 1;
     }
-    
-    /* ✅ MEJORAR CHAT EN MÓVILES */
-    .chat-container {
-        height: 90vh !important; /* ✅ MÁS ALTURA EN MÓVILES */
+
+    .stats-button-container .btn-sm {
+        font-size: .85rem;
+        padding: .4rem .85rem;
     }
-    
-    .chat-messages {
-        max-height: calc(90vh - 200px) !important; /* ✅ AJUSTADO PARA MÓVILES - MÁS ESPACIO PARA LA BARRA */
-        padding: 1rem; /* ✅ MENOS PADDING EN MÓVILES */
-        padding-bottom: 3rem !important; /* ✅ EXTRA PADDING ABAJO EN MÓVILES */
+
+    @media (max-width: 768px) {
+        .stats-button-container {
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .stats-button-container .btn {
+            width: 95%;
+            max-width: 320px;
+        }
+
+        /* ✅ MEJORAR CHAT EN MÓVILES */
+        .chat-container {
+            height: 90vh !important;
+            /* ✅ MÁS ALTURA EN MÓVILES */
+        }
+
+        .chat-messages {
+            max-height: calc(90vh - 200px) !important;
+            /* ✅ AJUSTADO PARA MÓVILES - MÁS ESPACIO PARA LA BARRA */
+            padding: 1rem;
+            /* ✅ MENOS PADDING EN MÓVILES */
+            padding-bottom: 3rem !important;
+            /* ✅ EXTRA PADDING ABAJO EN MÓVILES */
+        }
+
+        .message-content {
+            max-width: 90% !important;
+            /* ✅ MÁS ANCHO EN MÓVILES */
+            padding: 0.8rem 1rem;
+            /* ✅ MENOS PADDING EN MÓVILES */
+        }
+
+        /* ✅ EXTRA ESPACIO PARA ÚLTIMO MENSAJE EN MÓVILES */
+        .message.ai:last-child .message-content {
+            margin-bottom: 3rem !important;
+        }
     }
-    
-    .message-content {
-        max-width: 90% !important; /* ✅ MÁS ANCHO EN MÓVILES */
-        padding: 0.8rem 1rem; /* ✅ MENOS PADDING EN MÓVILES */
-    }
-    
-    /* ✅ EXTRA ESPACIO PARA ÚLTIMO MENSAJE EN MÓVILES */
-    .message.ai:last-child .message-content {
-        margin-bottom: 3rem !important;
-    }
-}
 
     @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-        40% { transform: translateY(-10px); }
-        60% { transform: translateY(-5px); }
+
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-10px);
+        }
+
+        60% {
+            transform: translateY(-5px);
+        }
     }
 
     /* 🎉 ESTILOS PARA NOTIFICACIÓN DE EVALUACIÓN */
@@ -404,6 +464,7 @@
             transform: translateY(20px);
             opacity: 0;
         }
+
         to {
             transform: translateY(0);
             opacity: 1;
@@ -437,21 +498,19 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="fw-bold mb-0">Sesiones Recientes</h6>
                     <span class="badge bg-primary">{{ sessions|length }}</span>
-                    <button id="deleteSessionsBtn" class="btn btn-outline-danger btn-sm ms-2" title="Eliminar sesiones seleccionadas" style="border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+                    <button id="deleteSessionsBtn" class="btn btn-outline-danger btn-sm ms-2"
+                        title="Eliminar sesiones seleccionadas"
+                        style="border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
                 <div id="sessionsList">
                     {% for session in sessions %}
                     <div class="session-item d-flex align-items-center" data-session-id="{{ session.id }}">
-                        <input type="checkbox"
-                               class="form-check-input me-2 session-checkbox"
-                               value="{{ session.id }}"
-                               style="margin-top:0;"
-                               onclick="event.stopPropagation();">
-                        <div class="flex-grow-1 session-clickable"
-                             style="cursor:pointer;"
-                             onclick="window.loadSession({{ session.id }})">
+                        <input type="checkbox" class="form-check-input me-2 session-checkbox" value="{{ session.id }}"
+                            style="margin-top:0;" onclick="event.stopPropagation();">
+                        <div class="flex-grow-1 session-clickable" style="cursor:pointer;"
+                            onclick="window.loadSession({{ session.id }})">
                             <div class="session-title">{{ session.title|truncatechars:25 }}</div>
                             <div class="session-date">{{ session.created_at|date:"d/m/Y H:i" }}</div>
                             <small class="text-muted">{{ session.session_type|title }}</small>
@@ -472,28 +531,28 @@
             <div class="position-relative flex-fill">
                 <div class="chat-messages" id="chatMessages">
                     {% if current_session and current_session.messages.all %}
-                        <!-- ✅ MOSTRAR MENSAJES EXISTENTES DE LA SESIÓN -->
-                        {% for message in current_session.messages.all %}
-                            <div class="message {% if message.is_user %}user{% else %}ai{% endif %}">
-                                <div class="message-avatar">
-                                    <i class="fas fa-{% if message.is_user %}user{% else %}robot{% endif %}"></i>
-                                </div>
-                                <div class="message-content">
-                                    {{ message.content }}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <!-- Mensaje de bienvenida solo si NO hay sesión actual -->
-                        <div class="welcome-message">
-                            <i class="fas fa-comments"></i>
-                            <h4>¡Bienvenido de vuelta!</h4>
-                            <p class="text-muted">Selecciona una sesión anterior o comienza una nueva conversación.</p>
+                    <!-- ✅ MOSTRAR MENSAJES EXISTENTES DE LA SESIÓN -->
+                    {% for message in current_session.messages.all %}
+                    <div class="message {% if message.is_user %}user{% else %}ai{% endif %}">
+                        <div class="message-avatar">
+                            <i class="fas fa-{% if message.is_user %}user{% else %}robot{% endif %}"></i>
                         </div>
+                        <div class="message-content">
+                            {{ message.content }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <!-- Mensaje de bienvenida solo si NO hay sesión actual -->
+                    <div class="welcome-message">
+                        <i class="fas fa-comments"></i>
+                        <h4>¡Bienvenido de vuelta!</h4>
+                        <p class="text-muted">Selecciona una sesión anterior o comienza una nueva conversación.</p>
+                    </div>
                     {% endif %}
                 </div>
 
-               
+
 
                 <!-- Scroll Indicator -->
                 <div class="scroll-indicator" id="scrollIndicator" onclick="scrollToBottom()">
@@ -503,7 +562,7 @@
 
         </div>
 
-        
+
 
         <!-- Typing Indicator -->
         <div class="message ai" id="typingIndicator" style="display: none; margin: 0 1.5rem;">
@@ -522,9 +581,8 @@
         <!-- Chat Input -->
         <div class="chat-input-container">
             <div class="input-group">
-                <input type="text" class="form-control" id="messageInput" 
-                       placeholder="Escribe tu mensaje aquí..." 
-                       onkeypress="handleKeyPress(event)">
+                <input type="text" class="form-control" id="messageInput" placeholder="Escribe tu mensaje aquí..."
+                    onkeypress="handleKeyPress(event)">
                 <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -533,13 +591,10 @@
             <!-- Contenedor para el botón de estadísticas (render inicial si hay sesión) -->
             <div id="statsButtonContainer" class="stats-button-container">
                 {% if current_session %}
-                    <a
-                        href="{% url 'evaluation:session_feedback' current_session.id %}"
-                        class="btn btn-success btn-sm no-exit-warning"
-                        data-safe-exit="true"
-                    >
-                        <i class="fas fa-chart-line me-1"></i>Ver Estadísticas
-                    </a>
+                <a href="{% url 'evaluation:session_feedback' current_session.id %}"
+                    class="btn btn-success btn-sm no-exit-warning" data-safe-exit="true">
+                    <i class="fas fa-chart-line me-1"></i>Ver Estadísticas
+                </a>
                 {% endif %}
             </div>
 
@@ -548,8 +603,10 @@
 </div>
 
 <!-- Modal de confirmación para eliminar sesiones -->
-<div id="deleteSessionsModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);z-index:2000;align-items:center;justify-content:center;">
-    <div style="background:white;padding:2rem 2.5rem;border-radius:16px;max-width:350px;margin:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;position:relative;top:30vh;">
+<div id="deleteSessionsModal"
+    style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);z-index:2000;align-items:center;justify-content:center;">
+    <div
+        style="background:white;padding:2rem 2.5rem;border-radius:16px;max-width:350px;margin:auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;position:relative;top:30vh;">
         <i class="fas fa-exclamation-triangle" style="font-size:2.5rem;color:#dc3545;"></i>
         <h4 style="margin-top:1rem;">¿Eliminar sesiones seleccionadas?</h4>
         <p style="color:#555;">Esta acción no se puede deshacer.<br>¿Estás seguro?</p>
@@ -561,15 +618,18 @@
 </div>
 
 <!-- Modal de éxito -->
-<div id="deleteSessionsSuccessModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);z-index:2100;align-items:center;justify-content:center;">
-    <div style="background:white;padding:1.5rem 2rem;border-radius:16px;max-width:300px;margin:auto;box-shadow:0 4px 16px rgba(0,0,0,0.12);text-align:center;position:relative;top:35vh;">
+<div id="deleteSessionsSuccessModal"
+    style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.2);z-index:2100;align-items:center;justify-content:center;">
+    <div
+        style="background:white;padding:1.5rem 2rem;border-radius:16px;max-width:300px;margin:auto;box-shadow:0 4px 16px rgba(0,0,0,0.12);text-align:center;position:relative;top:35vh;">
         <i class="fas fa-check-circle" style="font-size:2rem;color:#28a745;"></i>
         <h5 style="margin-top:0.5rem;">Sesiones eliminadas</h5>
     </div>
 </div>
 
 <!-- Modal de advertencia de salida -->
-<div id="exitWarningModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:3000;">
+<div id="exitWarningModal" class="modal"
+    style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:3000;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius:16px;">
             <div class="modal-body p-4 text-center">
@@ -603,113 +663,120 @@
 </script>
 
 <script>
-// =================================================================================
-// INITIALIZATION & GLOBAL VARIABLES
-// =================================================================================
-const sessionData = JSON.parse(document.getElementById('session-data').textContent);
-let currentSessionId = sessionData.currentSessionId;
-let isActiveInterview = false; // Controla si una entrevista está en curso
-let isSafeNavigation = false;  // <--- NUEVO: bandera de salida segura
+    // =================================================================================
+    // INITIALIZATION & GLOBAL VARIABLES
+    // =================================================================================
+    const sessionData = JSON.parse(document.getElementById('session-data').textContent);
+    let currentSessionId = sessionData.currentSessionId;
+    let isActiveInterview = false; // Controla si una entrevista está en curso
+    let isSafeNavigation = false;  // <--- NUEVO: bandera de salida segura
 
-const chatMessages = document.getElementById('chatMessages');
-const messageInput = document.getElementById('messageInput');
-const sendBtn = document.getElementById('sendBtn');
-const typingIndicator = document.getElementById('typingIndicator');
-const scrollIndicator = document.getElementById('scrollIndicator');
-const csrftoken = getCookie('csrftoken');
+    const chatMessages = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const scrollIndicator = document.getElementById('scrollIndicator');
+    const csrftoken = getCookie('csrftoken');
 
-// Por si vuelves a esta página desde el historial, resetea el flag
-window.addEventListener('pageshow', () => { isSafeNavigation = false; });
+    // Por si vuelves a esta página desde el historial, resetea el flag
+    window.addEventListener('pageshow', () => { isSafeNavigation = false; });
 
-// =================================================================================
-// EXIT WARNING LOGIC
-// =================================================================================
+    // =================================================================================
+    // EXIT WARNING LOGIC
+    // =================================================================================
 
-function showExitWarning(event) {
-    if (!isActiveInterview) return true;
+    function showExitWarning(event) {
+        if (!isActiveInterview) return true;
 
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        const modal = document.getElementById('exitWarningModal');
+        if (modal) modal.style.display = 'block';
+        return false;
     }
-    const modal = document.getElementById('exitWarningModal');
-    if (modal) modal.style.display = 'block';
-    return false;
-}
 
-function hideExitWarning() {
-    const modal = document.getElementById('exitWarningModal');
-    if (modal) modal.style.display = 'none';
-}
-
-function confirmExit() {
-    isActiveInterview = false;
-    hideExitWarning();
-    window.location.href = "{% url 'interview_trainer:home' %}";
-}
-
-// Listener para antes de que la página se descargue (cerrar pestaña, recargar)
-window.addEventListener('beforeunload', function(e) {
-    // <--- Solo advertir si hay entrevista activa y NO es una navegación segura
-    if (isActiveInterview && !isSafeNavigation) {
-        e.preventDefault();
-        e.returnValue = '';
-        return '';
+    function hideExitWarning() {
+        const modal = document.getElementById('exitWarningModal');
+        if (modal) modal.style.display = 'none';
     }
-});
 
-// ====== UTILIDAD: chequeos de “click con modificadores” o nuevas pestañas
-function isNewTabClick(evt) {
-    // botón medio (1) o Ctrl/Cmd/Shift/Alt para abrir en nueva pestaña/ventana
-    return evt.button === 1 || evt.ctrlKey || evt.metaKey || evt.shiftKey || evt.altKey;
-}
-
-// ====== Whitelist de destinos seguros por patrón de URL 
-const SAFE_URL_PATTERNS = [
-    /\/evaluation\/session_feedback\/\d+\/?$/, // Ver estadísticas
-];
-
-// Listener para clics en enlaces
-document.addEventListener('click', function(e) {
-    const target = e.target.closest('a');
-    if (!target) return;
-
-    // Si no hay entrevista activa, no hay nada que advertir
-    if (!isActiveInterview) return;
-
-    // Si se abre en nueva pestaña/ventana, no estorbar
-    if (isNewTabClick(e) || target.getAttribute('target') === '_blank') return;
-
-    const href = target.getAttribute('href') || '';
-
-    // 1) Bypass explícito por clase o data-atributo
-    const hasBypassClass = target.classList.contains('no-exit-warning');
-    const hasBypassData  = target.dataset.safeExit === 'true';
-
-    // 2) Bypass por anclas/links “internos” que no abandonan la vista
-    const isHashLink = href.startsWith('#') || href === '';
-    const isMailOrTel = href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:');
-
-    // 3) Bypass por patrón de URL permitido
-    const isSafePattern = SAFE_URL_PATTERNS.some(rx => rx.test(href));
-
-    // 4) Opcional: si el enlace está dentro del contenedor del chat y quieres permitirlos
-    const isInsideChat = !!target.closest('.chat-container');
-
-    // ¿Es un enlace “seguro”?
-    const isSafeLink = hasBypassClass || hasBypassData || isHashLink || isMailOrTel || isSafePattern || isInsideChat;
-
-    if (isSafeLink) {
-        // Marcar esta navegación como segura y desactivar entrevista activa
-        isSafeNavigation = true;
+    function confirmExit() {
         isActiveInterview = false;
-        // No bloquees la navegación
-        return;
+        hideExitWarning();
+        window.location.href = "{% url 'interview_trainer:home' %}";
     }
 
-    // Si no es seguro, muestra el warning y bloquea la navegación
-    showExitWarning(e);
-});
+    // Listener para antes de que la página se descargue (cerrar pestaña, recargar)
+    window.addEventListener('beforeunload', function (e) {
+        // <--- Solo advertir si hay entrevista activa y NO es una navegación segura
+        if (isActiveInterview && !isSafeNavigation) {
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        }
+    });
+
+    // ====== UTILIDAD: chequeos de “click con modificadores” o nuevas pestañas
+    function isNewTabClick(evt) {
+        // botón medio (1) o Ctrl/Cmd/Shift/Alt para abrir en nueva pestaña/ventana
+        return evt.button === 1 || evt.ctrlKey || evt.metaKey || evt.shiftKey || evt.altKey;
+    }
+
+    // ====== Whitelist de destinos seguros por patrón de URL 
+    const SAFE_URL_PATTERNS = [
+        /\/evaluation\/session_feedback\/\d+\/?$/, // Ver estadísticas
+    ];
+
+    // Listener para clics en enlaces
+    document.addEventListener('click', function (e) {
+        const target = e.target.closest('a');
+        if (!target) return;
+
+        // Si no hay entrevista activa, no hay nada que advertir
+        if (!isActiveInterview) return;
+
+        // Si se abre en nueva pestaña/ventana, no estorbar
+        if (isNewTabClick(e) || target.getAttribute('target') === '_blank') return;
+
+        const href = target.getAttribute('href') || '';
+
+        // 1) Bypass explícito por clase o data-atributo
+        const hasBypassClass = target.classList.contains('no-exit-warning');
+        const hasBypassData = target.dataset.safeExit === 'true';
+
+        // 2) Bypass por anclas/links “internos” que no abandonan la vista
+        // Nota: enlaces como href="#" suelen usarse para toggles de dropdown (data-bs-toggle)
+        // No deben considerarse "seguros" porque abrir un dropdown no es navegar fuera.
+        const isHashLink = (href.startsWith('#') || href === '')
+            && !target.classList.contains('dropdown-toggle')
+            && !target.hasAttribute('data-bs-toggle')
+            && !(target.getAttribute('role') && target.getAttribute('role').toLowerCase().includes('button'));
+
+        // mailto: y tel: se consideran seguros; javascript: no (no ejecutar/permitir como safe)
+        const isMailOrTel = href.startsWith('mailto:') || href.startsWith('tel:');
+
+        // 3) Bypass por patrón de URL permitido
+        const isSafePattern = SAFE_URL_PATTERNS.some(rx => rx.test(href));
+
+        // 4) Opcional: si el enlace está dentro del contenedor del chat y quieres permitirlos
+        const isInsideChat = !!target.closest('.chat-container');
+
+        // ¿Es un enlace “seguro”?
+        const isSafeLink = hasBypassClass || hasBypassData || isHashLink || isMailOrTel || isSafePattern || isInsideChat;
+
+        if (isSafeLink) {
+            // Marcar esta navegación como segura y desactivar entrevista activa
+            isSafeNavigation = true;
+            isActiveInterview = false;
+            // No bloquees la navegación
+            return;
+        }
+
+        // Si no es seguro, muestra el warning y bloquea la navegación
+        showExitWarning(e);
+    });
 
 
     // =================================================================================
@@ -738,7 +805,7 @@ document.addEventListener('click', function(e) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         scrollIndicator.classList.remove('show');
-        
+
         // ✅ ASEGURAR que el scroll llegue completamente abajo - MÁS AGRESIVO
         setTimeout(() => {
             chatMessages.scrollTop = chatMessages.scrollHeight + 100; // ✅ +100px extra para asegurar
@@ -789,7 +856,7 @@ document.addEventListener('click', function(e) {
             setTimeout(() => { window.location.href = "{% url 'interview_trainer:select_interview_type' %}"; }, 2000);
             return;
         }
-        
+
         isActiveInterview = true; // Marcar la entrevista como activa
         messageInput.disabled = true;
         sendBtn.disabled = true;
@@ -830,9 +897,9 @@ document.addEventListener('click', function(e) {
         try {
             isActiveInterview = true; // Marcar la entrevista como activa
             sessionId = parseInt(sessionId);
-            
+
             chatMessages.innerHTML = `<div class="text-center p-4"><i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i><h4>Cargando sesión...</h4></div>`;
-            
+
             const response = await fetch(`/api/sessions/${sessionId}/messages/`);
             const data = await response.json();
 
@@ -869,7 +936,7 @@ document.addEventListener('click', function(e) {
     let isUserScrolling = false;
     let scrollTimeout;
 
-    chatMessages.addEventListener('scroll', function() {
+    chatMessages.addEventListener('scroll', function () {
         isUserScrolling = true;
         clearTimeout(scrollTimeout);
         const isAtBottom = chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 50;
@@ -889,12 +956,12 @@ document.addEventListener('click', function(e) {
         }
     });
 
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', function (event) {
         if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') sendMessage();
         if (event.key === 'Escape') startNewSession();
     });
 
-    messageInput.addEventListener('keypress', function(event) {
+    messageInput.addEventListener('keypress', function (event) {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             sendMessage();
@@ -936,16 +1003,16 @@ document.addEventListener('click', function(e) {
         setTimeout(() => notificationDiv.remove(), 15000);
     }
 
-    document.getElementById('deleteSessionsBtn').addEventListener('click', function() {
+    document.getElementById('deleteSessionsBtn').addEventListener('click', function () {
         const selectedSessions = document.querySelectorAll('.session-checkbox:checked');
         if (selectedSessions.length === 0) return showError('No hay sesiones seleccionadas.');
         const modal = document.getElementById('deleteSessionsModal');
-        if(modal) modal.style.display = 'flex';
+        if (modal) modal.style.display = 'flex';
     });
 
     function hideDeleteSessionsModal() {
         const modal = document.getElementById('deleteSessionsModal');
-        if(modal) modal.style.display = 'none';
+        if (modal) modal.style.display = 'none';
     }
 
     async function confirmDeleteSessions() {
@@ -963,11 +1030,11 @@ document.addEventListener('click', function(e) {
             if (data.success) {
                 hideDeleteSessionsModal();
                 const successModal = document.getElementById('deleteSessionsSuccessModal');
-                if(successModal) successModal.style.display = 'flex';
-                setTimeout(() => { if(successModal) successModal.style.display = 'none'; }, 2000);
+                if (successModal) successModal.style.display = 'flex';
+                setTimeout(() => { if (successModal) successModal.style.display = 'none'; }, 2000);
 
                 sessionIds.forEach(id => document.querySelector(`[data-session-id="${id}"]`)?.remove());
-                
+
                 const sessionCount = document.querySelectorAll('.session-item').length;
                 document.querySelector('.badge.bg-primary').innerText = sessionCount;
 
