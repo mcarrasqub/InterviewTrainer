@@ -14,10 +14,29 @@
             --lumo-gradient: linear-gradient(135deg, #334960 0%, #667688 100%);
             --lumo-light: #F8FAFC;
             --lumo-dark: #1E293B;
-            --Lumo-logo: #6dd695;
-            --font-family: 'Lato', sans-serif;
         }
-        
+
+        /* Ajustes para que el footer quede pegado al fondo */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--lumo-light);
+        }
+
+        main {
+            flex: 1 0 auto; /* ocupa el espacio disponible */
+        }
+
+        footer {
+            margin-top: auto; /* asegura que el footer se empuje al final */
+        }
+
         /* Apply Lato to all elements */
         * {
             font-family: 'Lato', sans-serif;
