@@ -1,0 +1,2484 @@
+﻿[
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "session_type": "operations",
+    "title": "Entrevista 1",
+    "created_at": "2025-10-16T02:16:45.194Z",
+    "updated_at": "2025-10-16T02:16:45.195Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "session_type": "operations",
+    "title": "entrevista 2",
+    "created_at": "2025-10-16T02:23:22.026Z",
+    "updated_at": "2025-10-16T02:23:22.026Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 3,
+  "fields": {
+    "user": 1,
+    "session_type": "operations",
+    "title": "entrevista 3",
+    "created_at": "2025-10-16T02:27:23.090Z",
+    "updated_at": "2025-10-16T02:27:23.090Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "session_type": "operations",
+    "title": "Entrevista 1",
+    "created_at": "2025-10-16T02:37:29.556Z",
+    "updated_at": "2025-10-16T02:37:29.556Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 5,
+  "fields": {
+    "user": 3,
+    "session_type": "operations",
+    "title": "entrevista 1",
+    "created_at": "2025-10-16T02:46:21.304Z",
+    "updated_at": "2025-10-16T02:46:21.304Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 6,
+  "fields": {
+    "user": 3,
+    "session_type": "operations",
+    "title": "entrevista 2",
+    "created_at": "2025-10-16T02:51:24.883Z",
+    "updated_at": "2025-10-16T02:51:24.883Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 7,
+  "fields": {
+    "user": 3,
+    "session_type": "sales_marketing",
+    "title": "entrevista 3",
+    "created_at": "2025-10-16T02:55:51.333Z",
+    "updated_at": "2025-10-16T02:55:51.334Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 8,
+  "fields": {
+    "user": 4,
+    "session_type": "operations",
+    "title": "Entrevista 1",
+    "created_at": "2025-10-16T02:57:29.667Z",
+    "updated_at": "2025-10-16T02:57:29.668Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 9,
+  "fields": {
+    "user": 5,
+    "session_type": "operations",
+    "title": "si",
+    "created_at": "2025-10-16T02:59:00.916Z",
+    "updated_at": "2025-10-16T02:59:00.917Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 12,
+  "fields": {
+    "user": 4,
+    "session_type": "operations",
+    "title": "entrevista 2",
+    "created_at": "2025-10-16T03:38:33.900Z",
+    "updated_at": "2025-10-16T03:38:33.900Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 13,
+  "fields": {
+    "user": 3,
+    "session_type": "health",
+    "title": "",
+    "created_at": "2025-10-16T14:25:18.237Z",
+    "updated_at": "2025-10-16T14:25:18.237Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 14,
+  "fields": {
+    "user": 3,
+    "session_type": "health",
+    "title": "",
+    "created_at": "2025-10-16T14:25:18.599Z",
+    "updated_at": "2025-10-16T14:25:18.599Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.interviewsession",
+  "pk": 15,
+  "fields": {
+    "user": 3,
+    "session_type": "operations",
+    "title": "entrevista 4",
+    "created_at": "2025-10-16T14:57:48.731Z",
+    "updated_at": "2025-10-16T14:57:48.731Z",
+    "is_active": true,
+    "is_completed": false,
+    "questions_asked": 0
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 1,
+  "fields": {
+    "session": 1,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y te dar├® la bienvenida en esta entrevista para el puesto en Operaciones y Producci├│n. Para empezar, cu├®ntame un poco sobre ti y qu├® te atrae de este campo. ÔÜÖ´©Å",
+    "timestamp": "2025-10-16T02:16:46.843Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 2,
+  "fields": {
+    "session": 1,
+    "is_user": true,
+    "content": "soy Mariana Gracias por la bienvenida. Soy una persona orientada a los resultados, con gran inter├®s en optimizar procesos y mejorar la eficiencia operativa. Me atrae el campo de Operaciones y Producci├│n porque combina la planeaci├│n estrat├®gica con la ejecuci├│n pr├íctica; me motiva ver c├│mo una buena gesti├│n de recursos y una coordinaci├│n precisa pueden traducirse en resultados tangibles. Adem├ís, disfruto trabajar en entornos din├ímicos donde se requiere an├ílisis, organizaci├│n y trabajo en equipo.",
+    "timestamp": "2025-10-16T02:17:50.094Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 3,
+  "fields": {
+    "session": 1,
+    "is_user": false,
+    "content": "┬íExcelente, Mariana! ­ƒæì\n\nPregunta 1/7: Cu├®ntame de una vez en que tuviste que optimizar un proceso en el trabajo. ┬┐Qu├® m├®tricas utilizaste para medir el ├®xito de la optimizaci├│n?",
+    "timestamp": "2025-10-16T02:17:51.669Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 4,
+  "fields": {
+    "session": 1,
+    "is_user": true,
+    "content": "En una experiencia previa, not├® que el proceso de control de inventario estaba generando retrasos en la entrega de materiales. Propuse reorganizar el flujo de registro, incorporando un sistema digital para el seguimiento en tiempo real. Para medir la efectividad de la optimizaci├│n, utilic├® m├®tricas como el tiempo promedio de reposici├│n, el porcentaje de cumplimiento en entregas y la reducci├│n del error en conteo de inventario. Al cabo de un mes, logramos disminuir el tiempo de reposici├│n en un 25% y reducir los errores de registro en un 40%, lo cual mejor├│ la coordinaci├│n entre los equipos de log├¡stica y producci├│n.",
+    "timestamp": "2025-10-16T02:18:21.923Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 5,
+  "fields": {
+    "session": 1,
+    "is_user": false,
+    "content": "Pregunta 2/7: ┬┐Qu├® har├¡as si detectaras un cuello de botella en la l├¡nea de producci├│n que est├í afectando los tiempos de entrega y la calidad del producto? ÔÅ│",
+    "timestamp": "2025-10-16T02:18:23.519Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 6,
+  "fields": {
+    "session": 1,
+    "is_user": true,
+    "content": "Ante un cuello de botella, aplicar├¡a una metodolog├¡a estructurada como el An├ílisis de Causa Ra├¡z (Ishikawa o 5 Porqu├®s) y revisar├¡a los datos del takt time frente al cycle time de cada estaci├│n. Si el cuello se encuentra en una m├íquina o tarea espec├¡fica, evaluar├¡a la posibilidad de redistribuir la carga de trabajo, ajustar turnos o implementar mantenimiento preventivo. Medir├¡a la mejora con indicadores como Throughput, WIP (Work in Progress) y defect rate. El objetivo ser├¡a aumentar el flujo continuo sin comprometer la calidad ni generar sobrecarga en otros puntos del proceso.",
+    "timestamp": "2025-10-16T02:18:56.125Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 7,
+  "fields": {
+    "session": 1,
+    "is_user": false,
+    "content": "Pregunta 3/7: Describe una situaci├│n donde tuviste que tomar una decisi├│n r├ípida bajo presi├│n en un entorno de producci├│n. ┬┐Cu├íl fue el resultado? ÔÅ▒´©Å",
+    "timestamp": "2025-10-16T02:18:57.623Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 8,
+  "fields": {
+    "session": 1,
+    "is_user": true,
+    "content": "Una vez, en plena jornada, una de las m├íquinas dej├│ de funcionar justo cuando est├íbamos a punto de terminar un pedido grande. No hab├¡a mucho tiempo para pensar, as├¡ que decid├¡ mover parte del trabajo a otra l├¡nea y reorganizar el turno del equipo para no perder el avance. Mientras tanto, ped├¡ apoyo al ├írea de mantenimiento. Al final logramos entregar el pedido a tiempo y aprendimos a tener siempre un plan B cuando algo falla.",
+    "timestamp": "2025-10-16T02:19:27.048Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 9,
+  "fields": {
+    "session": 1,
+    "is_user": false,
+    "content": "Pregunta 4/7: ┬┐C├│mo priorizar├¡as la seguridad en el trabajo, manteniendo a la vez la eficiencia de la producci├│n? ­ƒæÀÔÇìÔÖÇ´©Å",
+    "timestamp": "2025-10-16T02:19:28.460Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 10,
+  "fields": {
+    "session": 1,
+    "is_user": true,
+    "content": "Para m├¡, la seguridad siempre va primero, pero eso no significa que haya que perder eficiencia. Lo que hago es asegurarme de que el equipo conozca bien los procedimientos y los siga al pie de la letra, y de que el entorno de trabajo est├® ordenado y libre de riesgos. Cuando todos trabajan seguros y tranquilos, la producci├│n fluye mejor, se reducen los errores y no hay paradas por accidentes o imprevistos.",
+    "timestamp": "2025-10-16T02:19:56.910Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 11,
+  "fields": {
+    "session": 1,
+    "is_user": false,
+    "content": "Pregunta 5/7: ┬┐C├│mo manejar├¡as un conflicto entre dos miembros del equipo de producci├│n que est├ín afectando el rendimiento general? ­ƒñØ",
+    "timestamp": "2025-10-16T02:19:58.345Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 12,
+  "fields": {
+    "session": 1,
+    "is_user": true,
+    "content": "Si hay dos compa├▒eros en conflicto, primero hablar├¡a con cada uno por separado para entender qu├® pasa sin que se sientan juzgados. Luego los reunir├¡a y les recordar├¡a que todos estamos remando hacia el mismo lado: que si el equipo no funciona, la producci├│n se afecta. Buscar├¡a una soluci├│n donde ambos puedan trabajar tranquilos, y si hace falta, ajustar├¡a tareas o turnos. Lo importante es resolver r├ípido pero con empat├¡a, para que el ambiente siga siendo positivo y el trabajo fluya.",
+    "timestamp": "2025-10-16T02:20:24.125Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 13,
+  "fields": {
+    "session": 1,
+    "is_user": false,
+    "content": "Pregunta 6/7: ┬┐Qu├® m├®tricas clave (KPIs) consideras m├ís importantes para medir el ├®xito en un departamento de producci├│n y por qu├®? ­ƒôè",
+    "timestamp": "2025-10-16T02:20:25.456Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 14,
+  "fields": {
+    "session": 1,
+    "is_user": true,
+    "content": "En producci├│n, los KPIs deben cubrir eficiencia, rendimiento y estabilidad del proceso. Mis principales ser├¡an:  OEE (Overall Equipment Effectiveness): mide el desempe├▒o real del equipo considerando disponibilidad, performance y calidad.  Yield o tasa de aprovechamiento: porcentaje de productos buenos frente al total producido.  MTTR (Mean Time to Repair) y MTBF (Mean Time Between Failures): indicadores de confiabilidad y mantenimiento.  Throughput: mide la cantidad de unidades procesadas por unidad de tiempo.  Scrap Rate: para controlar desperdicio y costos. Estos KPIs ofrecen una visi├│n t├®cnica del flujo productivo y permiten aplicar metodolog├¡as como Lean Manufacturing o TPM para mejorar resultados.",
+    "timestamp": "2025-10-16T02:21:05.344Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 15,
+  "fields": {
+    "session": 1,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T02:21:05.358Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 16,
+  "fields": {
+    "session": 2,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y te doy la bienvenida a esta entrevista para el puesto en Operaciones y Producci├│n. Para empezar, cu├®ntame un poco sobre ti y qu├® te atrae de este campo. ­ƒÅ¡",
+    "timestamp": "2025-10-16T02:23:23.555Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 17,
+  "fields": {
+    "session": 2,
+    "is_user": true,
+    "content": "Bueno, soy una persona responsable, me gusta aprender y trabajar en equipo. El ├írea de Operaciones y Producci├│n me parece interesante porque tiene que ver con c├│mo se hacen las cosas y c├│mo mejorar los procesos. Me llama la atenci├│n todo lo que tiene que ver con organizaci├│n y resultados.",
+    "timestamp": "2025-10-16T02:23:54.457Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 18,
+  "fields": {
+    "session": 2,
+    "is_user": false,
+    "content": "┬┐Cu├íl consideras que es tu mayor fortaleza en el contexto de Operaciones y Producci├│n? ­ƒñö",
+    "timestamp": "2025-10-16T02:23:55.768Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 19,
+  "fields": {
+    "session": 2,
+    "is_user": true,
+    "content": "Creo que mi mayor fortaleza es que soy muy comprometida y me adapto f├ícil a diferentes situaciones. Me gusta mantenerme organizada y tratar de que todo salga bien en el trabajo.",
+    "timestamp": "2025-10-16T02:24:15.821Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 20,
+  "fields": {
+    "session": 2,
+    "is_user": false,
+    "content": "Cu├®ntame de una situaci├│n donde tuviste que adaptarte r├ípidamente a un cambio inesperado en un proceso de producci├│n. ­ƒÜÇ",
+    "timestamp": "2025-10-16T02:24:17.365Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 21,
+  "fields": {
+    "session": 2,
+    "is_user": true,
+    "content": "Una vez hubo un cambio en la forma de hacer una tarea y toc├│ ajustarse r├ípido. Al principio fue un poco confuso, pero me adapt├®, colabor├® con el equipo y todo sali├│ bien al final.",
+    "timestamp": "2025-10-16T02:24:36.260Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 22,
+  "fields": {
+    "session": 2,
+    "is_user": false,
+    "content": "┬┐C├│mo priorizar├¡as tareas conflictivas con plazos ajustados en un entorno de producci├│n? ÔÅ│",
+    "timestamp": "2025-10-16T02:24:37.691Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 23,
+  "fields": {
+    "session": 2,
+    "is_user": true,
+    "content": "Tratar├¡a de ver cu├íles tareas son m├ís urgentes o importantes y empezar├¡a por ah├¡. Tambi├®n intentar├¡a organizarme bien y hablar con el equipo para cumplir con los tiempos lo mejor posible.",
+    "timestamp": "2025-10-16T02:24:55.733Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 24,
+  "fields": {
+    "session": 2,
+    "is_user": false,
+    "content": "┬┐Qu├® m├®tricas clave usar├¡as para medir la eficiencia de una l├¡nea de producci├│n y c├│mo las interpretar├¡as? ­ƒôè",
+    "timestamp": "2025-10-16T02:24:57.143Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 25,
+  "fields": {
+    "session": 2,
+    "is_user": true,
+    "content": "Usar├¡a algunas m├®tricas b├ísicas como la cantidad producida, el tiempo que se tarda en hacer las cosas y si se cumplen los objetivos del d├¡a. Si los n├║meros est├ín bien, quiere decir que el proceso va funcionando como deber├¡a.",
+    "timestamp": "2025-10-16T02:25:11.417Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 26,
+  "fields": {
+    "session": 2,
+    "is_user": false,
+    "content": "┬┐Qu├® har├¡as si detectaras una desviaci├│n significativa en una de esas m├®tricas?",
+    "timestamp": "2025-10-16T02:25:12.655Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 27,
+  "fields": {
+    "session": 2,
+    "is_user": true,
+    "content": "Primero revisar├¡a qu├® pudo haber pasado y hablar├¡a con el equipo para entender la causa. Luego tratar├¡a de hacer los ajustes necesarios para que todo vuelva a la normalidad.",
+    "timestamp": "2025-10-16T02:25:30.688Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 28,
+  "fields": {
+    "session": 2,
+    "is_user": false,
+    "content": "┬┐C├│mo comunicar├¡as esa desviaci├│n y el plan de acci├│n a la gerencia?",
+    "timestamp": "2025-10-16T02:25:32.341Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 29,
+  "fields": {
+    "session": 2,
+    "is_user": true,
+    "content": "Informar├¡a lo que pas├│ de manera clara y sencilla, mostrando los datos principales. Luego explicar├¡a qu├® se est├í haciendo para corregirlo y c├│mo se espera mejorar el resultado.",
+    "timestamp": "2025-10-16T02:25:57.023Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 30,
+  "fields": {
+    "session": 2,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T02:25:57.036Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 31,
+  "fields": {
+    "session": 3,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y te doy la bienvenida a esta entrevista para el puesto en Operaciones y Producci├│n. Para empezar, cu├®ntame sobre ti y qu├® te atrae de este campo. ­ƒÜÇ",
+    "timestamp": "2025-10-16T02:27:24.400Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 32,
+  "fields": {
+    "session": 3,
+    "is_user": true,
+    "content": "BuenoÔÇª eh, soy una persona trabajadora, creoÔÇª me gusta aprender cosas nuevas, aunque no tengo tanta experiencia en este campo todav├¡a. Me llama la atenci├│n c├│mo funciona todo en producci├│n, c├│mo se organizan los procesos y, bueno, me gustar├¡a poder aportar y seguir aprendiendo en eso.",
+    "timestamp": "2025-10-16T02:28:07.363Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 33,
+  "fields": {
+    "session": 3,
+    "is_user": false,
+    "content": "Pregunta 1/7 | Restantes: 6\n\nCu├®ntame de una vez que tuviste que aprender algo nuevo r├ípidamente en un entorno laboral. ┬┐C├│mo lo abordaste? ­ƒÜÇ",
+    "timestamp": "2025-10-16T02:28:08.837Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 34,
+  "fields": {
+    "session": 3,
+    "is_user": true,
+    "content": "HmmÔÇª bueno, hubo una vez que me pidieron usar una herramienta nueva en el trabajo y, la verdad, al principio no sab├¡a muy bien c├│mo funcionaba. Me puse a mirar algunos tutoriales y a preguntar a mis compa├▒erosÔÇª no me sali├│ perfecto al inicio, pero con el tiempo fui entendiendo mejor y logr├® hacerlo.",
+    "timestamp": "2025-10-16T02:28:32.356Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 35,
+  "fields": {
+    "session": 3,
+    "is_user": false,
+    "content": "Pregunta 2/7 | Restantes: 5\n\n┬┐C├│mo priorizar├¡as tareas conflictivas con plazos ajustados en un proyecto? ÔÅ│",
+    "timestamp": "2025-10-16T02:28:33.728Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 36,
+  "fields": {
+    "session": 3,
+    "is_user": true,
+    "content": "EhÔÇª bueno, creo que tratar├¡a de ver qu├® tarea es m├ís urgente o cu├íl afecta m├ís al resultado final. A veces me cuesta un poco decidir r├ípido, pero intento organizarme con una lista o algo as├¡ÔÇª y, si no estoy segura, prefiero preguntar o coordinar con el equipo para no equivocarme.",
+    "timestamp": "2025-10-16T02:28:52.890Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 37,
+  "fields": {
+    "session": 3,
+    "is_user": false,
+    "content": "Pregunta 3/7 | Restantes: 4\n\nDescribe una situaci├│n en la que tuviste que comunicarte con un equipo con diferentes niveles de experiencia. ┬┐Qu├® estrategias usaste? ­ƒùú´©Å",
+    "timestamp": "2025-10-16T02:28:54.408Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 38,
+  "fields": {
+    "session": 3,
+    "is_user": true,
+    "content": "Pues, una vez tuve que trabajar con gente que sab├¡a m├ís y otros que sab├¡an menosÔÇª entonces trat├® como de hablarles a todos igual, aunque a veces no me entend├¡an mucho. Yo les explicaba lo que pod├¡a y, bueno, al final m├ís o menos sali├│ bien, aunque fue un poco enredado.",
+    "timestamp": "2025-10-16T02:29:21.970Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 39,
+  "fields": {
+    "session": 3,
+    "is_user": false,
+    "content": "Lumo: Pregunta 4/7 | Restantes: 3\n\n┬┐Qu├® har├¡as si detectas un fallo en la l├¡nea de producci├│n que podr├¡a retrasar la entrega de un pedido importante? ÔÜÖ´©Å",
+    "timestamp": "2025-10-16T02:29:23.426Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 40,
+  "fields": {
+    "session": 3,
+    "is_user": true,
+    "content": "Pues yo creo que no dir├¡a nada al principio, esperar├¡a a ver si se arregla solo o si alguien m├ís se da cuenta. As├¡ no me meto en problemas ni paro la producci├│n por algo que de pronto no es tan grave.",
+    "timestamp": "2025-10-16T02:29:47.036Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 41,
+  "fields": {
+    "session": 3,
+    "is_user": false,
+    "content": "Lumo: Pregunta 5/7 | Restantes: 2\n\n┬┐C├│mo mides el ├®xito de un proyecto de mejora continua en la producci├│n? ­ƒôè",
+    "timestamp": "2025-10-16T02:29:48.479Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 42,
+  "fields": {
+    "session": 3,
+    "is_user": true,
+    "content": "Pues yo m├ís que todo me fijo si la gente del equipo est├í contenta o si ya no se quejan tanto. No suelo mirar mucho los n├║meros ni los resultados, porque eso lo ve normalmente otra persona.",
+    "timestamp": "2025-10-16T02:30:07.195Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 43,
+  "fields": {
+    "session": 3,
+    "is_user": false,
+    "content": "Pregunta 6/7 | Restantes: 1\n\nSi tuvieras que implementar un nuevo sistema de gesti├│n de inventario, ┬┐cu├íles ser├¡an los tres aspectos m├ís importantes a considerar? ­ƒñö",
+    "timestamp": "2025-10-16T02:30:08.648Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 44,
+  "fields": {
+    "session": 3,
+    "is_user": true,
+    "content": "Si tuviera que implementar un nuevo sistema de gesti├│n de inventario, considerar├¡a tres aspectos clave:  1´©ÅÔâú Precisi├│n y trazabilidad de la informaci├│n: asegurar que el sistema registre entradas, salidas y ubicaciones en tiempo real para evitar errores o p├®rdidas de stock.  2´©ÅÔâú Integraci├│n con otros procesos: el sistema debe conectarse con ├íreas como compras, producci├│n y ventas, de modo que todos trabajen con datos actualizados y coherentes.  3´©ÅÔâú Facilidad de uso y capacitaci├│n del personal: un sistema eficiente solo funciona bien si el equipo lo entiende y lo usa correctamente; por eso la formaci├│n y la interfaz intuitiva son esenciales.",
+    "timestamp": "2025-10-16T02:30:37.897Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 45,
+  "fields": {
+    "session": 3,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T02:30:37.910Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 46,
+  "fields": {
+    "session": 4,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y te doy la bienvenida a esta entrevista para el puesto en Operaciones y Producci├│n. Para empezar, cu├®ntame un poco sobre ti y qu├® te atrae de este campo. ­ƒÅ¡",
+    "timestamp": "2025-10-16T02:37:30.510Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 47,
+  "fields": {
+    "session": 4,
+    "is_user": true,
+    "content": "Gracias, Lumo, me llamo david garcia. Bueno, soy una persona bastante curiosa y me gusta entender c├│mo funcionan las cosas desde adentro. Siempre me ha llamado la atenci├│n c├│mo, detr├ís de un producto o servicio, hay todo un proceso que requiere coordinaci├│n, orden y trabajo en equipo.  Me atrae el campo de Operaciones y Producci├│n porque combina lo t├®cnico con lo humano: no solo es mejorar procesos, sino tambi├®n encontrar maneras para que las personas trabajen mejor juntas y todo fluya. Disfruto mucho cuando algo que parec├¡a complicado empieza a funcionar bien gracias al esfuerzo colectivo.",
+    "timestamp": "2025-10-16T02:38:26.562Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 48,
+  "fields": {
+    "session": 4,
+    "is_user": false,
+    "content": "┬íExcelente, David! ­ƒÜÇ\n\nPregunta 1/7: Cu├®ntame sobre un momento en que tuviste que optimizar un proceso, aunque no tuvieras toda la informaci├│n necesaria. ┬┐C├│mo lo abordaste?",
+    "timestamp": "2025-10-16T02:38:28.251Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 49,
+  "fields": {
+    "session": 4,
+    "is_user": true,
+    "content": "S├¡, recuerdo una situaci├│n en la que nos ped├¡an mejorar el tiempo de entrega de unos pedidos, pero no ten├¡amos toda la informaci├│n sobre las causas del retraso. En lugar de esperar a tener todos los datos, decid├¡ empezar por observar c├│mo se estaba trabajando y hablar directamente con las personas involucradas.  Me di cuenta de que hab├¡a pasos duplicados y cierta confusi├│n en la comunicaci├│n entre ├íreas. Propuse simplificar el flujo y establecer un canal m├ís directo para confirmar las entregas.  No fue una soluci├│n perfecta desde el principio, pero con cada ajuste fuimos puliendo el proceso. Al final, logramos reducir los tiempos y, sobre todo, que el equipo se sintiera m├ís c├│modo con la nueva forma de trabajar.",
+    "timestamp": "2025-10-16T02:38:52.079Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 50,
+  "fields": {
+    "session": 4,
+    "is_user": false,
+    "content": "Pregunta 2/7: ┬┐C├│mo priorizar├¡as tareas urgentes si dos de ellas entran en conflicto directo por recursos limitados? ÔÅ▒´©Å",
+    "timestamp": "2025-10-16T02:38:53.506Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 51,
+  "fields": {
+    "session": 4,
+    "is_user": true,
+    "content": "Creo que lo primero ser├¡a respirar y no dejarme llevar por la presi├│n. En esos casos trato de entender qu├® impacto tiene cada tarea en el resultado final: cu├íl afecta m├ís al cliente, a la producci├│n o al equipo.  Luego hablar├¡a con las personas involucradas para evaluar alternativas, como reasignar recursos, dividir el trabajo o ajustar plazos si es posible. No siempre se puede cumplir con todo al 100%, pero s├¡ se puede ser transparente y tomar una decisi├│n basada en datos y prioridades reales.  Para m├¡, lo importante es que la elecci├│n no sea impulsiva, sino razonada y comunicada claramente, para que el equipo entienda por qu├® se prioriza una tarea sobre otra.",
+    "timestamp": "2025-10-16T02:39:11.917Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 52,
+  "fields": {
+    "session": 4,
+    "is_user": false,
+    "content": "Pregunta 3/7: Describe una situaci├│n en la que tuviste que implementar un cambio significativo en un proceso productivo y c├│mo gestionaste la resistencia del equipo. ­ƒñØ",
+    "timestamp": "2025-10-16T02:39:13.345Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 53,
+  "fields": {
+    "session": 4,
+    "is_user": true,
+    "content": "Recuerdo un momento en que necesit├íbamos cambiar la forma en que registr├íbamos los pedidos en producci├│n, pasando de un proceso manual a uno digital. Al principio, algunos compa├▒eros se mostraron reacios porque estaban acostumbrados a la manera antigua y les daba miedo cometer errores con el nuevo sistema.  Lo que hice fue escuchar sus preocupaciones, mostrarles paso a paso c├│mo funcionar├¡a la nueva herramienta y ofrecer apoyo constante durante la transici├│n. Tambi├®n ped├¡ retroalimentaci├│n para ajustar el proceso a la realidad del d├¡a a d├¡a.  Poco a poco, la resistencia disminuy├│ y el equipo empez├│ a ver los beneficios: menos errores, m├ís claridad en los pedidos y un flujo de trabajo m├ís ├ígil. Fue un aprendizaje para m├¡ sobre paciencia, comunicaci├│n y acompa├▒amiento en el cambio.",
+    "timestamp": "2025-10-16T02:39:32.512Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 54,
+  "fields": {
+    "session": 4,
+    "is_user": false,
+    "content": "Pregunta 4/7: ┬┐Qu├® m├®tricas clave usar├¡as para evaluar la eficiencia de una l├¡nea de producci├│n y por qu├®? ­ƒôè",
+    "timestamp": "2025-10-16T02:39:33.855Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 55,
+  "fields": {
+    "session": 4,
+    "is_user": true,
+    "content": "Para evaluar la eficiencia de una l├¡nea de producci├│n me enfocar├¡a en algunas m├®tricas que realmente reflejen c├│mo fluye el trabajo y si estamos cumpliendo objetivos. Por ejemplo:  Tiempo de ciclo: para ver cu├ínto tarda cada producto en pasar por toda la l├¡nea y detectar posibles retrasos.  Tasa de productos buenos vs. defectuosos: porque la eficiencia no sirve de mucho si la calidad se ve afectada.  Cumplimiento de plan de producci├│n: para asegurarnos de que estamos entregando a tiempo y cumpliendo con los compromisos.",
+    "timestamp": "2025-10-16T02:39:52.776Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 56,
+  "fields": {
+    "session": 4,
+    "is_user": false,
+    "content": "Pregunta 5/7: Cu├®ntame de alguna ocasi├│n donde identificaste un cuello de botella en un proceso y qu├® pasos tomaste para resolverlo. ÔÜÖ´©Å",
+    "timestamp": "2025-10-16T02:39:54.169Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 57,
+  "fields": {
+    "session": 4,
+    "is_user": true,
+    "content": "S├¡, hubo una ocasi├│n en que not├® que en la l├¡nea de ensamblaje hab├¡a un retraso constante en una de las estaciones, y eso hac├¡a que el resto del proceso se acumulara. Primero habl├® con las personas que trabajaban all├¡ para entender qu├® dificultades ten├¡an y observ├® c├│mo se desarrollaba la tarea.  Me di cuenta de que algunos pasos pod├¡an reorganizarse y que faltaban algunas herramientas a mano. Propuse redistribuir ciertas tareas y asegurarnos de que todo el material estuviera disponible antes de comenzar.  Con esos ajustes, el flujo mejor├│ bastante y el equipo se sinti├│ m├ís c├│modo, porque ya no se acumulaba trabajo ni hab├¡a tanta presi├│n en esa estaci├│n. Fue un buen recordatorio de que a veces los problemas se resuelven escuchando al equipo y ajustando detalles pr├ícticos.",
+    "timestamp": "2025-10-16T02:40:14.078Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 58,
+  "fields": {
+    "session": 4,
+    "is_user": false,
+    "content": "Lumo: Pregunta 6/7: ┬┐C├│mo priorizar├¡as tareas cuando tienes m├║ltiples proyectos con plazos ajustados? ÔÅ░",
+    "timestamp": "2025-10-16T02:40:15.423Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 59,
+  "fields": {
+    "session": 4,
+    "is_user": true,
+    "content": "n situaciones con varios proyectos y plazos ajustados, trato primero de entender la urgencia e impacto de cada tarea: cu├íles afectan m├ís al cliente, a la producci├│n o al equipo.  Luego hago una especie de lista de prioridades y, si es necesario, hablo con el equipo o con los responsables para reajustar recursos o plazos. No siempre se puede cumplir todo al 100%, pero s├¡ se puede ser claro y transparente sobre lo que se va a hacer primero y por qu├®.  Para m├¡, lo importante es tomar decisiones conscientes, comunicar bien y mantener al equipo alineado, as├¡ todos saben qu├® se espera y se minimizan errores o malentendidos.",
+    "timestamp": "2025-10-16T02:40:37.547Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 60,
+  "fields": {
+    "session": 4,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T02:40:37.560Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 61,
+  "fields": {
+    "session": 5,
+    "is_user": false,
+    "content": "Hola, soy Lumo, entrevistador especializado en Operaciones y Producci├│n. ­ƒæï Para empezar, cu├®ntame sobre ti y por qu├® te interesa este campo.",
+    "timestamp": "2025-10-16T02:46:22.580Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 62,
+  "fields": {
+    "session": 5,
+    "is_user": true,
+    "content": "Hola, soy valen. Soy una persona organizada y me gusta aprender cosas nuevas. Me interesa Operaciones y Producci├│n porque me gusta ver c├│mo se hacen las cosas y que todo funcione bien.",
+    "timestamp": "2025-10-16T02:47:15.373Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 63,
+  "fields": {
+    "session": 5,
+    "is_user": false,
+    "content": "Entendido, Valen. ­ƒæì\n\nPregunta 1/7: Describe una situaci├│n en la que tuviste que optimizar un proceso para mejorar la eficiencia. ┬┐Qu├® pasos seguiste?",
+    "timestamp": "2025-10-16T02:47:16.652Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 64,
+  "fields": {
+    "session": 5,
+    "is_user": true,
+    "content": "Una vez vi que un proceso estaba tomando demasiado tiempo, as├¡ que lo revis├® paso a paso y habl├® con el equipo. Cambiamos algunas cosas y reorganizamos tareas, y al final el trabajo se hizo m├ís r├ípido y sin errores.",
+    "timestamp": "2025-10-16T02:47:35.266Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 65,
+  "fields": {
+    "session": 5,
+    "is_user": false,
+    "content": "Pregunta 2/7: ┬┐C├│mo priorizar├¡as tareas en un entorno de producci├│n con plazos ajustados y recursos limitados? ÔÅ│",
+    "timestamp": "2025-10-16T02:47:36.582Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 66,
+  "fields": {
+    "session": 5,
+    "is_user": true,
+    "content": "Primero ver├¡a qu├® tareas son m├ís urgentes o importantes, y har├¡a esas primero. Tambi├®n tratar├¡a de organizarme y pedir ayuda al equipo si hace falta para que todo salga a tiempo.",
+    "timestamp": "2025-10-16T02:47:53.742Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 67,
+  "fields": {
+    "session": 5,
+    "is_user": false,
+    "content": "Pregunta 3/7: ┬┐Qu├® herramientas o metodolog├¡as utilizas para el control de calidad en la producci├│n? ­ƒøá´©Å",
+    "timestamp": "2025-10-16T02:47:55.249Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 68,
+  "fields": {
+    "session": 5,
+    "is_user": true,
+    "content": "Normalmente reviso los productos paso a paso y uso listas de control para asegurarme de que todo est├® bien. A veces tambi├®n comparo con est├índares o gu├¡as de calidad para no cometer errores.",
+    "timestamp": "2025-10-16T02:48:11.002Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 69,
+  "fields": {
+    "session": 5,
+    "is_user": false,
+    "content": "Pregunta 4/7: Cu├®ntame de alguna vez que tuviste que resolver un problema inesperado en la l├¡nea de producci├│n. ┬┐Cu├íl fue tu enfoque? ­ƒñö",
+    "timestamp": "2025-10-16T02:48:12.353Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 70,
+  "fields": {
+    "session": 5,
+    "is_user": true,
+    "content": "Una vez algo no sali├│ como esperaba en la producci├│n, as├¡ que revis├® qu├® estaba pasando y habl├® con el equipo. Hicimos algunos ajustes r├ípidos y al final todo sigui├│ funcionando.",
+    "timestamp": "2025-10-16T02:48:27.650Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 71,
+  "fields": {
+    "session": 5,
+    "is_user": false,
+    "content": "Pregunta 5/7: ┬┐C├│mo te asegurar├¡as de mantener una comunicaci├│n efectiva con los diferentes equipos involucrados en el proceso de producci├│n? ­ƒùú´©Å",
+    "timestamp": "2025-10-16T02:48:29.043Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 72,
+  "fields": {
+    "session": 5,
+    "is_user": true,
+    "content": "Tratar├¡a de hablar con todos regularmente, usar mensajes o reuniones cortas para que todos sepan lo que est├í pasando y asegurarnos de que no haya confusiones.",
+    "timestamp": "2025-10-16T02:48:44.695Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 73,
+  "fields": {
+    "session": 5,
+    "is_user": false,
+    "content": "Pregunta 6/7: Describe una situaci├│n donde tuviste que implementar un cambio en el proceso de producci├│n. ┬┐C├│mo gestionaste la resistencia al cambio?",
+    "timestamp": "2025-10-16T02:48:46.136Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 74,
+  "fields": {
+    "session": 5,
+    "is_user": true,
+    "content": "Hubo un momento en que cambiamos la forma de hacer un proceso. Algunos compa├▒eros no estaban muy de acuerdo, as├¡ que les expliqu├® c├│mo funcionar├¡a y les ayud├® mientras se acostumbraban. Con eso, todos pudieron adaptarse y seguimos trabajando bien.",
+    "timestamp": "2025-10-16T02:49:08.390Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 75,
+  "fields": {
+    "session": 5,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T02:49:08.423Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 76,
+  "fields": {
+    "session": 6,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y te doy la bienvenida a esta entrevista para el puesto en Operaciones y Producci├│n. Para empezar, cu├®ntame un poco sobre ti y qu├® te atrae de este campo. ­ƒÜÇ",
+    "timestamp": "2025-10-16T02:51:26.203Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 77,
+  "fields": {
+    "session": 6,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:52:53.275Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 78,
+  "fields": {
+    "session": 6,
+    "is_user": false,
+    "content": "┬íEntendido! Vamos a empezar entonces.\n\nPregunta 1/7: ┬┐Podr├¡as describir un proyecto de optimizaci├│n de procesos en el que hayas participado y cu├íl fue tu rol espec├¡fico? ­ƒÜÇ",
+    "timestamp": "2025-10-16T02:52:55.084Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 79,
+  "fields": {
+    "session": 6,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:54:18.108Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 80,
+  "fields": {
+    "session": 6,
+    "is_user": false,
+    "content": "Pregunta 2/7: ┬┐Qu├® herramientas o metodolog├¡as utilizaste para identificar las ├íreas de mejora en ese proyecto? ­ƒøá´©Å",
+    "timestamp": "2025-10-16T02:54:19.766Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 81,
+  "fields": {
+    "session": 6,
+    "is_user": true,
+    "content": "no se",
+    "timestamp": "2025-10-16T02:54:22.653Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 82,
+  "fields": {
+    "session": 6,
+    "is_user": false,
+    "content": "Pregunta 3/7: ┬┐C├│mo priorizar├¡as las diferentes ├íreas de mejora identificadas para maximizar el impacto en la producci├│n? ­ƒôê",
+    "timestamp": "2025-10-16T02:54:23.965Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 83,
+  "fields": {
+    "session": 6,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:54:25.414Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 84,
+  "fields": {
+    "session": 6,
+    "is_user": false,
+    "content": "Pregunta 4/7: Describe una situaci├│n donde tuviste que tomar una decisi├│n r├ípida bajo presi├│n en un entorno de producci├│n. ┬┐Qu├® factores consideraste? ÔÅ│",
+    "timestamp": "2025-10-16T02:54:26.517Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 85,
+  "fields": {
+    "session": 6,
+    "is_user": true,
+    "content": "mal",
+    "timestamp": "2025-10-16T02:54:29.381Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 86,
+  "fields": {
+    "session": 6,
+    "is_user": false,
+    "content": "Pregunta 5/7: ┬┐C├│mo te asegurar├¡as de que tu equipo comprenda y se adhiera a los nuevos procedimientos implementados tras la decisi├│n que tomaste? ­ƒñØ",
+    "timestamp": "2025-10-16T02:54:30.880Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 87,
+  "fields": {
+    "session": 6,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:54:32.688Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 88,
+  "fields": {
+    "session": 6,
+    "is_user": false,
+    "content": "Pregunta 6/7: ┬┐Qu├® estrategias usar├¡as para fomentar la colaboraci├│n y la comunicaci├│n efectiva entre diferentes departamentos (ej. producci├│n, mantenimiento, calidad) para optimizar el flujo de trabajo? ­ƒùú´©Å",
+    "timestamp": "2025-10-16T02:54:34.209Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 89,
+  "fields": {
+    "session": 6,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:54:39.583Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 90,
+  "fields": {
+    "session": 6,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T02:54:39.596Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 91,
+  "fields": {
+    "session": 7,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y ser├® tu entrevistador hoy para Ventas y Marketing. Para empezar, cu├®ntame un poco sobre ti y por qu├® te atrae este campo. Ô£¿",
+    "timestamp": "2025-10-16T02:55:52.944Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 92,
+  "fields": {
+    "session": 8,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y te dar├® la bienvenida en esta entrevista para el puesto en Operaciones y Producci├│n. Para empezar, cu├®ntame un poco sobre ti y qu├® te atrae de este campo. ÔÜÖ´©Å",
+    "timestamp": "2025-10-16T02:57:31.351Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 93,
+  "fields": {
+    "session": 8,
+    "is_user": true,
+    "content": "soy sofia",
+    "timestamp": "2025-10-16T02:57:36.385Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 94,
+  "fields": {
+    "session": 8,
+    "is_user": false,
+    "content": "┬íHola Sofia! ­ƒæï Gracias por presentarte.\n\nPregunta 1/7: ┬┐Podr├¡as describir un proyecto en el que lideraste o participaste activamente para optimizar un proceso de producci├│n? ┬┐Cu├íl fue el resultado clave?",
+    "timestamp": "2025-10-16T02:57:37.909Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 95,
+  "fields": {
+    "session": 8,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:57:39.762Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 96,
+  "fields": {
+    "session": 8,
+    "is_user": false,
+    "content": "Pregunta 2/7: Entiendo. En ese caso, ┬┐puedes describir alguna experiencia, aunque no haya sido un proyecto formal, donde hayas identificado una ineficiencia en un proceso y propusiste una mejora? ­ƒºÉ",
+    "timestamp": "2025-10-16T02:57:41.385Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 97,
+  "fields": {
+    "session": 8,
+    "is_user": true,
+    "content": "mal",
+    "timestamp": "2025-10-16T02:57:42.794Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 98,
+  "fields": {
+    "session": 8,
+    "is_user": false,
+    "content": "Pregunta 3/7: Ok Sofia. ┬┐Qu├® pasos concretos tomar├¡as para mejorar la comunicaci├│n entre diferentes equipos en un entorno de producci├│n? ­ƒùú´©Å",
+    "timestamp": "2025-10-16T02:57:43.729Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 99,
+  "fields": {
+    "session": 8,
+    "is_user": true,
+    "content": "ah├¡",
+    "timestamp": "2025-10-16T02:57:49.418Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 100,
+  "fields": {
+    "session": 8,
+    "is_user": false,
+    "content": "Pregunta 4/7: ┬┐C├│mo priorizar├¡as tareas conflictivas con plazos ajustados y recursos limitados? ÔÅ│",
+    "timestamp": "2025-10-16T02:57:51.113Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 101,
+  "fields": {
+    "session": 8,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:57:52.443Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 102,
+  "fields": {
+    "session": 8,
+    "is_user": false,
+    "content": "Pregunta 5/7: Describe una situaci├│n donde tuviste que adaptarte r├ípidamente a un cambio inesperado en el proceso de producci├│n. ┬┐C├│mo lo manejaste? ­ƒÜÇ",
+    "timestamp": "2025-10-16T02:57:53.975Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 103,
+  "fields": {
+    "session": 8,
+    "is_user": true,
+    "content": "mal",
+    "timestamp": "2025-10-16T02:57:55.595Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 104,
+  "fields": {
+    "session": 8,
+    "is_user": false,
+    "content": "Pregunta 6/7: Sofia, ┬┐c├│mo manejar├¡as un conflicto entre un miembro de tu equipo y un proveedor clave que est├í afectando la producci├│n? ­ƒñØ",
+    "timestamp": "2025-10-16T02:57:56.547Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 105,
+  "fields": {
+    "session": 8,
+    "is_user": true,
+    "content": "si",
+    "timestamp": "2025-10-16T02:58:04.246Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 106,
+  "fields": {
+    "session": 8,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T02:58:04.256Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 107,
+  "fields": {
+    "session": 9,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y te doy la bienvenida a esta entrevista para el puesto en Operaciones y Producci├│n. Para empezar, cu├®ntame sobre ti y qu├® te atrae de este campo. ­ƒÜÇ",
+    "timestamp": "2025-10-16T02:59:02.589Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 108,
+  "fields": {
+    "session": 9,
+    "is_user": true,
+    "content": "soy felip",
+    "timestamp": "2025-10-16T02:59:10.633Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 109,
+  "fields": {
+    "session": 9,
+    "is_user": false,
+    "content": "┬íHola Felip! Gracias por compartir.\n\nPregunta 1/7: Cu├®ntame sobre alguna experiencia donde hayas tenido que optimizar un proceso de producci├│n para reducir costos. ┬┐Qu├® estrategias implementaste? ÔÜÖ´©Å",
+    "timestamp": "2025-10-16T02:59:12.185Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 110,
+  "fields": {
+    "session": 9,
+    "is_user": true,
+    "content": "a├║n no tengo experiencia lo siento",
+    "timestamp": "2025-10-16T02:59:22.921Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 111,
+  "fields": {
+    "session": 9,
+    "is_user": false,
+    "content": "Pregunta 2/7: En un escenario hipot├®tico, ┬┐qu├® pasos tomar├¡as para identificar cuellos de botella en una l├¡nea de producci├│n? ­ƒºÉ",
+    "timestamp": "2025-10-16T02:59:24.301Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 112,
+  "fields": {
+    "session": 9,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:59:25.587Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 113,
+  "fields": {
+    "session": 9,
+    "is_user": false,
+    "content": "Pregunta 3/7: ┬┐C├│mo priorizar├¡as tareas en un entorno de producci├│n con plazos ajustados y recursos limitados? ÔÅ░",
+    "timestamp": "2025-10-16T02:59:26.793Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 114,
+  "fields": {
+    "session": 9,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:59:37.725Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 115,
+  "fields": {
+    "session": 9,
+    "is_user": false,
+    "content": "Pregunta 4/7: Describe tu enfoque para mantener altos est├índares de calidad en un proceso de producci├│n, incluso bajo presi├│n. ÔÜÖ´©Å",
+    "timestamp": "2025-10-16T02:59:39.106Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 116,
+  "fields": {
+    "session": 9,
+    "is_user": true,
+    "content": "no",
+    "timestamp": "2025-10-16T02:59:41.350Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 117,
+  "fields": {
+    "session": 9,
+    "is_user": false,
+    "content": "Pregunta 5/7: Si fueras responsable de implementar una nueva tecnolog├¡a en la l├¡nea de producci├│n, ┬┐c├│mo gestionar├¡as la resistencia al cambio por parte del equipo? ­ƒñö",
+    "timestamp": "2025-10-16T02:59:42.741Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 118,
+  "fields": {
+    "session": 9,
+    "is_user": true,
+    "content": "si",
+    "timestamp": "2025-10-16T02:59:44.209Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 119,
+  "fields": {
+    "session": 9,
+    "is_user": false,
+    "content": "Pregunta 6/7: Cu├®ntame sobre una vez que identificaste un problema en un proceso de producci├│n y c├│mo lo solucionaste. ­ƒøá´©Å",
+    "timestamp": "2025-10-16T02:59:45.552Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 120,
+  "fields": {
+    "session": 9,
+    "is_user": true,
+    "content": "si",
+    "timestamp": "2025-10-16T02:59:51.483Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 121,
+  "fields": {
+    "session": 9,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T02:59:51.497Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 138,
+  "fields": {
+    "session": 12,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, y te doy la bienvenida a esta entrevista para el puesto en Operaciones y Producci├│n. Para empezar, cu├®ntame un poco sobre ti y qu├® te atrae de este campo. ­ƒÅ¡",
+    "timestamp": "2025-10-16T03:38:35.370Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 139,
+  "fields": {
+    "session": 12,
+    "is_user": true,
+    "content": "hola soy gallo, no estouy muy familiarizada con este campo laboral",
+    "timestamp": "2025-10-16T03:38:56.857Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 140,
+  "fields": {
+    "session": 12,
+    "is_user": false,
+    "content": "Pregunta 2/7: Entiendo, Gallo. Dada tu poca familiaridad con el campo, ┬┐qu├® habilidades o experiencias previas consideras que podr├¡an ser transferibles y ├║tiles en Operaciones y Producci├│n? ­ƒñö",
+    "timestamp": "2025-10-16T03:38:58.453Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 141,
+  "fields": {
+    "session": 12,
+    "is_user": true,
+    "content": "la inteligencia",
+    "timestamp": "2025-10-16T03:39:09.251Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 142,
+  "fields": {
+    "session": 12,
+    "is_user": false,
+    "content": "Pregunta 3/7: Gallo, ┬┐puedes darme un ejemplo concreto de c├│mo has aplicado tu inteligencia para resolver un problema complejo en un entorno laboral o acad├®mico? ­ƒñö",
+    "timestamp": "2025-10-16T03:39:10.560Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 143,
+  "fields": {
+    "session": 12,
+    "is_user": true,
+    "content": "no se",
+    "timestamp": "2025-10-16T03:39:18.160Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 144,
+  "fields": {
+    "session": 12,
+    "is_user": false,
+    "content": "Pregunta 4/7: Entiendo, Gallo. ­ƒñö Si te enfrentaras a un problema inesperado en la l├¡nea de producci├│n y no tuvieras experiencia previa, ┬┐cu├íl ser├¡a tu primer paso para abordarlo?",
+    "timestamp": "2025-10-16T03:39:19.483Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 145,
+  "fields": {
+    "session": 12,
+    "is_user": true,
+    "content": "preguntar a mis compa├▒eros m├ís experimentados",
+    "timestamp": "2025-10-16T03:39:36.452Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 146,
+  "fields": {
+    "session": 12,
+    "is_user": false,
+    "content": "Pregunta 5/7: Bien, Gallo. ­ƒñØ Si tus compa├▒eros no estuvieran disponibles inmediatamente, ┬┐qu├® pasos adicionales tomar├¡as para resolver ese problema en la l├¡nea de producci├│n?",
+    "timestamp": "2025-10-16T03:39:37.821Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 147,
+  "fields": {
+    "session": 12,
+    "is_user": true,
+    "content": "no sabr├¡a que hacer la vdd",
+    "timestamp": "2025-10-16T03:39:48.605Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 148,
+  "fields": {
+    "session": 12,
+    "is_user": false,
+    "content": "Pregunta 6/7: Entiendo, Gallo. ­ƒÿà ┬┐Podr├¡as describir alguna situaci├│n, no necesariamente laboral, donde hayas tenido que aprender algo nuevo r├ípidamente para superar un obst├ículo?",
+    "timestamp": "2025-10-16T03:39:50.003Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 149,
+  "fields": {
+    "session": 12,
+    "is_user": true,
+    "content": "aprender ingles",
+    "timestamp": "2025-10-16T03:39:59.318Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 150,
+  "fields": {
+    "session": 12,
+    "is_user": false,
+    "content": "Pregunta 7/7: ┬┐C├│mo evaluar├¡as tu capacidad para adaptarte a cambios inesperados en un entorno de producci├│n din├ímico? ­ƒÜÇ",
+    "timestamp": "2025-10-16T03:40:00.638Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 151,
+  "fields": {
+    "session": 12,
+    "is_user": true,
+    "content": "regular",
+    "timestamp": "2025-10-16T03:40:13.889Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 152,
+  "fields": {
+    "session": 12,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de resultados.",
+    "timestamp": "2025-10-16T03:40:13.900Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 153,
+  "fields": {
+    "session": 7,
+    "is_user": true,
+    "content": "hola soy vale y me gustan las ventas",
+    "timestamp": "2025-10-16T12:59:21.290Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 154,
+  "fields": {
+    "session": 7,
+    "is_user": false,
+    "content": "Pregunta 2/7: Vale, ┬ígenial que te gusten las ventas! ­ƒÿè ┬┐Podr├¡as compartir una experiencia donde hayas tenido que persuadir a alguien para que cambie de opini├│n?",
+    "timestamp": "2025-10-16T12:59:22.931Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 155,
+  "fields": {
+    "session": 7,
+    "is_user": true,
+    "content": "una vez un cliente me pidio devolver un producto y le di un descuento para que lo conservara",
+    "timestamp": "2025-10-16T13:02:32.681Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 156,
+  "fields": {
+    "session": 7,
+    "is_user": false,
+    "content": "Pregunta 3/7: Interesante. ┬┐Qu├® factores consideraste para ofrecer ese descuento en lugar de aceptar la devoluci├│n?",
+    "timestamp": "2025-10-16T13:02:36.351Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 157,
+  "fields": {
+    "session": 7,
+    "is_user": true,
+    "content": "mantener al cliente conectado con la empresa y generar ingresos pero con el cliente contento",
+    "timestamp": "2025-10-16T13:04:51.091Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 158,
+  "fields": {
+    "session": 7,
+    "is_user": false,
+    "content": "Pregunta 4/7: ┬┐C├│mo evaluar├¡as si esa estrategia de ofrecer un descuento fue realmente exitosa a largo plazo? ­ƒñö",
+    "timestamp": "2025-10-16T13:04:53.084Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 159,
+  "fields": {
+    "session": 7,
+    "is_user": true,
+    "content": "mirar├¡a si el cliente sigue comprando productos",
+    "timestamp": "2025-10-16T13:05:16.544Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 160,
+  "fields": {
+    "session": 7,
+    "is_user": false,
+    "content": "Pregunta 5/7: Vale, ┬┐qu├® har├¡as si el cliente, a pesar del descuento inicial, siguiera insistiendo en la devoluci├│n del producto?",
+    "timestamp": "2025-10-16T13:05:17.962Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 161,
+  "fields": {
+    "session": 7,
+    "is_user": true,
+    "content": "aceptar├¡a la devoluci├│n pero le ofrecer├¡a otros productos que le favorezcan con descuentos, siempre amable",
+    "timestamp": "2025-10-16T13:06:14.523Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 162,
+  "fields": {
+    "session": 7,
+    "is_user": false,
+    "content": "Pregunta 6/7: ┬┐Podr├¡as describir una situaci├│n en la que tuviste que adaptar tu estrategia de marketing debido a un cambio repentino en el mercado o en las preferencias del cliente? ­ƒÜÇ",
+    "timestamp": "2025-10-16T13:06:18.709Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 163,
+  "fields": {
+    "session": 7,
+    "is_user": true,
+    "content": "no s├®",
+    "timestamp": "2025-10-16T13:06:35.845Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 164,
+  "fields": {
+    "session": 7,
+    "is_user": false,
+    "content": "Pregunta 7/7: Entiendo. Para finalizar, ┬┐c├│mo priorizar├¡as tus tareas en un d├¡a t├¡pico como responsable de marketing, teniendo en cuenta que siempre surgen imprevistos? ­ƒÜÇ",
+    "timestamp": "2025-10-16T13:06:40.098Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 165,
+  "fields": {
+    "session": 7,
+    "is_user": true,
+    "content": "siempre soluciono lo m├ís urgente",
+    "timestamp": "2025-10-16T13:07:11.660Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 166,
+  "fields": {
+    "session": 7,
+    "is_user": false,
+    "content": "┬íExcelente! ­ƒÄë Hemos completado las 7 preguntas de esta entrevista. Ha sido un placer conocerte y escuchar sobre tu experiencia profesional. Muchas gracias por tu tiempo y por compartir tus conocimientos conmigo. ┬íTe deseo mucho ├®xito en tu proceso de selecci├│n! ­ƒîƒ\n\nLa entrevista ha finalizado. Puedes revisar tu evaluaci├│n en el panel de ver estad├¡sticas.",
+    "timestamp": "2025-10-16T13:07:11.674Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 167,
+  "fields": {
+    "session": 13,
+    "is_user": false,
+    "content": "Hola, soy Lumo, entrevistador especializado en Salud y Medicina. ­ƒÿè Para empezar, cu├®ntame sobre ti y por qu├® te interesa este campo.",
+    "timestamp": "2025-10-16T14:25:20.037Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 168,
+  "fields": {
+    "session": 14,
+    "is_user": false,
+    "content": "Hola, soy Lumo, entrevistador especializado en Salud y Medicina. ­ƒÿè Para empezar, cu├®ntame sobre ti y por qu├® te interesa este campo.",
+    "timestamp": "2025-10-16T14:25:20.075Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 169,
+  "fields": {
+    "session": 15,
+    "is_user": false,
+    "content": "┬íHola! Soy Lumo, entrevistador especializado en Operaciones y Producci├│n. ­ƒÿè Para empezar, cu├®ntame sobre ti y por qu├® te interesa este campo.",
+    "timestamp": "2025-10-16T14:57:51.293Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 170,
+  "fields": {
+    "session": 15,
+    "is_user": true,
+    "content": "hola soy valentina",
+    "timestamp": "2025-10-16T14:58:22.081Z"
+  }
+},
+{
+  "model": "interview_trainer.chatmessage",
+  "pk": 171,
+  "fields": {
+    "session": 15,
+    "is_user": false,
+    "content": "Pregunta 2/7: Valentina, ┬┐puedes describir un proyecto de operaciones o producci├│n en el que hayas participado y cu├íl fue tu rol espec├¡fico? ÔÜÖ´©Å",
+    "timestamp": "2025-10-16T14:58:24.018Z"
+  }
+},
+{
+  "model": "interview_trainer.userprofile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "preferred_interview_type": "operations",
+    "total_sessions": 3,
+    "created_at": "2025-10-16T02:16:17.679Z"
+  }
+},
+{
+  "model": "interview_trainer.userprofile",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "preferred_interview_type": "operations",
+    "total_sessions": 1,
+    "created_at": "2025-10-16T02:37:08.437Z"
+  }
+},
+{
+  "model": "interview_trainer.userprofile",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "preferred_interview_type": "operations",
+    "total_sessions": 6,
+    "created_at": "2025-10-16T02:46:05.284Z"
+  }
+},
+{
+  "model": "interview_trainer.userprofile",
+  "pk": 4,
+  "fields": {
+    "user": 4,
+    "preferred_interview_type": "operations",
+    "total_sessions": 3,
+    "created_at": "2025-10-16T02:57:17.745Z"
+  }
+},
+{
+  "model": "interview_trainer.userprofile",
+  "pk": 5,
+  "fields": {
+    "user": 5,
+    "preferred_interview_type": "operations",
+    "total_sessions": 1,
+    "created_at": "2025-10-16T02:58:52.804Z"
+  }
+},
+{
+  "model": "interview_trainer.userprofile",
+  "pk": 6,
+  "fields": {
+    "user": 6,
+    "preferred_interview_type": "general",
+    "total_sessions": 0,
+    "created_at": "2025-10-16T03:01:14.158Z"
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 1,
+  "fields": {
+    "session": 1,
+    "competency_name": "Comunicaci├│n",
+    "score": 8,
+    "feedback": "Se comunica de manera clara y concisa, articulando sus ideas de forma efectiva. Demuestra habilidad para explicar conceptos t├®cnicos de manera accesible."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 2,
+  "fields": {
+    "session": 1,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 7,
+    "feedback": "Aplica el an├ílisis de causa ra├¡z y considera diferentes soluciones ante problemas. Demuestra capacidad para evaluar situaciones complejas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 3,
+  "fields": {
+    "session": 1,
+    "competency_name": "Adaptabilidad",
+    "score": 6,
+    "feedback": "Muestra flexibilidad al reorganizar el trabajo ante una falla en la m├íquina. Sin embargo, podr├¡a demostrar mayor proactividad en la anticipaci├│n de problemas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 4,
+  "fields": {
+    "session": 1,
+    "competency_name": "Trabajo en equipo",
+    "score": 7,
+    "feedback": "Reconoce la importancia de la colaboraci├│n y la comunicaci├│n en la resoluci├│n de conflictos. Busca soluciones que beneficien a todos los miembros del equipo."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 5,
+  "fields": {
+    "session": 1,
+    "competency_name": "Inteligencia emocional",
+    "score": 8,
+    "feedback": "Demuestra empat├¡a y comprensi├│n al abordar conflictos interpersonales. Prioriza la seguridad y el bienestar del equipo."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 6,
+  "fields": {
+    "session": 2,
+    "competency_name": "Comunicaci├│n",
+    "score": 8,
+    "feedback": "El candidato se expresa con claridad y utiliza un lenguaje adecuado. Podr├¡a ser m├ís conciso en algunas respuestas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 7,
+  "fields": {
+    "session": 2,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 7,
+    "feedback": "El candidato muestra un razonamiento l├│gico b├ísico, pero necesita profundizar en el an├ílisis de problemas y soluciones."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 8,
+  "fields": {
+    "session": 2,
+    "competency_name": "Adaptabilidad",
+    "score": 6,
+    "feedback": "El candidato menciona su adaptabilidad, pero el ejemplo proporcionado es vago y carece de detalles concretos."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 9,
+  "fields": {
+    "session": 2,
+    "competency_name": "Trabajo en equipo",
+    "score": 7,
+    "feedback": "El candidato reconoce la importancia del trabajo en equipo y la colaboraci├│n, pero no ofrece ejemplos s├│lidos de su participaci├│n en equipos."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 10,
+  "fields": {
+    "session": 2,
+    "competency_name": "Inteligencia emocional",
+    "score": 8,
+    "feedback": "El candidato demuestra autoconocimiento y empat├¡a al reconocer sus fortalezas y la importancia de la comunicaci├│n."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 11,
+  "fields": {
+    "session": 3,
+    "competency_name": "Comunicaci├│n",
+    "score": 6,
+    "feedback": "La comunicaci├│n es adecuada, pero a veces carece de claridad y precisi├│n. Necesita articular mejor sus ideas y usar un lenguaje m├ís t├®cnico."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 12,
+  "fields": {
+    "session": 3,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 4,
+    "feedback": "El pensamiento cr├¡tico es un ├írea de mejora significativa. El candidato evita tomar decisiones dif├¡ciles y no demuestra un an├ílisis profundo de los problemas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 13,
+  "fields": {
+    "session": 3,
+    "competency_name": "Adaptabilidad",
+    "score": 6,
+    "feedback": "Muestra cierta adaptabilidad al aprender nuevas herramientas, pero necesita ser m├ís proactivo y buscar soluciones de manera independiente."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 14,
+  "fields": {
+    "session": 3,
+    "competency_name": "Trabajo en equipo",
+    "score": 5,
+    "feedback": "El candidato valora la colaboraci├│n, pero necesita mejorar su capacidad para coordinar y comunicar eficazmente dentro de un equipo."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 15,
+  "fields": {
+    "session": 3,
+    "competency_name": "Inteligencia emocional",
+    "score": 4,
+    "feedback": "La inteligencia emocional parece estar presente en la preocupaci├│n por el bienestar del equipo, pero la falta de atenci├│n a los resultados objetivos sugiere una necesidad de equilibrar la empat├¡a con el enfoque en el rendimiento."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 16,
+  "fields": {
+    "session": 4,
+    "competency_name": "Comunicaci├│n",
+    "score": 8,
+    "feedback": "Se comunica claramente y utiliza ejemplos para ilustrar sus puntos. Su lenguaje es accesible y demuestra buena capacidad para explicar conceptos."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 17,
+  "fields": {
+    "session": 4,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 7,
+    "feedback": "Demuestra capacidad para analizar problemas y proponer soluciones, aunque a veces podr├¡a profundizar m├ís en el an├ílisis de datos."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 18,
+  "fields": {
+    "session": 4,
+    "competency_name": "Adaptabilidad",
+    "score": 6,
+    "feedback": "Muestra flexibilidad al ajustar procesos y soluciones seg├║n la retroalimentaci├│n recibida, pero podr├¡a ser m├ís proactivo en la anticipaci├│n de problemas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 19,
+  "fields": {
+    "session": 4,
+    "competency_name": "Trabajo en equipo",
+    "score": 7,
+    "feedback": "Valora la colaboraci├│n y la comunicaci├│n con el equipo para la resoluci├│n de problemas y la implementaci├│n de cambios."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 20,
+  "fields": {
+    "session": 4,
+    "competency_name": "Inteligencia emocional",
+    "score": 8,
+    "feedback": "Demuestra empat├¡a y comprensi├│n hacia las preocupaciones del equipo, gestionando la resistencia al cambio con paciencia y apoyo."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 21,
+  "fields": {
+    "session": 5,
+    "competency_name": "Comunicaci├│n",
+    "score": 8,
+    "feedback": "Valen se comunica de manera clara y concisa, aunque podr├¡a enriquecer sus respuestas con mayor detalle."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 22,
+  "fields": {
+    "session": 5,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 7,
+    "feedback": "Muestra un razonamiento l├│gico b├ísico, pero necesita profundizar en el an├ílisis de problemas y soluciones."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 23,
+  "fields": {
+    "session": 5,
+    "competency_name": "Adaptabilidad",
+    "score": 6,
+    "feedback": "Demuestra cierta flexibilidad, pero las respuestas son generales y carecen de ejemplos espec├¡ficos de adaptaci├│n a situaciones cambiantes."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 24,
+  "fields": {
+    "session": 5,
+    "competency_name": "Trabajo en equipo",
+    "score": 7,
+    "feedback": "Reconoce la importancia de la colaboraci├│n, pero podr├¡a proporcionar ejemplos m├ís concretos de c├│mo trabaja en equipo."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 25,
+  "fields": {
+    "session": 5,
+    "competency_name": "Inteligencia emocional",
+    "score": 8,
+    "feedback": "Muestra conciencia de la importancia de la comunicaci├│n y la colaboraci├│n, lo que sugiere un buen nivel de inteligencia emocional."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 26,
+  "fields": {
+    "session": 6,
+    "competency_name": "Comunicaci├│n",
+    "score": 1,
+    "feedback": "La comunicaci├│n fue inexistente debido a la falta de respuestas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 27,
+  "fields": {
+    "session": 6,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 1,
+    "feedback": "No se pudo evaluar el pensamiento cr├¡tico debido a la falta de informaci├│n proporcionada."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 28,
+  "fields": {
+    "session": 6,
+    "competency_name": "Adaptabilidad",
+    "score": 1,
+    "feedback": "La adaptabilidad no pudo ser evaluada."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 29,
+  "fields": {
+    "session": 6,
+    "competency_name": "Trabajo en equipo",
+    "score": 1,
+    "feedback": "No se pudo evaluar la capacidad de trabajo en equipo."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 30,
+  "fields": {
+    "session": 6,
+    "competency_name": "Inteligencia emocional",
+    "score": 1,
+    "feedback": "La inteligencia emocional no pudo ser evaluada."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 31,
+  "fields": {
+    "session": 8,
+    "competency_name": "Comunicaci├│n",
+    "score": 1,
+    "feedback": "La comunicaci├│n fue extremadamente limitada y poco clara. No se proporcion├│ informaci├│n relevante."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 32,
+  "fields": {
+    "session": 8,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 1,
+    "feedback": "No se pudo evaluar el pensamiento cr├¡tico debido a la falta de respuestas elaboradas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 33,
+  "fields": {
+    "session": 8,
+    "competency_name": "Adaptabilidad",
+    "score": 1,
+    "feedback": "La adaptabilidad no pudo ser evaluada debido a la falta de ejemplos o situaciones descritas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 34,
+  "fields": {
+    "session": 8,
+    "competency_name": "Trabajo en equipo",
+    "score": 1,
+    "feedback": "No se pudo evaluar la capacidad de trabajo en equipo debido a la falta de ejemplos o situaciones descritas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 35,
+  "fields": {
+    "session": 8,
+    "competency_name": "Inteligencia emocional",
+    "score": 1,
+    "feedback": "La inteligencia emocional no pudo ser evaluada debido a la falta de respuestas que demostraran autoconocimiento o empat├¡a."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 36,
+  "fields": {
+    "session": 9,
+    "competency_name": "Comunicaci├│n",
+    "score": 2,
+    "feedback": "La comunicaci├│n es muy limitada, con respuestas monosil├íbicas que no permiten evaluar la capacidad de expresi├│n."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 37,
+  "fields": {
+    "session": 9,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 1,
+    "feedback": "No se evidencia pensamiento cr├¡tico debido a la falta de respuestas sustanciales a las preguntas planteadas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 38,
+  "fields": {
+    "session": 9,
+    "competency_name": "Adaptabilidad",
+    "score": 1,
+    "feedback": "La falta de respuestas impide evaluar la adaptabilidad del candidato a diferentes situaciones y desaf├¡os."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 39,
+  "fields": {
+    "session": 9,
+    "competency_name": "Trabajo en equipo",
+    "score": 1,
+    "feedback": "No hay informaci├│n suficiente para evaluar la capacidad de trabajar en equipo."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 40,
+  "fields": {
+    "session": 9,
+    "competency_name": "Inteligencia emocional",
+    "score": 1,
+    "feedback": "La falta de respuestas impide evaluar la inteligencia emocional del candidato."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 46,
+  "fields": {
+    "session": 12,
+    "competency_name": "Comunicaci├│n",
+    "score": 8,
+    "feedback": "El candidato se comunica de manera clara y directa, aunque las respuestas son breves."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 47,
+  "fields": {
+    "session": 12,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 4,
+    "feedback": "El candidato tiene dificultades para aplicar el pensamiento cr├¡tico a problemas espec├¡ficos."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 48,
+  "fields": {
+    "session": 12,
+    "competency_name": "Adaptabilidad",
+    "score": 4,
+    "feedback": "La adaptabilidad es baja, demostrando poca capacidad para reaccionar ante situaciones inesperadas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 49,
+  "fields": {
+    "session": 12,
+    "competency_name": "Trabajo en equipo",
+    "score": 6,
+    "feedback": "Reconoce la importancia del trabajo en equipo, pero no demuestra habilidades avanzadas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 50,
+  "fields": {
+    "session": 12,
+    "competency_name": "Inteligencia emocional",
+    "score": 6,
+    "feedback": "Muestra autoconocimiento al reconocer su falta de experiencia, pero necesita desarrollar m├ís ejemplos de superaci├│n personal."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 51,
+  "fields": {
+    "session": 7,
+    "competency_name": "Comunicaci├│n",
+    "score": 6,
+    "feedback": "La comunicaci├│n es directa pero carece de detalles y ejemplos elaborados. Necesita expandir sus respuestas."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 52,
+  "fields": {
+    "session": 7,
+    "competency_name": "Pensamiento cr├¡tico",
+    "score": 7,
+    "feedback": "Muestra cierto pensamiento cr├¡tico al considerar la retenci├│n del cliente y la generaci├│n de ingresos. Podr├¡a profundizar m├ís en el an├ílisis de la situaci├│n."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 53,
+  "fields": {
+    "session": 7,
+    "competency_name": "Adaptabilidad",
+    "score": 4,
+    "feedback": "La respuesta a la pregunta sobre la adaptaci├│n de la estrategia de marketing indica una falta de experiencia o conocimiento en esta ├írea."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 54,
+  "fields": {
+    "session": 7,
+    "competency_name": "Trabajo en equipo",
+    "score": 5,
+    "feedback": "No hay ejemplos directos de trabajo en equipo en la entrevista, lo que dificulta la evaluaci├│n. Se asume un nivel b├ísico."
+  }
+},
+{
+  "model": "evaluation.competencyscore",
+  "pk": 55,
+  "fields": {
+    "session": 7,
+    "competency_name": "Inteligencia emocional",
+    "score": 7,
+    "feedback": "Demuestra empat├¡a al priorizar la satisfacci├│n del cliente, incluso al aceptar una devoluci├│n."
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 1,
+  "fields": {
+    "session": 1,
+    "overall_feedback": "Mariana demuestra un buen entendimiento de los principios de Operaciones y Producci├│n, con ejemplos pr├ícticos y un enfoque en la mejora continua. Podr├¡a profundizar en el an├ílisis de datos y la implementaci├│n de soluciones m├ís innovadoras.",
+    "average_score": 7.2,
+    "performance_level": "Bueno",
+    "session_duration_minutes": 3,
+    "generated_at": "2025-10-16T02:20:29.894Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 2,
+  "fields": {
+    "session": 2,
+    "overall_feedback": "El candidato demuestra compromiso y adaptabilidad, pero necesita profundizar en el conocimiento t├®cnico y proporcionar ejemplos m├ís espec├¡ficos. Muestra buena inteligencia emocional y disposici├│n para el trabajo en equipo.",
+    "average_score": 7.2,
+    "performance_level": "Bueno",
+    "session_duration_minutes": 2,
+    "generated_at": "2025-10-16T02:25:36.086Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 3,
+  "fields": {
+    "session": 3,
+    "overall_feedback": "El candidato muestra potencial y disposici├│n para aprender, pero necesita fortalecer su pensamiento cr├¡tico y habilidades de resoluci├│n de problemas. Sus respuestas son a veces vagas y carecen de ejemplos concretos, especialmente en situaciones de presi├│n.",
+    "average_score": 5.0,
+    "performance_level": "Regular",
+    "session_duration_minutes": 2,
+    "generated_at": "2025-10-16T02:30:14.080Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 4,
+  "fields": {
+    "session": 4,
+    "overall_feedback": "David demuestra un buen entendimiento de los principios de Operaciones y Producci├│n, con ejemplos pr├ícticos y un enfoque en la colaboraci├│n. Podr├¡a fortalecer su an├ílisis cuantitativo y la toma de decisiones basada en datos concretos.",
+    "average_score": 7.2,
+    "performance_level": "Bueno",
+    "session_duration_minutes": 2,
+    "generated_at": "2025-10-16T02:40:19.979Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 5,
+  "fields": {
+    "session": 5,
+    "overall_feedback": "Valen demuestra una comprensi├│n b├ísica de los principios de Operaciones y Producci├│n, mostrando iniciativa y enfoque en la colaboraci├│n. Sin embargo, las respuestas carecen de profundidad y ejemplos concretos, lo que limita la evaluaci├│n de sus habilidades.",
+    "average_score": 7.2,
+    "performance_level": "Bueno",
+    "session_duration_minutes": 2,
+    "generated_at": "2025-10-16T02:48:50.448Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 6,
+  "fields": {
+    "session": 6,
+    "overall_feedback": "El candidato no proporcion├│ respuestas sustanciales a las preguntas planteadas, lo que impide una evaluaci├│n precisa de sus habilidades y experiencia en Operaciones y Producci├│n. Se requiere una entrevista m├ís completa con respuestas detalladas para determinar su idoneidad para el puesto.",
+    "average_score": 1.0,
+    "performance_level": "Necesita Mejora",
+    "session_duration_minutes": 3,
+    "generated_at": "2025-10-16T02:54:37.889Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 7,
+  "fields": {
+    "session": 8,
+    "overall_feedback": "La candidata Sofia no proporcion├│ respuestas sustanciales a las preguntas planteadas, lo que impide evaluar sus habilidades y experiencia en Operaciones y Producci├│n. Se requiere una participaci├│n m├ís activa y respuestas detalladas para una evaluaci├│n adecuada.",
+    "average_score": 1.0,
+    "performance_level": "Necesita Mejora",
+    "session_duration_minutes": 1,
+    "generated_at": "2025-10-16T02:58:00.753Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 8,
+  "fields": {
+    "session": 9,
+    "overall_feedback": "El candidato Felip muestra poca preparaci├│n para la entrevista, con respuestas limitadas y falta de ejemplos concretos. Se necesita un esfuerzo significativo para demostrar comprensi├│n y experiencia en el campo de Operaciones y Producci├│n.",
+    "average_score": 1.2,
+    "performance_level": "Necesita Mejora",
+    "session_duration_minutes": 1,
+    "generated_at": "2025-10-16T02:59:49.813Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 10,
+  "fields": {
+    "session": 12,
+    "overall_feedback": "El candidato muestra potencial en comunicaci├│n e inteligencia emocional, pero carece de experiencia y respuestas concretas en pensamiento cr├¡tico y adaptabilidad. Se necesita mayor preparaci├│n y ejemplos espec├¡ficos para demostrar habilidades transferibles.",
+    "average_score": 5.6,
+    "performance_level": "Regular",
+    "session_duration_minutes": 1,
+    "generated_at": "2025-10-16T03:40:04.893Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.feedbackreport",
+  "pk": 11,
+  "fields": {
+    "session": 7,
+    "overall_feedback": "Vale demuestra un entendimiento b├ísico de ventas y servicio al cliente, con un enfoque en la retenci├│n. Sin embargo, necesita desarrollar su capacidad para articular estrategias de marketing y adaptarse a situaciones cambiantes.",
+    "average_score": 5.8,
+    "performance_level": "Regular",
+    "session_duration_minutes": 610,
+    "generated_at": "2025-10-16T13:06:45.525Z",
+    "is_final": true
+  }
+},
+{
+  "model": "evaluation.competencydefinition",
+  "pk": 1,
+  "fields": {
+    "name": "Comunicaci├│n",
+    "description": "Capacidad de expresar ideas de forma clara y efectiva",
+    "evaluation_criteria": "Claridad, estructura, capacidad de expresar ideas",
+    "icon": "­ƒùú´©Å",
+    "is_active": true,
+    "order": 1
+  }
+},
+{
+  "model": "evaluation.competencydefinition",
+  "pk": 2,
+  "fields": {
+    "name": "Pensamiento cr├¡tico",
+    "description": "Habilidad para analizar problemas y encontrar soluciones",
+    "evaluation_criteria": "An├ílisis, l├│gica, resoluci├│n de problemas",
+    "icon": "­ƒºá",
+    "is_active": true,
+    "order": 2
+  }
+},
+{
+  "model": "evaluation.competencydefinition",
+  "pk": 3,
+  "fields": {
+    "name": "Adaptabilidad",
+    "description": "Flexibilidad ante cambios y nuevas situaciones",
+    "evaluation_criteria": "Flexibilidad, manejo de cambios, aprendizaje",
+    "icon": "­ƒöä",
+    "is_active": true,
+    "order": 3
+  }
+},
+{
+  "model": "evaluation.competencydefinition",
+  "pk": 4,
+  "fields": {
+    "name": "Trabajo en equipo",
+    "description": "Capacidad de colaborar efectivamente con otros",
+    "evaluation_criteria": "Colaboraci├│n, liderazgo, habilidades interpersonales",
+    "icon": "­ƒæÑ",
+    "is_active": true,
+    "order": 4
+  }
+},
+{
+  "model": "evaluation.competencydefinition",
+  "pk": 5,
+  "fields": {
+    "name": "Inteligencia emocional",
+    "description": "Manejo de emociones propias y de otros",
+    "evaluation_criteria": "Autoconocimiento, empat├¡a, manejo de emociones",
+    "icon": "ÔØñ´©Å",
+    "is_active": true,
+    "order": 5
+  }
+}
+]
