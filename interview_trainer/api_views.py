@@ -6,8 +6,11 @@ from django.shortcuts import get_object_or_404
 from .models import InterviewSession, ChatMessage, UserProfile
 from .services import GeminiService
 from asgiref.sync import sync_to_async
+from django.core.files.base import ContentFile
 import asyncio
 import logging
+import time
+import mimetypes
 
 # Importar servicio de evaluación para generación automática
 try:
@@ -101,7 +104,7 @@ async def handle_evaluation_generation(session):
         logger.error(f"❌ Error en evaluación automática: {str(e)}")
         return {'evaluation_error': str(e)}
 
-async def process_message_async(user, message, session_id):
+async def process_message_async(user, message, session_id, voice_name=None):
     """Procesa el mensaje de forma asíncrona"""
     try:
         # Obtener sesión usando sync_to_async
@@ -136,6 +139,35 @@ async def process_message_async(user, message, session_id):
         # Guardar respuesta de IA
         ai_message = await create_ai_message(session, ai_response)
         
+        # Generar TTS inmediatamente (usar voice_name pasado o 'Leda')
+        try:
+            chosen_voice = voice_name or 'Leda'
+            tts_result = gemini_service.text_to_speech(ai_response, voice_name=chosen_voice)
+            if tts_result and tts_result.get('audio_bytes'):
+                import base64
+                audio_base64 = base64.b64encode(tts_result['audio_bytes']).decode('utf-8')
+                # Persistir el audio en el modelo para poder servirlo como URL
+                try:
+                    ext = '.wav'
+                    mime = tts_result.get('mime_type') or 'audio/wav'
+                    import mimetypes as _mimetypes
+                    _ext = _mimetypes.guess_extension(mime)
+                    if _ext:
+                        ext = _ext
+                    filename = f"session_{session.id}_msg_{ai_message.id}_{int(time.time())}{ext}"
+                    ai_message.audio_file.save(filename, ContentFile(tts_result['audio_bytes']))
+                    ai_message.tts_voice = tts_result.get('voice_name') or chosen_voice
+                    ai_message.save()
+                    logger.info(f"TTS guardado en modelo para mensaje {ai_message.id} voice={ai_message.tts_voice}")
+                except Exception as save_ex:
+                    logger.exception("No se pudo guardar el audio en ChatMessage: %s", save_ex)
+            else:
+                audio_base64 = None
+        except Exception as ex:
+            logger.warning(f"No se pudo generar TTS: {ex}")
+            tts_result = None
+            audio_base64 = None
+            
         # Manejar evaluación automática
         evaluation_data = await handle_evaluation_generation(session)
         
@@ -153,7 +185,12 @@ async def process_message_async(user, message, session_id):
             'ai_response': {
                 'id': ai_message.id,
                 'content': ai_message.content,
-                'timestamp': ai_message.timestamp.isoformat()
+                'timestamp': ai_message.timestamp.isoformat(),
+                'audio_data': {
+                    'base64': audio_base64,
+                    'mime_type': tts_result.get('mime_type') if tts_result else None,
+                    'voice_name': tts_result.get('voice_name') if tts_result else (voice_name or 'Leda')
+                } if audio_base64 else None
             },
             'evaluation': evaluation_data
         }
@@ -173,6 +210,7 @@ def send_message(request):
     try:
         message = request.data.get('message', '').strip()
         session_id = request.data.get('session_id')
+        voice_name = request.data.get('voice_name') or 'Leda'
         
         if not message:
             return Response({'error': 'Mensaje vacío'}, status=status.HTTP_400_BAD_REQUEST)
@@ -185,7 +223,7 @@ def send_message(request):
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             result = loop.run_until_complete(
-                process_message_async(request.user, message, session_id)
+                process_message_async(request.user, message, session_id, voice_name=voice_name)
             )
             loop.close()
             
@@ -237,6 +275,9 @@ def get_session_messages(request, session_id):
             'is_user': message.is_user,
             'content': message.content,
             'timestamp': message.timestamp.isoformat()
+            ,
+            'audio_url': message.audio_file.url if message.audio_file else None,
+            'tts_voice': message.tts_voice if hasattr(message, 'tts_voice') else None
         })
     
     return Response({
@@ -247,6 +288,25 @@ def get_session_messages(request, session_id):
         },
         'messages': messages_data
     })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_message(request, message_id):
+    """Devuelve detalles de un mensaje individual (incluye audio_url si está listo)"""
+    try:
+        message = get_object_or_404(ChatMessage, id=message_id, session__user=request.user)
+        return Response({
+            'id': message.id,
+            'is_user': message.is_user,
+            'content': message.content,
+            'timestamp': message.timestamp.isoformat(),
+            'audio_url': message.audio_file.url if message.audio_file else None,
+            'tts_voice': message.tts_voice if hasattr(message, 'tts_voice') else None
+        })
+    except Exception as e:
+        logger.exception('Error en get_message: %s', e)
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])

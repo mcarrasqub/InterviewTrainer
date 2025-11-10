@@ -357,6 +357,78 @@ REQUISITOS:
             logger.error(f"Error generando feedback: {str(e)}")
             raise e
 
+    def text_to_speech(self, text: str, voice_name: str = "Leda"):
+        """Intento robusto de generar audio usando la librería de Gemini (si está disponible).
+
+        Devuelve diccionario {'audio_bytes': bytes, 'mime_type': str, 'voice_name': str} o None.
+        """
+        try:
+            # Intentar importar la nueva librería google-genai si está disponible
+            try:
+                from google import genai as ggenai
+                types = ggenai.types
+            except Exception:
+                ggenai = None
+                types = None
+
+            if ggenai is None:
+                logger.warning("google.genai no disponible; omitiendo TTS.")
+                return None
+
+            api_key = self.api_key or ''
+            if not api_key:
+                logger.warning("GEMINI API key no configurada; omitiendo TTS.")
+                return None
+
+            client = ggenai.Client(api_key=api_key)
+            model = "gemini-2.5-pro-preview-tts"
+
+            contents = [
+                types.Content(
+                    role="user",
+                    parts=[types.Part.from_text(text=text)]
+                )
+            ]
+
+            generate_content_config = types.GenerateContentConfig(
+                response_modalities=["audio"],
+                speech_config=types.SpeechConfig(
+                    multi_speaker_voice_config=types.MultiSpeakerVoiceConfig(
+                        speaker_voice_configs=[
+                            types.SpeakerVoiceConfig(
+                                speaker="Speaker 1",
+                                voice_config=types.VoiceConfig(
+                                    prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                                        voice_name=voice_name
+                                    )
+                                )
+                            )
+                        ]
+                    )
+                )
+            )
+
+            for chunk in client.models.generate_content_stream(
+                model=model,
+                contents=contents,
+                config=generate_content_config,
+            ):
+                if not getattr(chunk, "candidates", None):
+                    continue
+                candidate = chunk.candidates[0]
+                if not getattr(candidate, "content", None) or not getattr(candidate.content, "parts", None):
+                    continue
+                part = candidate.content.parts[0]
+                inline = getattr(part, "inline_data", None)
+                if inline and getattr(inline, "data", None):
+                    raw = inline.data  # bytes
+                    mime = inline.mime_type or "audio/wav"
+                    return {"audio_bytes": raw, "mime_type": mime, "voice_name": voice_name}
+            return None
+        except Exception as exc:
+            logger.exception("Error solicitando TTS a Gemini: %s", exc)
+            return None
+
     def _parse_json_feedback_response(self, response_text: str) -> dict:
         """
         🔧 PROPÓSITO: Parsea la respuesta JSON de la IA
