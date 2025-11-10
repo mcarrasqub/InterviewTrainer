@@ -43,13 +43,18 @@ class ChatMessage(models.Model):
     is_user = models.BooleanField(default=True)  # True = usuario, False = IA
     content = models.TextField()  # El texto del mensaje
     timestamp = models.DateTimeField(default=timezone.now)  # ¿Cuándo se envió?
+    # Archivo de audio TTS asociado (opcional)
+    audio_file = models.FileField(upload_to='chat_audio/', null=True, blank=True)
+    # Nombre de la voz utilizada para TTS (opcional)
+    tts_voice = models.CharField(max_length=100, null=True, blank=True)
     
     class Meta:
         ordering = ['timestamp']  # Cronológico
     
     def __str__(self):
         sender = "Usuario" if self.is_user else "IA"
-        return f"{sender}: {self.content[:50]}..."
+        audio_marker = " [audio]" if self.audio_file else ""
+        return f"{sender}: {self.content[:50]}...{audio_marker}"
 
 # class CompetencyScore(models.Model):
 #     """

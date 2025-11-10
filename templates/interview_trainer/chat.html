@@ -510,7 +510,7 @@
                         <input type="checkbox" class="form-check-input me-2 session-checkbox" value="{{ session.id }}"
                             style="margin-top:0;" onclick="event.stopPropagation();">
                         <div class="flex-grow-1 session-clickable" style="cursor:pointer;"
-                            onclick="window.loadSession({{ session.id }})">
+                            onclick="loadSession('{{ session.id }}')">
                             <div class="session-title">{{ session.title|truncatechars:25 }}</div>
                             <div class="session-date">{{ session.created_at|date:"d/m/Y H:i" }}</div>
                             <small class="text-muted">{{ session.session_type|title }}</small>
@@ -812,6 +812,29 @@
         }, smooth ? 400 : 50); // ✅ MÁS TIEMPO PARA SMOOTH SCROLL
     }
 
+    // Browser TTS fallback using Web Speech API
+    function speakText(text, lang = 'es-ES') {
+        try {
+            if (!('speechSynthesis' in window)) return false;
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = lang;
+            // Optional: choose a preferred voice if available
+            const voices = window.speechSynthesis.getVoices() || [];
+            if (voices.length) {
+                // try to find a Spanish voice
+                const preferred = voices.find(v => /es(-|\b)/i.test(v.lang) || /Spanish/i.test(v.name));
+                if (preferred) utter.voice = preferred;
+            }
+            window.speechSynthesis.speak(utter);
+            return true;
+        } catch (e) {
+            console.warn('Browser TTS failed:', e);
+            return false;
+        }
+    }
+
     function showTyping() {
         typingIndicator.style.display = 'flex';
         if (!isUserScrolling) scrollToBottom();
@@ -830,20 +853,51 @@
         setTimeout(() => errorDiv.remove(), 5000);
     }
 
+    // Removed polling functionality as audio is now played immediately
+
     // =================================================================================
     // CORE CHAT FUNCTIONALITY
     // =================================================================================
 
-    function addMessage(content, isUser = false, animate = true) {
+    function addMessage(content, isUser = false, animate = true, opts = {}) {
+        // opts: { messageId, audio_url }
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+
+        let controlsHtml = '';
+        if (!isUser) {
+            // For AI messages show audio controls placeholder if audio exists or will be generated
+            const audioUrl = opts.audio_url || null;
+            const messageId = opts.messageId || null;
+            if (audioUrl) {
+                controlsHtml = `<div class="mt-2"><button class="btn btn-sm btn-outline-secondary play-audio" data-audio-url="${audioUrl}">🔊 Reproducir</button></div>`;
+            }
+        }
+
         messageDiv.innerHTML = `
             <div class="message-avatar">
                 <i class="fas fa-${isUser ? 'user' : 'robot'}"></i>
             </div>
-            <div class="message-content">${content}</div>
+            <div class="message-content">${content}${controlsHtml}</div>
         `;
+
         chatMessages.appendChild(messageDiv);
+
+        // Attach click handler for play buttons
+        const btn = messageDiv.querySelector('.play-audio');
+        if (btn) {
+            btn.addEventListener('click', function (e) {
+                const audioUrl = e.currentTarget.dataset.audioUrl;
+                if (audioUrl) {
+                    const audio = new Audio(audioUrl);
+                    audio.play().catch(err => console.warn('Autoplay prevented:', err));
+                } else if (messageId) {
+                    // Start polling for audio availability and play when ready
+                    pollForAudio(parseInt(messageId), 0, 20, 1500);
+                }
+            });
+        }
+
         if (!isUserScrolling || isUser) scrollToBottom(animate);
     }
 
@@ -869,13 +923,48 @@
             const response = await fetch('/api/send-message/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
-                body: JSON.stringify({ message: message, session_id: currentSessionId })
+                body: JSON.stringify({ message: message, session_id: currentSessionId, voice_name: 'Leda' })
             });
             const data = await response.json();
             hideTyping();
 
             if (data.success && data.ai_response && data.ai_response.content) {
-                addMessage(data.ai_response.content, false);
+                // Add AI message with metadata
+                addMessage(data.ai_response.content, false, true);
+
+                // Try to play audio immediately from base64 data; fall back to browser TTS if unavailable
+                let playedAudio = false;
+                if (data.ai_response.audio_data && data.ai_response.audio_data.base64) {
+                    try {
+                        const audioBlob = new Blob(
+                            [Uint8Array.from(atob(data.ai_response.audio_data.base64), c => c.charCodeAt(0))],
+                            { type: data.ai_response.audio_data.mime_type || 'audio/wav' }
+                        );
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audio = new Audio(audioUrl);
+                        audio.play().then(() => {
+                            playedAudio = true;
+                        }).catch(err => {
+                            console.warn('Autoplay prevented or failed:', err);
+                            playedAudio = false;
+                        });
+
+                        // Clean up blob URL after playing
+                        audio.onended = () => URL.revokeObjectURL(audioUrl);
+                    } catch (e) {
+                        console.error('Error reproduciendo audio:', e);
+                        playedAudio = false;
+                    }
+                }
+
+                // If no audio played, use browser TTS fallback
+                setTimeout(() => {
+                    if (!playedAudio) {
+                        const spoke = speakText(data.ai_response.content, 'es-ES');
+                        if (!spoke) console.warn('No available TTS and browser speech failed');
+                    }
+                }, 150); // slight delay to allow audio.play() promise to resolve
+
                 if (data.evaluation && data.evaluation.evaluation_generated) {
                     setTimeout(() => showEvaluationNotification(data.evaluation), 1000);
                 }
@@ -907,7 +996,11 @@
             chatMessages.innerHTML = '';
 
             data.messages.forEach((msg, index) => {
-                setTimeout(() => addMessage(msg.content, msg.is_user, false), index * 50);
+                setTimeout(() => {
+                    const opts = { messageId: msg.id };
+                    if (msg.audio_url) opts.audio_url = msg.audio_url;
+                    addMessage(msg.content, msg.is_user, false, opts);
+                }, index * 50);
             });
 
             updateStatsButton(currentSessionId);
