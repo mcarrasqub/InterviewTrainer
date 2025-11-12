@@ -14,9 +14,20 @@
             const avgEl = document.getElementById('averageScore');
             const totalEl = document.getElementById('totalSessions');
             const compEl = document.getElementById('completedSessions');
+            const avgTimeEl = document.getElementById('averageTimeScore');
+            // format average_time_score to one decimal when present
             if (avgEl) avgEl.textContent = data.average_score;
             if (totalEl) totalEl.textContent = (data.sessions_labels || []).length;
             if (compEl) compEl.textContent = (data.sessions_labels || []).filter((_,i) => (data.sessions_scores[i] || 0) > 0).length;
+            if (avgTimeEl) {
+                if (typeof data.average_time_score !== 'undefined' && data.average_time_score !== null) {
+                    // ensure numeric and show one decimal
+                    const n = Number(data.average_time_score);
+                    avgTimeEl.textContent = Number.isFinite(n) ? n.toFixed(1) : '-';
+                } else {
+                    avgTimeEl.textContent = '-';
+                }
+            }
 
             // Sessions chart (bar)
             const sessionsChartEl = document.getElementById('sessionsChart');
@@ -40,8 +51,15 @@
             if (scoreEvolutionCanvas) {
                 const scoreEvolutionCtx = scoreEvolutionCanvas.getContext('2d');
                 const labels = data.sessions_labels || [];
-                const evolutionData = (data.sessions_scores || []).map(v => v === null ? NaN : v);
-                new Chart(scoreEvolutionCtx, { type: 'line', data: { labels, datasets: [{ label: 'Evolución de puntaje', data: evolutionData, borderColor: 'rgba(79,70,229,0.95)', backgroundColor: 'rgba(79,70,229,0.12)', tension: 0.25, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 10 } }, plugins: { legend: { display: false } } } });
+                const evolutionData = (data.sessions_scores || []).map(v => v === null ? null : v);
+                const timeData = (data.sessions_time_scores || []).map(v => v === null ? null : v);
+                const datasets = [{ label: 'Evolución de puntaje', data: evolutionData, borderColor: 'rgba(79,70,229,0.95)', backgroundColor: 'rgba(79,70,229,0.12)', tension: 0.25, fill: true }];
+                // Only add the time management series if there's at least one numeric value
+                const hasTimeValues = Array.isArray(timeData) && timeData.some(v => v !== null && !Number.isNaN(v));
+                if (hasTimeValues) {
+                    datasets.push({ label: 'Gestión del tiempo', data: timeData, borderColor: 'rgba(16,185,129,0.95)', backgroundColor: 'rgba(16,185,129,0.12)', tension: 0.25, fill: false, borderDash: [4,4], spanGaps: true, pointRadius: 4 });
+                }
+                new Chart(scoreEvolutionCtx, { type: 'line', data: { labels, datasets }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 10 } }, plugins: { legend: { display: true } } } });
             }
 
             // Sparklines + modal
