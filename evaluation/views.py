@@ -8,6 +8,62 @@ from .models import FeedbackReport, UserAnalytics, CompetencyDefinition
 from django.db.models import Avg, Window, F
 from django.db.models.functions import Rank
 
+
+def evaluate_time_management(session):
+    """
+    Calcula la evaluación de gestión del tiempo para una `InterviewSession`.
+
+    Retorna una tupla: (feedback_text, score_float)
+
+    Reglas (heurísticas simples):
+    - Tiempo permitido por defecto: session.total_time_allowed (segundos).
+    - Si el tiempo usado está en el rango 80%-100% del permitido => score 10 (óptimo uso del tiempo).
+    - Si usó menos del 80% => score proporcional (0-10) escalado hasta un mínimo de 4.
+    - Si excedió el tiempo => penalización proporcional (10/percent) con minimo 0.
+    - Devuelve feedback textual con consejos.
+    """
+    # Seguridad: revisar que existen los datos necesarios
+    try:
+        total_allowed = int(getattr(session, 'total_time_allowed', 900) or 900)
+        total_used = int(getattr(session, 'total_time_used', 0) or 0)
+    except Exception:
+        return ('No hay datos de tiempo suficientes para evaluar.', None)
+
+    if total_allowed <= 0:
+        return ('Evaluación de tiempo no disponible (configuración inválida).', None)
+
+    percent = float(total_used) / float(total_allowed) if total_allowed else 0.0
+
+    # Categorías y cálculo de score
+    if 0.8 <= percent <= 1.0:
+        score = 10.0
+        feedback = (
+            'Excelente gestión del tiempo: aprovechaste el período de práctica de manera equilibrada. '
+            'Mantén el ritmo y usa los últimos minutos para sintetizar tus respuestas.'
+        )
+    elif percent < 0.8:
+        # Contestó notablemente más rápido que el tiempo recomendado
+        # Escalamos linealmente hasta 0.8 como el punto óptimo
+        scale = percent / 0.8 if 0.8 > 0 else 0
+        raw_score = 10.0 * scale
+        score = max(4.0, round(raw_score, 1))
+        feedback = (
+            'Contestaste más rápido de lo recomendado. ' 
+            'Intenta desarrollar un poco más tus respuestas y aprovechar el tiempo para ofrecer ejemplos concretos y estructura (situación, tarea, acción, resultado).'
+        )
+    else:
+        # percent > 1.0: excedió el tiempo
+        # Penalizamos de forma inversa proporcional
+        raw = 10.0 / percent
+        score = max(0.0, round(raw, 1))
+        feedback = (
+            'Te excediste del tiempo ideal. Trata de sintetizar mejor y practicar respuestas concisas; ' 
+            'puedes usar bullets y enfocarte en lo esencial (causa, acción, resultado).' 
+            f' Tiempo usado: {total_used // 60}m {total_used % 60}s, Tiempo ideal: {total_allowed // 60}m.'
+        )
+
+    return (feedback, float(score) if score is not None else None)
+
 @login_required
 def session_feedback(request, session_id):
     """

@@ -31,6 +31,10 @@ class FeedbackReport(models.Model):
     average_score = models.FloatField()
     performance_level = models.CharField(max_length=50)  # Excelente, Bueno, etc.
     session_duration_minutes = models.IntegerField(default=0)
+    # ---- Time management evaluation fields ----
+    time_evaluation_enabled = models.BooleanField(default=True, help_text='Si False, la evaluación de tiempo está deshabilitada (p. ej. por interrupción).')
+    time_management_score = models.FloatField(null=True, blank=True, help_text='Puntaje de gestión del tiempo (0-10)')
+    feedback_time = models.TextField(blank=True, default='', help_text='Feedback textual específico sobre la gestión del tiempo')
     generated_at = models.DateTimeField(default=timezone.now)
     is_final = models.BooleanField(default=True)
     
@@ -67,6 +71,10 @@ class UserAnalytics(models.Model):
     weakest_competency = models.CharField(max_length=100, blank=True)
     total_questions_answered = models.IntegerField(default=0)
     total_session_time_minutes = models.IntegerField(default=0)
+    # ---- Time management aggregated stats ----
+    total_time_management_evaluations = models.IntegerField(default=0, help_text='Número de sesiones con evaluación de tiempo')
+    total_time_management_score = models.FloatField(default=0.0, help_text='Suma acumulada de puntajes de gestión del tiempo')
+    average_time_management_score = models.FloatField(default=0.0, help_text='Promedio de gestión del tiempo (0-10)')
     last_updated = models.DateTimeField(auto_now=True)
     
     class Meta:
