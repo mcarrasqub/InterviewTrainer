@@ -15,19 +15,10 @@
             const totalEl = document.getElementById('totalSessions');
             const compEl = document.getElementById('completedSessions');
             const avgTimeEl = document.getElementById('averageTimeScore');
-            // format average_time_score to one decimal when present
             if (avgEl) avgEl.textContent = data.average_score;
             if (totalEl) totalEl.textContent = (data.sessions_labels || []).length;
             if (compEl) compEl.textContent = (data.sessions_labels || []).filter((_,i) => (data.sessions_scores[i] || 0) > 0).length;
-            if (avgTimeEl) {
-                if (typeof data.average_time_score !== 'undefined' && data.average_time_score !== null) {
-                    // ensure numeric and show one decimal
-                    const n = Number(data.average_time_score);
-                    avgTimeEl.textContent = Number.isFinite(n) ? n.toFixed(1) : '-';
-                } else {
-                    avgTimeEl.textContent = '-';
-                }
-            }
+            if (avgTimeEl) avgTimeEl.textContent = (typeof data.average_time_score !== 'undefined') ? data.average_time_score : '-';
 
             // Sessions chart (bar)
             const sessionsChartEl = document.getElementById('sessionsChart');
@@ -53,6 +44,8 @@
                 const labels = data.sessions_labels || [];
                 const evolutionData = (data.sessions_scores || []).map(v => v === null ? null : v);
                 const timeData = (data.sessions_time_scores || []).map(v => v === null ? null : v);
+                // debug
+                console.debug('progreso: timeData', timeData);
                 const datasets = [{ label: 'Evolución de puntaje', data: evolutionData, borderColor: 'rgba(79,70,229,0.95)', backgroundColor: 'rgba(79,70,229,0.12)', tension: 0.25, fill: true }];
                 // Only add the time management series if there's at least one numeric value
                 const hasTimeValues = Array.isArray(timeData) && timeData.some(v => v !== null && !Number.isNaN(v));

@@ -134,6 +134,18 @@ class EvaluationService:
                 performance_level=performance_level,
                 session_duration_minutes=session_duration
             )
+
+            # ---- Evaluación de gestión del tiempo: calcular y guardar ----
+            try:
+                # Importar la función de evaluación (local import para evitar ciclos)
+                from .views import evaluate_time_management
+                feedback_text, score = evaluate_time_management(session)
+                feedback_report.time_evaluation_enabled = True if score is not None else False
+                feedback_report.time_management_score = score
+                feedback_report.feedback_time = feedback_text or ''
+                await sync_to_async(feedback_report.save)()
+            except Exception as e:
+                logger.warning(f"No se pudo calcular la evaluación de tiempo al guardar el reporte: {e}")
             
             # Crear puntajes de competencias
             competency_scores = []
@@ -233,6 +245,21 @@ class EvaluationService:
                 )['total_time']
             )()
             analytics.total_session_time_minutes = total_time or 0
+
+            # Estadísticas acumuladas de gestión del tiempo
+            time_stats = await sync_to_async(
+                lambda: FeedbackReport.objects.filter(session__user=user).aggregate(
+                    count=models.Count('time_management_score'),
+                    sum=models.Sum('time_management_score'),
+                    avg=models.Avg('time_management_score')
+                )
+            )()
+            time_count = time_stats.get('count') or 0
+            time_sum = time_stats.get('sum') or 0.0
+            time_avg = time_stats.get('avg') or 0.0
+            analytics.total_time_management_evaluations = time_count
+            analytics.total_time_management_score = float(time_sum) if time_sum is not None else 0.0
+            analytics.average_time_management_score = float(time_avg) if time_avg is not None else 0.0
             
             # Encontrar competencia más fuerte y más débil
             competency_scores_exist = await sync_to_async(
