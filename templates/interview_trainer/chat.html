@@ -658,7 +658,8 @@
     "currentSessionId": {% if current_session %}{{ current_session.id }}{% else %}null{% endif %},
     "hasCurrentSession": {% if current_session %}true{% else %}false{% endif %},
     "hasMessages": {% if current_session and current_session.messages.all %}true{% else %}false{% endif %},
-    "messageCount": {% if current_session %}{{ current_session.messages.count }}{% else %}0{% endif %}
+    "messageCount": {% if current_session %}{{ current_session.messages.count }}{% else %}0{% endif %},
+    "totalTimeAllowed": {% if current_session %}{{ current_session.total_time_allowed }}{% else %}900{% endif %}
 }
 </script>
 
@@ -1146,4 +1147,6 @@
         }
     }
 </script>
+    <!-- Timer popups (lightweight floating pop-ups fuera del contenedor de chat) -->
+    <script src="{% static 'interview_trainer/timer_popups.js' %}"></script>
 {% endblock %}
