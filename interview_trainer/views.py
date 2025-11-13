@@ -252,11 +252,22 @@ def progreso_data(request):
         else:
             # si no hay feedback, colocar None para que la gráfica muestre huecos
             sessions_scores.append(None)
+    # Serie de puntajes de gestión del tiempo (por sesión)
+    sessions_time_scores = []
+    for s in sessions:
+        feedback = getattr(s, 'feedback_report', None)
+        if feedback and getattr(feedback, 'time_management_score', None) is not None:
+            sessions_time_scores.append(round(feedback.time_management_score, 2))
+        else:
+            sessions_time_scores.append(None)
 
     # Puntaje promedio calculado sobre feedbacks existentes
     feedbacks = FeedbackReport.objects.filter(session__user=user).order_by('-generated_at')[:50]
     scores = [f.average_score for f in feedbacks if f.average_score is not None]
     average_score = round(sum(scores) / len(scores), 2) if scores else 0
+    # Promedio de gestión de tiempo global
+    time_scores = [f.time_management_score for f in feedbacks if f.time_management_score is not None]
+    average_time_score = round(sum(time_scores) / len(time_scores), 2) if time_scores else 0
 
     # Competencias: obtener definiciones activas y construir series por cada competencia
     competencies = list(CompetencyDefinition.get_default_competencies())
@@ -291,8 +302,10 @@ def progreso_data(request):
 
     return JsonResponse({
         'average_score': average_score,
+        'average_time_score': average_time_score,
         'sessions_labels': sessions_labels,
         'sessions_scores': sessions_scores,
+        'sessions_time_scores': sessions_time_scores,
         'skills_labels': skills_labels,
         'skills_series': skills_series,
         'skills_series_cumulative': skills_series_cumulative,

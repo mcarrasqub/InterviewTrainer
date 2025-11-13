@@ -11,6 +11,7 @@ import asyncio
 import logging
 import time
 import mimetypes
+from django.utils import timezone
 
 # Importar servicio de evaluación para generación automática
 try:
@@ -402,3 +403,96 @@ def delete_all_sessions(request):
             'success': False,
             'error': f'Error eliminando todas las sesiones: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# ---------------- Timer endpoints (status + tick) ----------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def session_timer_status(request, session_id):
+    """Devuelve estado simple del temporizador para la sesión: remaining_seconds, progress_ratio, message, status"""
+    session = get_object_or_404(InterviewSession, id=session_id, user=request.user)
+
+    # Calcular tiempo usado actual (no muta la DB): total_time_used + elapsed desde last_resume_time
+    total_used = session.total_time_used or 0
+    if not session.is_paused and session.last_resume_time:
+        elapsed = timezone.now() - session.last_resume_time
+        total_used += int(elapsed.total_seconds())
+
+    total_allowed = session.total_time_allowed or 900
+    remaining = max(0, int(total_allowed - total_used))
+    progress_ratio = float(total_used) / float(total_allowed) if total_allowed else 0.0
+
+    # Mensaje motivacional según progreso (sin mostrar tiempos)
+    def get_message_for_progress(ratio):
+        if ratio < 0.25:
+            return "Tómate un momento para conectar con la pregunta."
+        elif ratio < 0.5:
+            return "Sigue adelante, mantén claridad y foco."
+        elif ratio < 0.75:
+            return "Ya estás en la parte más desafiante: mantén energía."
+        elif ratio < 0.9:
+            return "A veces lo mejor sale al final."
+        else:
+            return "Cierra con intención, confía en lo que ya expresaste."
+
+    message = get_message_for_progress(progress_ratio)
+
+    status_label = 'PAUSED' if session.is_paused else ('ENDED' if session.is_completed or remaining <= 0 else 'RUNNING')
+
+    return Response({
+        'remaining_seconds': remaining,
+        'progress_ratio': round(progress_ratio, 3),
+        'message': message,
+        'status': status_label,
+        'time_evaluation_enabled': getattr(getattr(session, 'feedback_report', None), 'time_evaluation_enabled', True)
+    })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def session_timer_tick(request, session_id):
+    """Incrementa el time used en `seconds_passed` si la sesión está activa y no en pausa.
+
+    Body: { seconds_passed: int }
+    """
+    session = get_object_or_404(InterviewSession, id=session_id, user=request.user)
+    seconds = int(request.data.get('seconds_passed', 0) or 0)
+
+    if not session.is_active or session.is_paused:
+        return Response({'success': False, 'error': 'Session not active or paused'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        session.total_time_used = (session.total_time_used or 0) + seconds
+        # si había last_resume_time, lo limpiamos porque estamos aplicando un tick manual
+        session.last_resume_time = None
+        session.save(update_fields=['total_time_used', 'last_resume_time'])
+
+        total_allowed = session.total_time_allowed or 900
+        remaining = total_allowed - session.total_time_used
+        if remaining <= 0:
+            # finalizar la sesión (no marcada como interrompida aquí)
+            try:
+                session.finish_timer(interrupted=False)
+            except Exception as e:
+                logger.exception('Error finalizando timer: %s', e)
+            return Response({'success': True, 'status': 'END'})
+
+        # devolver mensaje motivacional
+        ratio = float(session.total_time_used) / float(total_allowed) if total_allowed else 0.0
+        def get_message_for_progress(ratio):
+            if ratio < 0.25:
+                return "Tómate un momento para conectar con la pregunta."
+            elif ratio < 0.5:
+                return "Sigue adelante, mantén claridad y foco."
+            elif ratio < 0.75:
+                return "Ya estás en la parte más desafiante: mantén energía."
+            elif ratio < 0.9:
+                return "A veces lo mejor sale al final."
+            else:
+                return "Cierra con intención, confía en lo que ya expresaste."
+
+        return Response({'success': True, 'status': 'RUNNING', 'progress_ratio': round(ratio,3), 'message': get_message_for_progress(ratio)})
+
+    except Exception as e:
+        logger.exception('Error en session_timer_tick: %s', e)
+        return Response({'success': False, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
