@@ -62,7 +62,7 @@ python manage.py migrate
 ```
 
 
-## 4. Run the project
+## 5. Run the project
 
 Depending on how it's designed, you could use any of the following commands:
 
