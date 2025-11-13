@@ -52,6 +52,16 @@ DEBUG=True
 GEMINI_API_KEY= (insert APIkey)
 
 
+## 4. Make migrations
+
+ Use this commands for make migrations of the database:
+ 
+ ```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+
 ## 4. Run the project
 
 Depending on how it's designed, you could use any of the following commands:
