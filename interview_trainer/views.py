@@ -9,8 +9,11 @@ from django.contrib import messages
 from urllib3 import request
 from .models import InterviewSession, ChatMessage, UserProfile
 from django.http import JsonResponse
+from .services import GeminiService
+import asyncio
 
 logger = logging.getLogger(__name__)
+gemini_service = GeminiService()
 
 def home(request):
     """
@@ -127,23 +130,60 @@ def chat_session(request, session_id):
     """
     💬 PROPÓSITO: Chat de una sesión específica
     📝 QUÉ HACE: Muestra interfaz de chat para una sesión ya creada
+    + Ahora: puede generar respuesta de IA + audio TTS para esa sesión
     """
     session = get_object_or_404(InterviewSession, id=session_id, user=request.user)
     
+    reply_text = None
+    audio_url = None
+    user_message = None
+
     try:
-        # Obtener o crear perfil
+        # 🧍‍♂️ 1. Obtener o crear perfil
         profile, created = UserProfile.objects.get_or_create(user=request.user)
         
-        # Obtener sesiones del usuario para el sidebar
+        # 📋 2. Obtener sesiones del usuario para el sidebar
         sessions = InterviewSession.objects.filter(user=request.user)[:10]
-        
+
+        # 💬 3. Si viene un POST, significa que el usuario envió un mensaje
+        if request.method == "POST":
+            user_message = request.POST.get("message", "").strip()
+
+            if user_message:
+                # (Opcional) aquí podrías construir un conversation_history real
+                conversation_history = None  # por ahora lo dejamos así
+
+                # 🧠 4. Llamar a Gemini para texto + audio
+                # generate_response_with_tts es async, así que usamos asyncio.run
+                result = asyncio.run(
+                    gemini_service.generate_response_with_tts(
+                        message=user_message,
+                        conversation_history=conversation_history,
+                        interview_type=session.interview_type if hasattr(session, "interview_type") else "operations",
+                        voice_name="Leda",  # o la voz que quieras
+                    )
+                )
+
+                reply_text = result.get("reply_text")
+                audio_url = result.get("audio_url")
+
+                # (Opcional) aquí podrías guardar el mensaje y la respuesta en la BD
+
+        # 🎨 5. Armar el contexto para la plantilla
         context = {
             'profile': profile,
             'sessions': sessions,
             'current_session': session,
             'has_api_key': True,  # ✅ Siempre True porque usas TU API key
+
+            # 🔊 Nuevos campos para el chat con voz:
+            'user_message': user_message,
+            'reply_text': reply_text,
+            'audio_url': audio_url,
         }
+
         return render(request, 'interview_trainer/chat.html', context)
+
     except Exception as e:
         messages.error(request, f'Error accediendo al chat: {str(e)}')
         return redirect('interview_trainer:home')
@@ -310,3 +350,14 @@ def progreso_data(request):
         'skills_series': skills_series,
         'skills_series_cumulative': skills_series_cumulative,
     })
+
+async def chat_tts_page(request):
+    if request.method == "POST":
+        message = request.POST.get("message")
+        result = await gemini_service.generate_response_with_tts(message)
+        return render(request, "interview_trainer/chat.html", {
+            "reply_text": result["reply_text"],
+            "audio_url": result["audio_url"],
+        })
+
+    return render(request, "interview_trainer/chat.html")

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from interview_trainer.views import chat_tts_page
 
 app_name = 'interview_trainer'
 
@@ -12,4 +13,5 @@ urlpatterns = [
     path('profile/', views.profile_settings, name='profile_settings'),
     path('progreso/', views.progreso_view, name='progreso'),
     path('progreso/data/', views.progreso_data, name='progreso_data'),
+    
 ]

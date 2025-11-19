@@ -140,32 +140,42 @@ async def process_message_async(user, message, session_id, voice_name=None):
         # Guardar respuesta de IA
         ai_message = await create_ai_message(session, ai_response)
         
-        # Generar TTS inmediatamente (usar voice_name pasado o 'Leda')
+        # ✅ NUEVO: Función helper para guardar audio de forma síncrona
+        @sync_to_async
+        def save_audio_file(msg, audio_bytes, voice):
+            """Guarda el archivo de audio en el mensaje"""
+            mime = 'audio/wav'
+            ext = '.wav'
+            filename = f"session_{session.id}_msg_{msg.id}_{int(time.time())}{ext}"
+            msg.audio_file.save(filename, ContentFile(audio_bytes))
+            msg.tts_voice = voice
+            msg.save()
+            return msg.audio_file.url
+        
+        # Generar TTS inmediatamente
         try:
             chosen_voice = voice_name or 'Leda'
             tts_result = gemini_service.text_to_speech(ai_response, voice_name=chosen_voice)
+            
             if tts_result and tts_result.get('audio_bytes'):
                 import base64
                 audio_base64 = base64.b64encode(tts_result['audio_bytes']).decode('utf-8')
-                # Persistir el audio en el modelo para poder servirlo como URL
+                
+                # ✅ Guardar audio usando sync_to_async
                 try:
-                    ext = '.wav'
-                    mime = tts_result.get('mime_type') or 'audio/wav'
-                    import mimetypes as _mimetypes
-                    _ext = _mimetypes.guess_extension(mime)
-                    if _ext:
-                        ext = _ext
-                    filename = f"session_{session.id}_msg_{ai_message.id}_{int(time.time())}{ext}"
-                    ai_message.audio_file.save(filename, ContentFile(tts_result['audio_bytes']))
-                    ai_message.tts_voice = tts_result.get('voice_name') or chosen_voice
-                    ai_message.save()
-                    logger.info(f"TTS guardado en modelo para mensaje {ai_message.id} voice={ai_message.tts_voice}")
+                    audio_url = await save_audio_file(
+                        ai_message, 
+                        tts_result['audio_bytes'], 
+                        tts_result.get('voice_name') or chosen_voice
+                    )
+                    logger.info(f"✅ TTS guardado en modelo para mensaje {ai_message.id} voice={chosen_voice}")
                 except Exception as save_ex:
-                    logger.exception("No se pudo guardar el audio en ChatMessage: %s", save_ex)
+                    logger.exception("❌ No se pudo guardar el audio en ChatMessage: %s", save_ex)
             else:
                 audio_base64 = None
+                
         except Exception as ex:
-            logger.warning(f"No se pudo generar TTS: {ex}")
+            logger.warning(f"⚠️ No se pudo generar TTS: {ex}")
             tts_result = None
             audio_base64 = None
             
@@ -187,6 +197,7 @@ async def process_message_async(user, message, session_id, voice_name=None):
                 'id': ai_message.id,
                 'content': ai_message.content,
                 'timestamp': ai_message.timestamp.isoformat(),
+                'audio_url': ai_message.audio_file.url if ai_message.audio_file else None,
                 'audio_data': {
                     'base64': audio_base64,
                     'mime_type': tts_result.get('mime_type') if tts_result else None,
@@ -197,7 +208,7 @@ async def process_message_async(user, message, session_id, voice_name=None):
         }
         
     except Exception as e:
-        logger.error(f"Error en process_message_async: {str(e)}")
+        logger.error(f"❌ Error en process_message_async: {str(e)}")
         raise e
 
 @api_view(['POST'])

@@ -647,6 +647,8 @@
             </div>
         </div>
     </div>
+    <!-- Reproductor TTS “invisible” -->
+     <audio id="ttsAudio" style="display:none;"></audio>
 </div>
 
 {% endblock %}
@@ -813,26 +815,18 @@
         }, smooth ? 400 : 50); // ✅ MÁS TIEMPO PARA SMOOTH SCROLL
     }
 
-    // Browser TTS fallback using Web Speech API
-    function speakText(text, lang = 'es-ES') {
+    function playTtsFromUrl(audioUrl) {
         try {
-            if (!('speechSynthesis' in window)) return false;
-            // Cancel any ongoing speech
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = lang;
-            // Optional: choose a preferred voice if available
-            const voices = window.speechSynthesis.getVoices() || [];
-            if (voices.length) {
-                // try to find a Spanish voice
-                const preferred = voices.find(v => /es(-|\b)/i.test(v.lang) || /Spanish/i.test(v.name));
-                if (preferred) utter.voice = preferred;
-            }
-            window.speechSynthesis.speak(utter);
-            return true;
+            const audio = document.getElementById('ttsAudio');
+            if (!audio || !audioUrl) return;
+
+            audio.src = audioUrl;
+            audio.play()
+                .catch(err => {
+                    console.warn("No se pudo reproducir el TTS automáticamente:", err);
+                });
         } catch (e) {
-            console.warn('Browser TTS failed:', e);
-            return false;
+            console.warn("Error al intentar reproducir TTS:", e);
         }
     }
 
@@ -912,7 +906,7 @@
             return;
         }
 
-        isActiveInterview = true; // Marcar la entrevista como activa
+        isActiveInterview = true;
         messageInput.disabled = true;
         sendBtn.disabled = true;
 
@@ -924,47 +918,18 @@
             const response = await fetch('/api/send-message/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
-                body: JSON.stringify({ message: message, session_id: currentSessionId, voice_name: 'Leda' })
+                body: JSON.stringify({ message: message, session_id: currentSessionId, voice_name: 'Zephyr' })
             });
             const data = await response.json();
             hideTyping();
 
             if (data.success && data.ai_response && data.ai_response.content) {
-                // Add AI message with metadata
+                // ✅ AQUÍ SE PINTA EL MENSAJE
                 addMessage(data.ai_response.content, false, true);
 
-                // Try to play audio immediately from base64 data; fall back to browser TTS if unavailable
-                let playedAudio = false;
-                if (data.ai_response.audio_data && data.ai_response.audio_data.base64) {
-                    try {
-                        const audioBlob = new Blob(
-                            [Uint8Array.from(atob(data.ai_response.audio_data.base64), c => c.charCodeAt(0))],
-                            { type: data.ai_response.audio_data.mime_type || 'audio/wav' }
-                        );
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        const audio = new Audio(audioUrl);
-                        audio.play().then(() => {
-                            playedAudio = true;
-                        }).catch(err => {
-                            console.warn('Autoplay prevented or failed:', err);
-                            playedAudio = false;
-                        });
-
-                        // Clean up blob URL after playing
-                        audio.onended = () => URL.revokeObjectURL(audioUrl);
-                    } catch (e) {
-                        console.error('Error reproduciendo audio:', e);
-                        playedAudio = false;
-                    }
+                if (data.ai_response.audio_url) {
+                    playTtsFromUrl(data.ai_response.audio_url);
                 }
-
-                // If no audio played, use browser TTS fallback
-                setTimeout(() => {
-                    if (!playedAudio) {
-                        const spoke = speakText(data.ai_response.content, 'es-ES');
-                        if (!spoke) console.warn('No available TTS and browser speech failed');
-                    }
-                }, 150); // slight delay to allow audio.play() promise to resolve
 
                 if (data.evaluation && data.evaluation.evaluation_generated) {
                     setTimeout(() => showEvaluationNotification(data.evaluation), 1000);

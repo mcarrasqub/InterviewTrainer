@@ -3,6 +3,10 @@ from django.conf import settings
 import logging
 import json
 from django.utils import timezone
+import os
+import mimetypes
+import uuid
+import struct
 
 logger = logging.getLogger(__name__)
 
@@ -244,6 +248,31 @@ Genera SOLO el saludo inicial:"""
         except Exception as e:
             logger.error(f"Error generando respuesta con Gemini: {str(e)}")
             raise e
+
+    async def generate_response_with_tts(self,message,conversation_history=None,interview_type='operations',voice_name="Leda",):
+        """
+        1. Llama a generate_response para obtener el texto.
+        2. Llama a text_to_speech con ese texto.
+        3. Devuelve dict con texto + audio_url.
+        """
+        # 1) texto de respuesta
+        reply_text = await self.generate_response(
+            message=message,
+            conversation_history=conversation_history,
+            interview_type=interview_type,
+        )
+
+        # 2) audio de la respuesta
+        tts_result = self.text_to_speech(reply_text, voice_name=voice_name)
+
+        audio_url = None
+        if tts_result:
+            audio_url = tts_result["url"]
+
+        return {
+            "reply_text": reply_text,
+            "audio_url": audio_url,
+        }
         
     async def generate_feedback_and_scores(self, session, messages):
         """
@@ -357,25 +386,19 @@ REQUISITOS:
             logger.error(f"Error generando feedback: {str(e)}")
             raise e
 
-    def text_to_speech(self, text: str, voice_name: str = "Leda"):
-        """Intento robusto de generar audio usando la librería de Gemini (si está disponible).
-
-        Devuelve diccionario {'audio_bytes': bytes, 'mime_type': str, 'voice_name': str} o None.
+    def text_to_speech(self, text: str, voice_name: str = "Zephyr"):
+        """
+        Genera audio usando Gemini y lo guarda en MEDIA_ROOT/tts/<archivo>.wav
         """
         try:
-            # Intentar importar la nueva librería google-genai si está disponible
             try:
                 from google import genai as ggenai
                 types = ggenai.types
             except Exception:
-                ggenai = None
-                types = None
-
-            if ggenai is None:
                 logger.warning("google.genai no disponible; omitiendo TTS.")
                 return None
 
-            api_key = self.api_key or ''
+            api_key = self.api_key or ""
             if not api_key:
                 logger.warning("GEMINI API key no configurada; omitiendo TTS.")
                 return None
@@ -393,20 +416,16 @@ REQUISITOS:
             generate_content_config = types.GenerateContentConfig(
                 response_modalities=["audio"],
                 speech_config=types.SpeechConfig(
-                    multi_speaker_voice_config=types.MultiSpeakerVoiceConfig(
-                        speaker_voice_configs=[
-                            types.SpeakerVoiceConfig(
-                                speaker="Speaker 1",
-                                voice_config=types.VoiceConfig(
-                                    prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                                        voice_name=voice_name
-                                    )
-                                )
-                            )
-                        ]
+                    voice_config=types.VoiceConfig(
+                        prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                            voice_name=voice_name
+                        )
                     )
                 )
             )
+
+            audio_chunks = []
+            mime_type = None
 
             for chunk in client.models.generate_content_stream(
                 model=model,
@@ -418,16 +437,113 @@ REQUISITOS:
                 candidate = chunk.candidates[0]
                 if not getattr(candidate, "content", None) or not getattr(candidate.content, "parts", None):
                     continue
+
                 part = candidate.content.parts[0]
                 inline = getattr(part, "inline_data", None)
                 if inline and getattr(inline, "data", None):
-                    raw = inline.data  # bytes
-                    mime = inline.mime_type or "audio/wav"
-                    return {"audio_bytes": raw, "mime_type": mime, "voice_name": voice_name}
-            return None
+                    audio_chunks.append(inline.data)
+                    mime_type = inline.mime_type or "audio/wav"
+
+            if not audio_chunks:
+                logger.warning("Gemini no devolvió audio.")
+                return None
+
+            raw_audio = b"".join(audio_chunks)
+            guessed_ext = mimetypes.guess_extension(mime_type) or ".wav"
+
+            # ✅ CORRECCIÓN: Agregar self. antes de convert_to_wav
+            if mime_type and "audio/L" in mime_type:
+                raw_audio = self.convert_to_wav(raw_audio, mime_type)
+                guessed_ext = ".wav"
+
+            # Guardar en MEDIA_ROOT/tts/
+            tts_dir = os.path.join(settings.MEDIA_ROOT, "tts")
+            os.makedirs(tts_dir, exist_ok=True)
+
+            filename = f"{uuid.uuid4().hex}{guessed_ext}"
+            file_path = os.path.join(tts_dir, filename)
+
+            with open(file_path, "wb") as f:
+                f.write(raw_audio)
+
+            audio_url = f"{settings.MEDIA_URL}tts/{filename}"
+
+            return {
+                "url": audio_url,
+                "file_path": file_path,
+                "mime_type": mime_type,
+                "voice_name": voice_name,
+                "audio_bytes": raw_audio,  # Para que api_views pueda codificar en base64
+            }
+
         except Exception as exc:
             logger.exception("Error solicitando TTS a Gemini: %s", exc)
             return None
+
+    @staticmethod
+    def parse_audio_mime_type(mime_type: str) -> dict[str, int | None]:
+        """
+        Parsea el mime_type para extraer parámetros de audio (rate, channels, bits).
+        Ejemplo: "audio/L16;rate=24000;channels=1" -> {'rate': 24000, 'channels': 1, 'bits': 16}
+        """
+        params = {'rate': None, 'channels': None, 'bits': None}
+        
+        if not mime_type:
+            return params
+            
+        # Extraer bits del formato (ej: L16 -> 16 bits)
+        if 'L16' in mime_type:
+            params['bits'] = 16
+        elif 'L8' in mime_type:
+            params['bits'] = 8
+            
+        # Extraer parámetros de la cadena
+        parts = mime_type.split(';')
+        for part in parts[1:]:  # Saltar el primer elemento que es el tipo base
+            if '=' in part:
+                key, value = part.strip().split('=')
+                key = key.strip().lower()
+                if key == 'rate':
+                    params['rate'] = int(value)
+                elif key == 'channels':
+                    params['channels'] = int(value)
+                    
+        return params
+
+    @staticmethod
+    def convert_to_wav(audio_data: bytes, mime_type: str) -> bytes:
+        """
+        Convierte audio raw (ej: audio/L16) a formato WAV con encabezado.
+        """
+        params = GeminiService.parse_audio_mime_type(mime_type)
+        rate = params.get('rate') or 24000
+        channels = params.get('channels') or 1
+        bits = params.get('bits') or 16
+        
+        # Calcular tamaños
+        byte_rate = rate * channels * (bits // 8)
+        block_align = channels * (bits // 8)
+        data_size = len(audio_data)
+        
+        # Construir encabezado WAV
+        wav_header = struct.pack(
+            '<4sI4s4sIHHIIHH4sI',
+            b'RIFF',
+            data_size + 36,  # Tamaño del archivo - 8
+            b'WAVE',
+            b'fmt ',
+            16,  # Tamaño del chunk fmt
+            1,   # Formato PCM
+            channels,
+            rate,
+            byte_rate,
+            block_align,
+            bits,
+            b'data',
+            data_size
+        )
+        
+        return wav_header + audio_data
 
     def _parse_json_feedback_response(self, response_text: str) -> dict:
         """
@@ -472,7 +588,7 @@ REQUISITOS:
                         'score': 7,
                         'feedback': 'Evaluación pendiente',
                         'example': 'Por determinar',
-                        'improvement_area': 'Análisis en proceso'
+                        'improvement_area': 'Recomendaciones disponibles próximamente'
                     }
                 else:
                     # Validar estructura de cada competencia
@@ -484,7 +600,7 @@ REQUISITOS:
                     comp_data.setdefault('score', 7)
                     comp_data.setdefault('feedback', 'Evaluación pendiente')
                     comp_data.setdefault('example', 'Por determinar')
-                    comp_data.setdefault('improvement_area', 'Análisis en proceso')
+                    comp_data.setdefault('improvement_area', 'Recomendaciones disponibles próximamente')
                     
                     # Validar que score esté en rango 1-10
                     try:
